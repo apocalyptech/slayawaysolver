@@ -84,7 +84,7 @@ class PlayerDeath(Exception):
 
 class Cell(object):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, level=None):
         self.x = x
         self.y = y
         self.exit = False
@@ -94,14 +94,15 @@ class Cell(object):
         self.victim = None
         self.obstacle = None
 
-        if self.x == 0:
-            self.walls[DIR_W] = True
-        if self.x == 8:
-            self.walls[DIR_E] = True
-        if self.y == 0:
-            self.walls[DIR_N] = True
-        if self.y == 8:
-            self.walls[DIR_S] = True
+        if level is not None:
+            if self.x == 0:
+                self.walls[DIR_W] = True
+            if self.x == level.width - 1:
+                self.walls[DIR_E] = True
+            if self.y == 0:
+                self.walls[DIR_N] = True
+            if self.y == level.height - 1:
+                self.walls[DIR_S] = True
 
     def set_victim(self, victim):
         if victim.cell is not None:
@@ -233,18 +234,24 @@ class Player(object):
 
 class Level(object):
 
-    def __init__(self, desc, player_x, player_y, exit_x, exit_y, max_steps=None):
+    def __init__(self, desc, width, height,
+            player_x, player_y,
+            exit_x, exit_y,
+            max_steps=None):
 
         self.desc = desc
         self.max_steps = max_steps
 
+        self.width = width
+        self.height = height
+
         self.cells = []
         self.victims = []
         self.obstacles = []
-        for y in range(9):
+        for y in range(height):
             self.cells.append([])
-            for x in range(9):
-                self.cells[y].append(Cell(x, y))
+            for x in range(width):
+                self.cells[y].append(Cell(x, y, self))
         player_cell = self.get_cell(player_x, player_y)
         self.player = Player(player_cell, self)
         self.won = False
@@ -266,12 +273,12 @@ class Level(object):
 
     def wall_east(self, x, y):
         self.cells[y][x].walls[DIR_E] = True
-        if x < 8:
+        if x < (self.width-1):
             self.cells[y][x+1].walls[DIR_W] = True
 
     def wall_south(self, x, y):
         self.cells[y][x].walls[DIR_S] = True
-        if y < 8:
+        if y < (self.height-1):
             self.cells[y+1][x].walls[DIR_N] = True
 
     def wall_north(self, x, y):
@@ -286,12 +293,12 @@ class Level(object):
 
     def short_wall_east(self, x, y):
         self.cells[y][x].short_walls[DIR_E] = True
-        if x < 8:
+        if x < (self.width-1):
             self.cells[y][x+1].short_walls[DIR_W] = True
 
     def short_wall_south(self, x, y):
         self.cells[y][x].short_walls[DIR_S] = True
-        if y < 8:
+        if y < (self.height-1):
             self.cells[y+1][x].short_walls[DIR_N] = True
 
     def short_wall_north(self, x, y):
