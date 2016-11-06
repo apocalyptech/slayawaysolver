@@ -25,11 +25,16 @@ if __name__ == '__main__':
         help='Generate python code suitable for a unit test')
 
     parser.add_argument('-l', '--level',
-        choices=levels.level_names,
+        choices=levels.level_names + ['list'],
         default='s1_s01',
-        help='Level name to run')
+        metavar='LEVELNAME',
+        help='Level name to run (use "list" to get a list)')
 
     args = parser.parse_args()
+
+    if args.level == 'list':
+        levels.report_levels()
+        sys.exit(0)
 
     game = Game(levels.get_level(args.level))
     if args.interactive:

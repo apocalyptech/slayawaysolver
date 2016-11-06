@@ -20,6 +20,14 @@ class Levels(object):
     def get_level(self, name):
         return self.levels[name]()
 
+    def report_levels(self):
+        print('Available level names:')
+        print('')
+        for name in self.level_names:
+            level = self.get_level(name)
+            print('   %s: %s' % (name, level.desc))
+        print('')
+
     @staticmethod
     def s1_s01():
 
@@ -479,6 +487,33 @@ class Levels(object):
         level.add_victim(3, 3)
         level.add_victim(5, 4)
         level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
+    def s2_s01():
+
+        level = Level('Slayaway Camp 2, Scene 1 - A Really Dumb Cop...', 5, 6,
+            2, 5,
+            3, 0)
+
+        level.wall_box(0, 5)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.wall_south(3, 3)
+        level.wall_west(3, 3)
+        level.wall_north(3, 3)
+        level.wall_north(4, 3)
+        level.wall_west(4, 4)
+        level.wall_west(4, 5)
+
+        level.wall_south(1, 2)
+
+        level.add_victim(4, 2)
 
         return level
 
