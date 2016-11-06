@@ -266,6 +266,12 @@ class Level(object):
         self.obstacles.append(obstacle)
         self.get_cell(x, y).set_obstacle(obstacle)
 
+    def add_cabinet_ns(self, x, y):
+        self.add_obstacle(x, y, Cabinet([DIR_N, DIR_S], self))
+
+    def add_cabinet_we(self, x, y):
+        self.add_obstacle(x, y, Cabinet([DIR_W, DIR_E], self))
+
     def wall_west(self, x, y):
         self.cells[y][x].walls[DIR_W] = True
         if x > 0:

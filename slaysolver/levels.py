@@ -2,7 +2,7 @@
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
 import re
-from slaysolver.app import Level, Cabinet, DIR_N, DIR_S, DIR_W, DIR_E
+from slaysolver.app import Level
 
 class Levels(object):
 
@@ -509,9 +509,9 @@ class Levels(object):
         level.short_wall_box(1, 7)
 
         # Cabinets
-        level.add_obstacle(1, 2, Cabinet([DIR_W, DIR_E], level))
-        level.add_obstacle(4, 2, Cabinet([DIR_N, DIR_S], level))
-        level.add_obstacle(6, 2, Cabinet([DIR_W, DIR_E], level))
+        level.add_cabinet_we(1, 2)
+        level.add_cabinet_ns(4, 2)
+        level.add_cabinet_we(6, 2)
 
         # Victims
         level.add_victim(1, 3)
