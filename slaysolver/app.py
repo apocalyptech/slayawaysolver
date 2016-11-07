@@ -167,7 +167,6 @@ class Cabinet(object):
 
     def __init__(self, fall_dirs, level):
         self.cell = None
-        self.save_state = True
         self.fall_dirs = fall_dirs
         self.level = level
 
@@ -224,7 +223,6 @@ class Phone(object):
         """
         self.level = level
         self.name = name
-        self.save_state = False
         self.cell = None
         self.other = None
 
@@ -256,6 +254,19 @@ class Phone(object):
                         cur_cell = next_cell
                 else:
                     break
+
+    # Next three methods just here to pretend like our state is important.
+    # In the end I think that's better than trying to exclude this type of
+    # obstacle from our checksumming methods.
+
+    def clone(self):
+        return self
+
+    def apply_clone(self, newobj):
+        pass
+
+    def checksum(self):
+        return 'p'
 
 class Victim(object):
     """
@@ -836,8 +847,7 @@ class State(object):
         for victim in level.victims:
             self.victims.append(victim.clone())
         for obstacle in level.obstacles:
-            if obstacle.save_state:
-                self.obstacles.append(obstacle.clone())
+            self.obstacles.append(obstacle.clone())
 
     def apply(self):
 
