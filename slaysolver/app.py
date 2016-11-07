@@ -45,10 +45,8 @@
 # 'r' will reset, and n/e/s/w will move in the specified
 # direction.
 #
-# Each space will be drawn w/ 3x3 characters, with pipes, plusses, and
-# dashes to indicate walls ("low" walls will be in red).  Walls will
-# appear to be two characters deep 'cause we consider a south wall on
-# one cell to be a north wall on the next one down.
+# Each space will be drawn w/ 3x3 characters, with some unicode block
+# characters to indicate walls ("low" walls will be in red).
 #
 # Symbols in the middle of the cell render:
 #   P - Player
@@ -667,13 +665,13 @@ class Level(object):
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '+')
+                        sys.stdout.write(color + extra + '▛')
                     else:
                         if row.short_walls[DIR_N]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '-')
+                        sys.stdout.write(color + extra + '▀')
                     if row.short_walls[DIR_N]:
                         extra = colorama.Fore.RED
                     else:
@@ -681,26 +679,26 @@ class Level(object):
                     if row.victim and row.victim.facing is not None and row.victim.facing == DIR_N:
                         sys.stdout.write(color + extra + '↑')
                     else:
-                        sys.stdout.write(color + extra + '-')
+                        sys.stdout.write(color + extra + '▀')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_N] and row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '+')
+                        sys.stdout.write(color + extra + '▜')
                     else:
                         if row.short_walls[DIR_N]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '-')
+                        sys.stdout.write(color + extra + '▀')
                 else:
                     if row.walls[DIR_W] or row.short_walls[DIR_W]:
                         if row.short_walls[DIR_W]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '|')
+                        sys.stdout.write(color + extra + '▌')
                     else:
                         sys.stdout.write(color + ' ')
                     if row.victim and row.victim.facing is not None and row.victim.facing == DIR_N:
@@ -712,7 +710,7 @@ class Level(object):
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '|')
+                        sys.stdout.write(color + extra + '▐')
                     else:
                         sys.stdout.write(color + ' ')
             sys.stdout.write("\n")
@@ -735,7 +733,7 @@ class Level(object):
                     if row.victim and row.victim.facing and row.victim.facing == DIR_W:
                         sys.stdout.write(color + extra + '←')
                     else:
-                        sys.stdout.write(color + extra + '|')
+                        sys.stdout.write(color + extra + '▌')
                 else:
                     if row.victim and row.victim.facing and row.victim.facing == DIR_W:
                         sys.stdout.write(color + '←')
@@ -772,7 +770,7 @@ class Level(object):
                     if row.victim and row.victim.facing and row.victim.facing == DIR_E:
                         sys.stdout.write(color + extra + '→')
                     else:
-                        sys.stdout.write(color + extra + '|')
+                        sys.stdout.write(color + extra + '▐')
                 else:
                     if row.victim and row.victim.facing and row.victim.facing == DIR_E:
                         sys.stdout.write(color + '→')
@@ -796,13 +794,13 @@ class Level(object):
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '+')
+                        sys.stdout.write(color + extra + '▙')
                     else:
                         if row.short_walls[DIR_S]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '-')
+                        sys.stdout.write(color + extra + '▄')
                     if row.short_walls[DIR_S]:
                         extra = colorama.Fore.RED
                     else:
@@ -810,26 +808,26 @@ class Level(object):
                     if row.victim and row.victim.facing and row.victim.facing == DIR_S:
                         sys.stdout.write(color + extra + '↓')
                     else:
-                        sys.stdout.write(color + extra + '-')
+                        sys.stdout.write(color + extra + '▄')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_S] and row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '+')
+                        sys.stdout.write(color + extra + '▟')
                     else:
                         if row.short_walls[DIR_S]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '-')
+                        sys.stdout.write(color + extra + '▄')
                 else:
                     if row.walls[DIR_W] or row.short_walls[DIR_W]:
                         if row.short_walls[DIR_W]:
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '|')
+                        sys.stdout.write(color + extra + '▌')
                     else:
                         sys.stdout.write(color + ' ')
                     if row.victim and row.victim.facing and row.victim.facing == DIR_S:
@@ -841,7 +839,7 @@ class Level(object):
                             extra = colorama.Fore.RED
                         else:
                             extra = ''
-                        sys.stdout.write(color + extra + '|')
+                        sys.stdout.write(color + extra + '▐')
                     else:
                         sys.stdout.write(color + ' ')
             sys.stdout.write("\n")
