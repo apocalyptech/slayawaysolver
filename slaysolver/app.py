@@ -29,12 +29,13 @@
 #   * Bookcases (though I call them Cabinets)
 #   * Victims
 #   * Hazards (fire, water, holes - all just considered a "hazard")
+#   * Police
 #
 # Stuff not yet implemented:
-#   * Police
-#   * SWAT
+#   * SWAT (though should be able to extend Police pretty easily)
 #   * Cats
-#   * Light Switches
+#   * Light Switches (level lights and some Police interaction are
+#     theoretically in here, though)
 #   * Telephones (I assume I'll want to rewrite Victim.scare()
 #     a bit for re-use)
 #   * Mines (probably just a special-cased Hazard)
@@ -52,6 +53,8 @@
 # Symbols in the middle of the cell render:
 #   P - Player
 #   V - Victim
+#   L - Police
+#   O - Police targeting reticle
 #   H - Hazard
 #   | - Bookcase/Cabinet which can be knocked over west or east
 #   = - Bookcase/Cabinet which can be knocked over north or south
@@ -76,6 +79,8 @@ DIR_CMD = {
     'w': DIR_W,
     'e': DIR_E,
 }
+def rev_dir(direction):
+    return (direction+2)%4
 
 class PlayerDeath(Exception):
     """
@@ -93,6 +98,7 @@ class Cell(object):
         self.short_walls = [False]*4
         self.victim = None
         self.obstacle = None
+        self.reticles = {}
 
         if level is not None:
             if self.x == 0:
@@ -111,15 +117,45 @@ class Cell(object):
         victim.cell = self
 
     def kill_victim(self):
+        """
+        Used when a victim is killed by an environmental factor
+        """
         if self.victim:
             self.victim.die()
             self.victim = None
+
+    def attack_victim(self, from_direction):
+        """
+        Used for player physically attacking a victim
+        """
+        if self.victim:
+            if self.victim.assault(from_direction):
+                self.victim = None
 
     def set_obstacle(self, obstacle):
         if obstacle.cell is not None:
             obstacle.cell.obstacle = None
         self.obstacle = obstacle
         self.obstacle.cell = self
+
+    def set_reticle(self, victim):
+        self.reticles[victim] = True
+
+    def clear_reticle(self, victim):
+        if victim in self.reticles:
+            del self.reticles[victim]
+
+    def get_reticles(self):
+        return self.reticles.keys()
+
+    def has_reticles(self):
+        if len(self.reticles) > 0:
+            return True
+        else:
+            return False
+
+    def checksum(self):
+        return '%d,%d' % (self.x, self.y)
 
     def clone(self):
         newobj = Cell(self.x, self.y)
@@ -170,10 +206,19 @@ class Victim(object):
     Victim
     """
 
+    T_VICTIM = 0
+    T_COP = 1
+
     def __init__(self, level):
         self.cell = None
         self.alive = True
+        self.required_to_kill = True
         self.level = level
+        self.scareable = True
+        self.type = Victim.T_VICTIM
+
+    def update_facing_vars(self, facing=None):
+        return
 
     def die(self):
         self.alive = False
@@ -186,7 +231,15 @@ class Victim(object):
             if rel_cell.victim:
                 rel_cell.victim.scare(direction)
 
+        return True
+
+    def assault(self, from_direction):
+        return self.die()
+
     def scare(self, direction):
+
+        if not self.scareable:
+            return
 
         while True:
             cur_cell = self.cell
@@ -205,6 +258,12 @@ class Victim(object):
 
         return False
 
+    def checksum(self):
+        if self.alive:
+            return self.cell.checksum()
+        else:
+            return 'd'
+
     def clone(self):
         newobj = Victim(self.level)
         newobj.alive = self.alive
@@ -215,6 +274,69 @@ class Victim(object):
         self.alive = newobj.alive
         if self.alive:
             self.level.get_cell(newobj.cell.x, newobj.cell.y).set_victim(self)
+
+class Cop(Victim):
+
+    def __init__(self, level, facing=DIR_N):
+        super(Cop, self).__init__(level)
+        self.scareable = False
+        self.required_to_kill = False
+        self.facing = facing
+        self.reticles = []
+        self.type = Victim.T_COP
+        self.reticles_need_lights = True
+
+    def update_facing_vars(self, facing=None):
+
+        if facing is not None:
+            self.facing = facing
+
+        for reticle in self.reticles:
+            reticle.clear_reticle(self)
+        self.reticles = []
+
+        cur_cell = self.cell
+        if cur_cell is not None:
+            if cur_cell.walls[self.facing]:
+                return
+
+            rel_cell = self.level.get_cell_relative_cell(cur_cell, self.facing)
+            if rel_cell:
+                self.reticles.append(rel_cell)
+                rel_cell.set_reticle(self)
+
+                # Check to see if the player is in our reticle.
+                if rel_cell == self.level.player.cell:
+                    raise PlayerDeath()
+
+    def die(self):
+        super(Cop, self).die()
+        for reticle in self.reticles:
+            reticle.clear_reticle(self)
+
+    def assault(self, from_direction):
+        if self.level.lights and from_direction == self.facing:
+            raise PlayerDeath()
+        else:
+            self.die()
+            return True
+
+    def checksum(self):
+        if self.alive:
+            return '%s;f%d' % (self.cell.checksum(), self.facing)
+        else:
+            return 'd'
+
+    def clone(self):
+        newobj = super(Cop, self).clone()
+        newobj.facing = self.facing
+        return newobj
+
+    def apply_clone(self, newobj):
+        super(Cop, self).apply_clone(newobj)
+        self.facing = newobj.facing
+        if self.alive:
+            self.update_facing_vars()
 
 class Player(object):
     """
@@ -245,6 +367,7 @@ class Level(object):
         self.width = width
         self.height = height
 
+        self.lights = True
         self.cells = []
         self.victims = []
         self.obstacles = []
@@ -257,10 +380,16 @@ class Level(object):
         self.won = False
         self.set_exit(exit_x, exit_y)
 
-    def add_victim(self, x, y):
-        victim = Victim(self)
+    def add_victim_obj(self, x, y, victim):
         self.victims.append(victim)
         self.cells[y][x].set_victim(victim)
+        victim.update_facing_vars()
+
+    def add_victim(self, x, y):
+        self.add_victim_obj(x, y, Victim(self))
+
+    def add_cop(self, x, y, direction):
+        self.add_victim_obj(x, y, Cop(self, direction))
 
     def add_obstacle(self, x, y, obstacle):
         self.obstacles.append(obstacle)
@@ -365,11 +494,17 @@ class Level(object):
                 next_cell.obstacle.hit(direction)
                 break
             if next_cell.victim:
-                next_cell.kill_victim()
+                next_cell.attack_victim(rev_dir(direction))
                 break
             self.player.cell = next_cell
             if next_cell.hazard:
                 raise PlayerDeath()
+
+        # If we landed on a reticle, we're dead
+        for reticle in self.player.cell.get_reticles():
+            if reticle.reticles_need_lights and not self.lights:
+                continue
+            raise PlayerDeath()
 
         # check for adjacent victims to scare
         for direction in DIRS:
@@ -415,7 +550,7 @@ class Level(object):
     def num_alive(self):
         alive = 0
         for victim in self.victims:
-            if victim.alive:
+            if victim.required_to_kill and victim.alive:
                 alive += 1
         return alive
 
@@ -504,12 +639,11 @@ class Level(object):
 
                 if row == self.player.cell:
                     sys.stdout.write(color + 'P')
-                elif row.exit:
-                    sys.stdout.write(color + 'E')
-                elif row.hazard:
-                    sys.stdout.write(color + 'H')
                 elif row.victim:
-                    sys.stdout.write(color + 'V')
+                    if row.victim.type == Victim.T_COP:
+                        sys.stdout.write(color + 'L')
+                    else:
+                        sys.stdout.write(color + 'V')
                 elif row.obstacle:
                     if DIR_N in row.obstacle.fall_dirs:
                         sys.stdout.write(color + '=')
@@ -517,6 +651,12 @@ class Level(object):
                         sys.stdout.write(color + '|')
                     else:
                         sys.stdout.write(color + 'X')
+                elif row.hazard:
+                    sys.stdout.write(color + 'H')
+                elif row.has_reticles():
+                    sys.stdout.write(color + 'O')
+                elif row.exit:
+                    sys.stdout.write(color + 'E')
                 else:
                     sys.stdout.write(color + ' ')
 
@@ -595,6 +735,7 @@ class State(object):
     def __init__(self, level):
 
         self.level = level
+        self.lights = level.lights
         self.victims = []
         self.obstacles = []
         self.player = level.player.clone()
@@ -605,6 +746,8 @@ class State(object):
             self.obstacles.append(obstacle.clone())
 
     def apply(self):
+
+        self.level.lights = self.lights
 
         self.level.player.apply_clone(self.player)
 
@@ -617,14 +760,15 @@ class State(object):
     def checksum(self):
 
         sumlist = []
-        sumlist.append('p=%d,%d' % (self.player.cell.x, self.player.cell.y))
+        if self.level.lights:
+            sumlist.append('l1')
+        else:
+            sumlist.append('l0')
+        sumlist.append('p=%s' % (self.player.cell.checksum()))
         for (idx, victim) in enumerate(self.victims):
-            if victim.alive:
-                sumlist.append('v%d=%d,%d' % (idx, victim.cell.x, victim.cell.y))
-            else:
-                sumlist.append('v%d=d' % (idx))
+            sumlist.append('v%d=%s' % (idx, victim.checksum()))
         for (idx, obstacle) in enumerate(self.obstacles):
-            sumlist.append('o%d=%d,%d;%s' % (idx, obstacle.cell.x, obstacle.cell.y,
+            sumlist.append('o%d=%s;%s' % (idx, obstacle.cell.checksum(),
                 ','.join([str(d) for d in obstacle.fall_dirs])))
         return '|'.join(sumlist)
 
