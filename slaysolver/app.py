@@ -888,8 +888,6 @@ class Game(object):
     
     def __init__(self, level):
 
-        colorama.init(autoreset=True)
-
         # Save the level
         self.level = level
 
@@ -959,14 +957,15 @@ class Game(object):
         for (n, move) in enumerate(move_set):
             print("\t%d. %s" % (n+1, DIR_T[move]))
 
-    def store_winning_moves(self, display=True):
-        print('Found winning solution with %d moves' % (len(self.moves)))
+    def store_winning_moves(self, quiet=False, display_moves=True):
+        if not quiet:
+            print('Found winning solution with %d moves' % (len(self.moves)))
         self.max_steps = len(self.moves)-1
         if self.solution is None or len(self.moves) < len(self.solution):
             self.solution = []
             for direction in self.moves:
                 self.solution.append(direction)
-        if display:
+        if not quiet and display_moves:
             self.print_winning_move_set(self.moves)
 
     def print(self):
@@ -974,7 +973,7 @@ class Game(object):
         if self.level.won:
             print('You win!')
             print('')
-            self.store_winning_moves(display=True)
+            self.store_winning_moves(display_moves=True)
         elif self.alive == False:
             print('You have died.')
         else:
@@ -989,6 +988,7 @@ class Game(object):
                     print("\t%s" % (DIR_T[direction]))
 
     def interactive(self):
+        colorama.init(autoreset=True)
         while True:
             self.print()
             if self.level.won:
@@ -1026,7 +1026,7 @@ class Game(object):
         for direction in self.level.possible_moves():
             try:
                 if (self.move(direction, state)):
-                    self.store_winning_moves(display=False)
+                    self.store_winning_moves(quiet=True, display_moves=False)
                     self.undo()
                 else:
                     if self.step_limit():
