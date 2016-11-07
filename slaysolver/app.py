@@ -28,14 +28,14 @@
 #   * Short Walls
 #   * Bookcases (though I call them Cabinets)
 #   * Victims
-#   * Hazards (fire, water, holes - all just considered a "hazard")
+#   * Cats
 #   * Police
+#   * Hazards (fire, water, holes - all just considered a "hazard")
 #   * Telephones
 #   * Mines
 #
 # Stuff not yet implemented:
 #   * SWAT (though should be able to extend Police pretty easily)
-#   * Cats
 #   * Light Switches (level lights and some Police interaction are
 #     theoretically in here, though)
 #   * Electric Walls
@@ -51,6 +51,7 @@
 # Symbols in the middle of the cell render:
 #   P - Player
 #   V - Victim
+#   C - Cat
 #   L - Police (will use ←↑→↓ to show which way they're facing)
 #   O - Police targeting reticle
 #   H - Hazard
@@ -311,6 +312,7 @@ class Victim(object):
 
     T_VICTIM = 0
     T_COP = 1
+    T_CAT = 2
 
     def __init__(self, level):
         self.cell = None
@@ -321,6 +323,7 @@ class Victim(object):
         self.type = Victim.T_VICTIM
         self.facing = None
         self.occupied = False
+        self.scare_on_lure = False
 
     def update_facing_vars(self, facing=None):
         return
@@ -348,6 +351,9 @@ class Victim(object):
 
         if self.occupied:
             return
+
+        if self.scare_on_lure and lure_object is not None:
+            direction=rev_dir(direction)
 
         self.occupied = True
         self.update_facing_vars(facing=direction)
@@ -390,6 +396,28 @@ class Victim(object):
         self.alive = newobj.alive
         if self.alive:
             self.level.get_cell(newobj.cell.x, newobj.cell.y).set_victim(self)
+
+class Cat(Victim):
+
+    def __init__(self, level):
+        super(Cat, self).__init__(level)
+        self.type = Victim.T_CAT
+        self.required_to_kill = False
+        self.scare_on_lure = True
+
+    def die(self):
+        raise PlayerDeath('Cat was killed!')
+
+    def checksum(self):
+        return self.cell.checksum()
+
+    def clone(self):
+        newobj = Cat(self.level)
+        newobj.cell = self.cell.clone()
+        return newobj
+
+    def apply_clone(self, newobj):
+        self.level.get_cell(newobj.cell.x, newobj.cell.y).set_victim(self)
 
 class Cop(Victim):
 
@@ -507,6 +535,9 @@ class Level(object):
 
     def add_victim(self, x, y):
         self.add_victim_obj(x, y, Victim(self))
+
+    def add_cat(self, x, y):
+        self.add_victim_obj(x, y, Cat(self))
 
     def add_cop(self, x, y, direction):
         self.add_victim_obj(x, y, Cop(self, direction))
@@ -794,6 +825,8 @@ class Level(object):
                 elif row.victim:
                     if row.victim.type == Victim.T_COP:
                         sys.stdout.write(color + 'L')
+                    elif row.victim.type == Victim.T_CAT:
+                        sys.stdout.write(color + 'C')
                     else:
                         sys.stdout.write(color + 'V')
                 elif row.obstacle:
