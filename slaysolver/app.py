@@ -1004,7 +1004,10 @@ class Game(object):
             sys.stdout.write('[%d] > ' % (self.cur_steps + 1))
             sys.stdout.flush()
             cmd = sys.stdin.readline()
-            cmd = cmd.strip()[0].lower()
+            cmd = cmd.strip()
+            if cmd == '':
+                continue
+            cmd = cmd[0].lower()
 
             direction = None
             if cmd == 'q':
