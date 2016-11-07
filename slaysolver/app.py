@@ -659,7 +659,7 @@ class Level(object):
                     if self.num_alive() == 0:
                         extra = colorama.Fore.GREEN
                     else:
-                        extra = colorama.Fore.CYAN
+                        extra = colorama.Fore.MAGENTA
                     sys.stdout.write(color + extra + 'E')
                 else:
                     sys.stdout.write(color + ' ')
