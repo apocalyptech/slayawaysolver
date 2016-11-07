@@ -588,7 +588,7 @@ class Level(object):
                     else:
                         extra = ''
                     if row.victim and row.victim.facing and row.victim.facing == DIR_N:
-                        sys.stdout.write(color + extra + '^')
+                        sys.stdout.write(color + extra + '↑')
                     else:
                         sys.stdout.write(color + extra + '-')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
@@ -613,7 +613,7 @@ class Level(object):
                     else:
                         sys.stdout.write(color + ' ')
                     if row.victim and row.victim.facing and row.victim.facing == DIR_N:
-                        sys.stdout.write(color + '^')
+                        sys.stdout.write(color + '↑')
                     else:
                         sys.stdout.write(color + ' ')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
@@ -642,12 +642,12 @@ class Level(object):
                     else:
                         extra = ''
                     if row.victim and row.victim.facing and row.victim.facing == DIR_W:
-                        sys.stdout.write(color + extra + '<')
+                        sys.stdout.write(color + extra + '←')
                     else:
                         sys.stdout.write(color + extra + '|')
                 else:
                     if row.victim and row.victim.facing and row.victim.facing == DIR_W:
-                        sys.stdout.write(color + '<')
+                        sys.stdout.write(color + '←')
                     else:
                         sys.stdout.write(color + ' ')
 
@@ -684,12 +684,12 @@ class Level(object):
                     else:
                         extra = ''
                     if row.victim and row.victim.facing and row.victim.facing == DIR_E:
-                        sys.stdout.write(color + extra + '>')
+                        sys.stdout.write(color + extra + '→')
                     else:
                         sys.stdout.write(color + extra + '|')
                 else:
                     if row.victim and row.victim.facing and row.victim.facing == DIR_E:
-                        sys.stdout.write(color + '>')
+                        sys.stdout.write(color + '→')
                     else:
                         sys.stdout.write(color + ' ')
             sys.stdout.write("\n")
@@ -722,7 +722,7 @@ class Level(object):
                     else:
                         extra = ''
                     if row.victim and row.victim.facing and row.victim.facing == DIR_S:
-                        sys.stdout.write(color + extra + 'V')
+                        sys.stdout.write(color + extra + '↓')
                     else:
                         sys.stdout.write(color + extra + '-')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
@@ -747,7 +747,7 @@ class Level(object):
                     else:
                         sys.stdout.write(color + ' ')
                     if row.victim and row.victim.facing and row.victim.facing == DIR_S:
-                        sys.stdout.write(color + 'V')
+                        sys.stdout.write(color + '↓')
                     else:
                         sys.stdout.write(color + ' ')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
