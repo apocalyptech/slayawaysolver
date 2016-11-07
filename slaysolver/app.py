@@ -656,7 +656,11 @@ class Level(object):
                 elif row.has_reticles():
                     sys.stdout.write(color + 'O')
                 elif row.exit:
-                    sys.stdout.write(color + 'E')
+                    if self.num_alive() == 0:
+                        extra = colorama.Fore.GREEN
+                    else:
+                        extra = colorama.Fore.RED
+                    sys.stdout.write(color + extra + 'E')
                 else:
                     sys.stdout.write(color + ' ')
 
