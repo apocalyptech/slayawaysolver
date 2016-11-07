@@ -458,6 +458,8 @@ class Level(object):
         self.won = False
         self.set_exit(exit_x, exit_y)
 
+        self.latest_phone_pair = 0
+
     def add_victim_obj(self, x, y, victim):
         self.victims.append(victim)
         self.cells[y][x].set_victim(victim)
@@ -479,9 +481,10 @@ class Level(object):
     def add_cabinet_we(self, x, y):
         self.add_obstacle(x, y, Cabinet([DIR_W, DIR_E], self))
 
-    def add_phone_pair(self, x1, y1, x2, y2, name):
-        p1 = Phone(self, name)
-        p2 = Phone(self, name)
+    def add_phone_pair(self, x1, y1, x2, y2):
+        self.latest_phone_pair += 1
+        p1 = Phone(self, str(self.latest_phone_pair))
+        p2 = Phone(self, str(self.latest_phone_pair))
         p1.other = p2
         p2.other = p1
         self.add_obstacle(x1, y1, p1)
