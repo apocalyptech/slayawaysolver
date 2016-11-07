@@ -30,15 +30,15 @@
 #   * Victims
 #   * Hazards (fire, water, holes - all just considered a "hazard")
 #   * Police
+#   * Telephones
 #
 # Stuff not yet implemented:
 #   * SWAT (though should be able to extend Police pretty easily)
 #   * Cats
 #   * Light Switches (level lights and some Police interaction are
 #     theoretically in here, though)
-#   * Telephones (I assume I'll want to rewrite Victim.scare()
-#     a bit for re-use)
 #   * Mines (probably just a special-cased Hazard)
+#   * Electric Walls
 #
 # This can be run interactively with the -i/--interactive flag.
 # While running interactive, 'q' will quit, 'u' will undo,
@@ -53,11 +53,13 @@
 # Symbols in the middle of the cell render:
 #   P - Player
 #   V - Victim
-#   L - Police
+#   L - Police (will use ←↑→↓ to show which way they're facing)
 #   O - Police targeting reticle
 #   H - Hazard
+#   1/2/3 - Phones
 #   | - Bookcase/Cabinet which can be knocked over west or east
 #   = - Bookcase/Cabinet which can be knocked over north or south
+#   X - Bookcase/Cabinet which has been knocked over
 
 import sys
 import colorama
@@ -165,8 +167,17 @@ class Cabinet(object):
 
     def __init__(self, fall_dirs, level):
         self.cell = None
+        self.save_state = True
         self.fall_dirs = fall_dirs
         self.level = level
+
+    def get_interactive_character(self):
+        if DIR_N in self.fall_dirs:
+            return '='
+        elif DIR_W in self.fall_dirs:
+            return '|'
+        else:
+            return 'X'
 
     def interactable(self, direction):
         if direction in self.fall_dirs:
@@ -200,6 +211,51 @@ class Cabinet(object):
         for direction in newobj.fall_dirs:
             self.fall_dirs.append(direction)
         self.level.get_cell(newobj.cell.x, newobj.cell.y).set_obstacle(self)
+
+    def checksum(self):
+        return '%s;%s' % (self.cell.checksum(),
+            ','.join([str(d) for d in self.fall_dirs]))
+
+class Phone(object):
+
+    def __init__(self, level, name):
+        """
+        'name' should be a single digit
+        """
+        self.level = level
+        self.name = name
+        self.save_state = False
+        self.cell = None
+        self.other = None
+
+    def get_interactive_character(self):
+        return self.name[0]
+
+    def interactable(self, direction):
+        return True
+
+    def hit(self, direction):
+        if self.other:
+            self.other.ring()
+
+    def ring(self):
+        for direction in [DIR_N, DIR_E, DIR_W, DIR_S]:
+            cur_cell = self.cell
+            while True:
+                # TODO: I don't *think* short walls block phone sounds?
+                if cur_cell.walls[direction]:
+                    break
+                next_cell = self.level.get_cell_relative_cell(cur_cell, direction)
+                if next_cell:
+                    if next_cell.obstacle:
+                        break
+                    elif next_cell.victim:
+                        next_cell.victim.scare(rev_dir(direction), lure_object=self)
+                        break
+                    else:
+                        cur_cell = next_cell
+                else:
+                    break
 
 class Victim(object):
     """
@@ -237,10 +293,12 @@ class Victim(object):
     def assault(self, from_direction):
         return self.die()
 
-    def scare(self, direction):
+    def scare(self, direction, lure_object=None):
 
-        if not self.scareable:
+        if lure_object is None and not self.scareable:
             return
+
+        self.update_facing_vars(facing=direction)
 
         while True:
             cur_cell = self.cell
@@ -248,11 +306,13 @@ class Victim(object):
                 break
             next_cell = self.level.get_cell_relative_cell(cur_cell, direction)
             if next_cell.obstacle:
-                next_cell.obstacle.hit(direction)
+                if lure_object is None or next_cell.obstacle != lure_object:
+                    next_cell.obstacle.hit(direction)
                 break
             if next_cell.victim:
                 break
             next_cell.set_victim(self)
+            self.update_facing_vars(facing=direction)
             if next_cell.hazard:
                 next_cell.kill_victim()
                 break
@@ -402,6 +462,14 @@ class Level(object):
 
     def add_cabinet_we(self, x, y):
         self.add_obstacle(x, y, Cabinet([DIR_W, DIR_E], self))
+
+    def add_phone_pair(self, x1, y1, x2, y2, name):
+        p1 = Phone(self, name)
+        p2 = Phone(self, name)
+        p1.other = p2
+        p2.other = p1
+        self.add_obstacle(x1, y1, p1)
+        self.add_obstacle(x2, y2, p2)
 
     def wall_west(self, x, y):
         self.cells[y][x].walls[DIR_W] = True
@@ -587,7 +655,7 @@ class Level(object):
                         extra = colorama.Fore.RED
                     else:
                         extra = ''
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_N:
+                    if row.victim and row.victim.facing is not None and row.victim.facing == DIR_N:
                         sys.stdout.write(color + extra + '↑')
                     else:
                         sys.stdout.write(color + extra + '-')
@@ -612,7 +680,7 @@ class Level(object):
                         sys.stdout.write(color + extra + '|')
                     else:
                         sys.stdout.write(color + ' ')
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_N:
+                    if row.victim and row.victim.facing is not None and row.victim.facing == DIR_N:
                         sys.stdout.write(color + '↑')
                     else:
                         sys.stdout.write(color + ' ')
@@ -659,12 +727,7 @@ class Level(object):
                     else:
                         sys.stdout.write(color + 'V')
                 elif row.obstacle:
-                    if DIR_N in row.obstacle.fall_dirs:
-                        sys.stdout.write(color + '=')
-                    elif DIR_W in row.obstacle.fall_dirs:
-                        sys.stdout.write(color + '|')
-                    else:
-                        sys.stdout.write(color + 'X')
+                    sys.stdout.write(color + row.obstacle.get_interactive_character())
                 elif row.hazard:
                     sys.stdout.write(color + 'H')
                 elif row.has_reticles():
@@ -773,7 +836,8 @@ class State(object):
         for victim in level.victims:
             self.victims.append(victim.clone())
         for obstacle in level.obstacles:
-            self.obstacles.append(obstacle.clone())
+            if obstacle.save_state:
+                self.obstacles.append(obstacle.clone())
 
     def apply(self):
 
@@ -798,8 +862,7 @@ class State(object):
         for (idx, victim) in enumerate(self.victims):
             sumlist.append('v%d=%s' % (idx, victim.checksum()))
         for (idx, obstacle) in enumerate(self.obstacles):
-            sumlist.append('o%d=%s;%s' % (idx, obstacle.cell.checksum(),
-                ','.join([str(d) for d in obstacle.fall_dirs])))
+            sumlist.append('o%d=%s' % (idx, obstacle.checksum()))
         return '|'.join(sumlist)
 
 class Game(object):
