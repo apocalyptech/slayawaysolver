@@ -31,13 +31,13 @@
 #   * Hazards (fire, water, holes - all just considered a "hazard")
 #   * Police
 #   * Telephones
+#   * Mines
 #
 # Stuff not yet implemented:
 #   * SWAT (though should be able to extend Police pretty easily)
 #   * Cats
 #   * Light Switches (level lights and some Police interaction are
 #     theoretically in here, though)
-#   * Mines (probably just a special-cased Hazard)
 #   * Electric Walls
 #
 # This can be run interactively with the -i/--interactive flag.
@@ -54,6 +54,7 @@
 #   L - Police (will use ←↑→↓ to show which way they're facing)
 #   O - Police targeting reticle
 #   H - Hazard
+#   M - Mine
 #   1/2/3 - Phones
 #   | - Bookcase/Cabinet which can be knocked over west or east
 #   = - Bookcase/Cabinet which can be knocked over north or south
@@ -94,6 +95,7 @@ class Cell(object):
         self.y = y
         self.exit = False
         self.hazard = False
+        self.mine = False
         self.walls = [False]*4
         self.short_walls = [False]*4
         self.victim = None
@@ -137,6 +139,15 @@ class Cell(object):
             obstacle.cell.obstacle = None
         self.obstacle = obstacle
         self.obstacle.cell = self
+
+    def set_mine(self, mine):
+        self.mine = mine
+        self.mine.cell = self
+
+    def explode(self):
+        if self.mine:
+            self.kill_victim()
+            self.mine = None
 
     def set_reticle(self, victim):
         self.reticles[victim] = True
@@ -266,6 +277,33 @@ class Phone(object):
     def checksum(self):
         return 'p'
 
+class Mine(object):
+
+    def __init__(self):
+        self.cell = None
+        self.active = True
+
+    def explode(self):
+        self.active = False
+        if self.cell is not None:
+            self.cell.explode()
+
+    def clone(self):
+        newobj = Mine()
+        newobj.active = self.active
+        return newobj
+
+    def apply_clone(self, newobj):
+        self.active = newobj.active
+        if self.active and self.cell:
+            self.cell.set_mine(self)
+
+    def checksum(self):
+        if self.active:
+            return '1'
+        else:
+            return '0'
+
 class Victim(object):
     """
     Victim
@@ -329,6 +367,9 @@ class Victim(object):
             self.update_facing_vars(facing=direction)
             if next_cell.hazard:
                 next_cell.kill_victim()
+                break
+            if next_cell.mine:
+                next_cell.mine.explode()
                 break
 
         return False
@@ -447,6 +488,7 @@ class Level(object):
         self.cells = []
         self.victims = []
         self.obstacles = []
+        self.mines = []
         for y in range(height):
             self.cells.append([])
             for x in range(width):
@@ -584,7 +626,7 @@ class Level(object):
                 next_cell.attack_victim(rev_dir(direction))
                 break
             self.player.cell = next_cell
-            if next_cell.hazard:
+            if next_cell.hazard or next_cell.mine:
                 raise PlayerDeath()
 
         # If we landed on a reticle, we're dead
@@ -637,6 +679,11 @@ class Level(object):
 
     def set_hazard(self, x, y):
         self.get_cell(x, y).hazard = True
+
+    def set_mine(self, x, y):
+        mine = Mine()
+        self.mines.append(mine)
+        self.get_cell(x, y).set_mine(mine)
 
     def num_alive(self):
         alive = 0
@@ -751,6 +798,8 @@ class Level(object):
                     sys.stdout.write(color + row.obstacle.get_interactive_character())
                 elif row.hazard:
                     sys.stdout.write(color + 'H')
+                elif row.mine:
+                    sys.stdout.write(color + 'M')
                 elif row.has_reticles():
                     sys.stdout.write(color + colorama.Fore.RED + 'O')
                 elif row.exit:
@@ -852,12 +901,15 @@ class State(object):
         self.lights = level.lights
         self.victims = []
         self.obstacles = []
+        self.mines = []
         self.player = level.player.clone()
 
         for victim in level.victims:
             self.victims.append(victim.clone())
         for obstacle in level.obstacles:
             self.obstacles.append(obstacle.clone())
+        for mine in level.mines:
+            self.mines.append(mine.clone())
 
     def apply(self):
 
@@ -869,6 +921,9 @@ class State(object):
             real.apply_clone(saved)
 
         for (saved, real) in zip(self.obstacles, self.level.obstacles):
+            real.apply_clone(saved)
+
+        for (saved, real) in zip(self.mines, self.level.mines):
             real.apply_clone(saved)
 
     def checksum(self):
@@ -883,6 +938,8 @@ class State(object):
             sumlist.append('v%d=%s' % (idx, victim.checksum()))
         for (idx, obstacle) in enumerate(self.obstacles):
             sumlist.append('o%d=%s' % (idx, obstacle.checksum()))
+        for (idx, mine) in enumerate(self.mines):
+            sumlist.append('m%d=%s' % (idx, mine.checksum()))
         return '|'.join(sumlist)
 
 class Game(object):
