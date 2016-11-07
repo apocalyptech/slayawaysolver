@@ -423,7 +423,7 @@ class Cop(Victim):
 
                 # Check to see if the player is in our reticle.
                 if rel_cell == self.level.player.cell:
-                    raise PlayerDeath()
+                    raise PlayerDeath('Apprehended by Police')
 
     def die(self):
         super(Cop, self).die()
@@ -432,7 +432,7 @@ class Cop(Victim):
 
     def assault(self, from_direction):
         if self.level.lights and from_direction == self.facing:
-            raise PlayerDeath()
+            raise PlayerDeath('Apprehended by Police')
         else:
             self.die()
             return True
@@ -626,14 +626,16 @@ class Level(object):
                 next_cell.attack_victim(rev_dir(direction))
                 break
             self.player.cell = next_cell
-            if next_cell.hazard or next_cell.mine:
-                raise PlayerDeath()
+            if next_cell.hazard:
+                raise PlayerDeath('Fell into a hazard')
+            if next_cell.mine:
+                raise PlayerDeath('Walked into a mine')
 
         # If we landed on a reticle, we're dead
         for reticle in self.player.cell.get_reticles():
             if reticle.reticles_need_lights and not self.lights:
                 continue
-            raise PlayerDeath()
+            raise PlayerDeath('Shot/Apprehended by the police')
 
         # check for adjacent victims to scare
         for direction in DIRS:
@@ -1077,8 +1079,12 @@ class Game(object):
                 if direction in self.level.possible_moves():
                     try:
                         self.move(DIR_CMD[cmd])
-                    except PlayerDeath:
+                    except PlayerDeath as e:
                         self.alive = False
+                        report_str = 'Player Death: %s' % (e)
+                        print('-'*len(report_str))
+                        print(report_str)
+                        print('-'*len(report_str))
 
     def solve(self):
         (state, new_checksum) = self.get_state()
