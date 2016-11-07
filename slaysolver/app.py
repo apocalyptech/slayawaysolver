@@ -328,8 +328,9 @@ class Cop(Victim):
             return 'd'
 
     def clone(self):
-        newobj = super(Cop, self).clone()
-        newobj.facing = self.facing
+        newobj = Cop(self.level, self.facing)
+        newobj.alive = self.alive
+        newobj.cell = self.cell.clone()
         return newobj
 
     def apply_clone(self, newobj):
