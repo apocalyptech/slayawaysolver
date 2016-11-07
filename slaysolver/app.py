@@ -216,6 +216,7 @@ class Victim(object):
         self.level = level
         self.scareable = True
         self.type = Victim.T_VICTIM
+        self.facing = None
 
     def update_facing_vars(self, facing=None):
         return
@@ -586,7 +587,10 @@ class Level(object):
                         extra = colorama.Fore.RED
                     else:
                         extra = ''
-                    sys.stdout.write(color + extra + '-')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_N:
+                        sys.stdout.write(color + extra + '^')
+                    else:
+                        sys.stdout.write(color + extra + '-')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_N] and row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
@@ -608,7 +612,10 @@ class Level(object):
                         sys.stdout.write(color + extra + '|')
                     else:
                         sys.stdout.write(color + ' ')
-                    sys.stdout.write(color + ' ')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_N:
+                        sys.stdout.write(color + '^')
+                    else:
+                        sys.stdout.write(color + ' ')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
@@ -634,9 +641,15 @@ class Level(object):
                         extra = colorama.Fore.RED
                     else:
                         extra = ''
-                    sys.stdout.write(color + extra + '|')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_W:
+                        sys.stdout.write(color + extra + '<')
+                    else:
+                        sys.stdout.write(color + extra + '|')
                 else:
-                    sys.stdout.write(color + ' ')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_W:
+                        sys.stdout.write(color + '<')
+                    else:
+                        sys.stdout.write(color + ' ')
 
                 if row == self.player.cell:
                     sys.stdout.write(color + 'P')
@@ -670,9 +683,15 @@ class Level(object):
                         extra = colorama.Fore.RED
                     else:
                         extra = ''
-                    sys.stdout.write(color + extra + '|')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_E:
+                        sys.stdout.write(color + extra + '>')
+                    else:
+                        sys.stdout.write(color + extra + '|')
                 else:
-                    sys.stdout.write(color + ' ')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_E:
+                        sys.stdout.write(color + '>')
+                    else:
+                        sys.stdout.write(color + ' ')
             sys.stdout.write("\n")
             for (x, row) in enumerate(col):
                 if y % 2 == 0:
@@ -702,7 +721,10 @@ class Level(object):
                         extra = colorama.Fore.RED
                     else:
                         extra = ''
-                    sys.stdout.write(color + extra + '-')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_S:
+                        sys.stdout.write(color + extra + 'V')
+                    else:
+                        sys.stdout.write(color + extra + '-')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_S] and row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
@@ -724,7 +746,10 @@ class Level(object):
                         sys.stdout.write(color + extra + '|')
                     else:
                         sys.stdout.write(color + ' ')
-                    sys.stdout.write(color + ' ')
+                    if row.victim and row.victim.facing and row.victim.facing == DIR_S:
+                        sys.stdout.write(color + 'V')
+                    else:
+                        sys.stdout.write(color + ' ')
                     if row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
