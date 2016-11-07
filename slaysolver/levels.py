@@ -519,6 +519,114 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s2_s02():
+
+        level = Level('Slayaway Camp 2, Scene 2 - Danger Lake', 8, 8,
+            5, 7,
+            0, 1)
+
+        level.wall_box(0, 3)
+        level.wall_box(1, 6)
+        level.wall_box(2, 6)
+        level.wall_box(2, 4)
+        level.wall_box(3, 4)
+        level.wall_box(2, 2)
+        level.wall_box(3, 0)
+        level.wall_box(4, 0)
+        level.wall_box(4, 2)
+        level.wall_box(5, 2)
+        level.wall_box(6, 4)
+        level.wall_box(5, 5)
+
+        level.set_hazard(0, 7)
+
+        level.set_hazard(5, 0)
+        level.set_hazard(5, 1)
+        for y in [0, 1, 2, 3, 6, 7]:
+            level.set_hazard(6, y)
+            level.set_hazard(7, y)
+
+        level.add_victim(3, 1)
+        level.add_victim(5, 3)
+
+        return level
+
+    @staticmethod
+    def s2_s03():
+
+        level = Level('Slayaway Camp 2, Scene 3 - Right to Remain Deadly', 7, 7,
+            5, 2,
+            6, 0)
+
+        level.wall_box(0, 0)
+        level.wall_box(0, 3)
+        level.wall_box(2, 3)
+        level.wall_box(6, 6)
+
+        level.wall_north(0, 6)
+        level.wall_north(1, 6)
+        level.wall_north(2, 6)
+        level.wall_north(3, 6)
+        level.wall_east(3, 6)
+
+        level.wall_west(6, 2)
+        level.wall_south(6, 2)
+        level.wall_north(6, 1)
+        level.wall_north(5, 1)
+        level.wall_south(5, 1)
+        level.wall_north(4, 1)
+        level.wall_west(4, 1)
+        level.wall_west(4, 2)
+        level.wall_east(4, 2)
+        level.wall_south(4, 2)
+        level.wall_west(4, 3)
+        level.wall_south(4, 3)
+
+        level.add_cop(4, 3, DIR_E)
+        level.add_cop(3, 0, DIR_S)
+
+        level.add_victim(2, 4)
+
+        return level
+
+    @staticmethod
+    def s2_s04():
+
+        level = Level('Slayaway Camp 2, Scene 4 - Triple Truncheon', 7, 7,
+            1, 4,
+            4, 0)
+
+        level.wall_box(6, 0)
+        level.wall_box(5, 2)
+        level.wall_box(6, 6)
+
+        level.wall_east(3, 0)
+        level.wall_south(3, 0)
+        level.wall_east(2, 1)
+        level.wall_south(2, 1)
+        level.wall_south(1, 1)
+        level.wall_south(0, 1)
+
+        level.wall_north(0, 3)
+        level.wall_east(0, 3)
+        level.wall_east(0, 4)
+        level.wall_east(0, 5)
+        level.wall_north(1, 6)
+        level.wall_east(1, 6)
+
+        level.wall_east(3, 2)
+        level.wall_east(3, 3)
+        level.wall_east(3, 4)
+
+        level.add_cop(0, 2, DIR_E)
+        level.add_cop(5, 0, DIR_S)
+        level.add_cop(3, 3, DIR_S)
+
+        level.add_victim(4, 4)
+        
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,
