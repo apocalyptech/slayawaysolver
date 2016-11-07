@@ -1158,6 +1158,70 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s25_s02():
+
+        level = Level('Slayaway Camp 2.5, Scene 2 - Playmaker', 6, 5,
+            4, 4,
+            0, 2)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.wall_west(4, 0)
+        level.wall_south(4, 0)
+        level.wall_west(5, 1)
+        level.wall_west(5, 2)
+        level.wall_south(5, 2)
+
+        level.wall_box(1, 2)
+
+        level.wall_north(0, 4)
+        level.wall_north(1, 4)
+        level.wall_east(1, 4)
+
+        level.add_victim(3, 0)
+        level.add_victim(4, 2)
+
+        return level
+
+    @staticmethod
+    def s25_s03():
+
+        level = Level('Slayaway Camp 2.5, Scene 3 - Ringing Phones Attract Curiosity', 7, 7,
+            0, 5,
+            6, 0)
+
+        level.wall_west(6, 0)
+        level.wall_west(6, 1)
+        level.wall_west(6, 2)
+
+        level.wall_north(0, 4)
+        level.wall_north(1, 4)
+        level.wall_east(1, 4)
+        level.wall_south(1, 4)
+        level.wall_west(1, 5)
+        level.wall_south(1, 5)
+        level.wall_south(2, 5)
+        level.wall_south(3, 5)
+        level.wall_south(4, 5)
+        level.wall_east(4, 5)
+        level.wall_east(4, 4)
+        level.wall_north(4, 4)
+        level.wall_north(3, 4)
+        level.wall_north(2, 4)
+
+        level.add_phone_pair(5, 0, 6, 6, '1')
+
+        level.add_cop(6, 2, DIR_S)
+
+        level.add_victim(0, 0)
+        level.add_victim(1, 6)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,

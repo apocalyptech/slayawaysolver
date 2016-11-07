@@ -612,6 +612,39 @@ class LevelTests(unittest.TestCase):
             DIR_N,
         ])
 
+    def test_s25_s02(self):
+        game = Game(levels.get_level('s25_s02'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+        ])
+
+    def test_s25_s03(self):
+        game = Game(levels.get_level('s25_s03'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_S,
+            DIR_E,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+        ])
+
 if __name__ == '__main__':
 
     unittest.main()

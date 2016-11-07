@@ -284,6 +284,7 @@ class Victim(object):
         self.scareable = True
         self.type = Victim.T_VICTIM
         self.facing = None
+        self.occupied = False
 
     def update_facing_vars(self, facing=None):
         return
@@ -309,6 +310,10 @@ class Victim(object):
         if lure_object is None and not self.scareable:
             return
 
+        if self.occupied:
+            return
+
+        self.occupied = True
         self.update_facing_vars(facing=direction)
 
         while True:
@@ -596,6 +601,10 @@ class Level(object):
                 continue
             if adj_cell.victim is not None:
                 adj_cell.victim.scare(direction)
+
+        # Reset all the victims' "occupied" flags
+        for victim in self.victims:
+            victim.occupied = False
 
         # Do one more check here, to see if we've won.  It's possible
         # in at least one level to scare a victim into a hole on the
