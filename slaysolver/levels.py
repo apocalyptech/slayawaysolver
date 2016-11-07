@@ -1521,6 +1521,256 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s25_s13():
+
+        level = Level('Slayaway Camp 2.5, Scene 13 - A Flaming Felony', 6, 7,
+            0, 3,
+            5, 6)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_south(0, 1)
+
+        level.wall_north(0, 4)
+        level.wall_east(0, 4)
+        level.wall_east(0, 5)
+        level.wall_east(0, 6)
+
+        level.wall_east(2, 3)
+        level.wall_south(2, 3)
+
+        level.wall_box(4, 6)
+
+        level.set_hazard(5, 3)
+
+        level.add_cop(4, 0, DIR_E)
+        level.add_cop(4, 2, DIR_W)
+
+        level.add_victim(5, 1)
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
+    def s25_s14():
+
+        level = Level('Slayaway Camp 2.5, Scene 14 - Living Room Lacerations', 8, 8,
+            4, 4,
+            1, 4)
+
+        level.wall_box(0, 0)
+        level.wall_box(1, 0)
+        level.wall_box(3, 0)
+        level.wall_box(0, 2)
+        level.wall_box(2, 2)
+        level.wall_box(3, 3)
+        level.wall_box(2, 6)
+        level.wall_box(4, 7)
+        level.wall_box(7, 7)
+
+        level.wall_south(3, 5)
+        level.wall_east(6, 5)
+
+        level.add_victim(0, 1)
+        level.add_victim(7, 1)
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
+    def s25_s15():
+
+        level = Level('Slayaway Camp 2.5, Scene 15 - Kill the Camp Counsellor, Dale', 7, 8,
+            1, 3,
+            3, 0)
+
+        level.wall_south(0, 1)
+        level.wall_south(1, 1)
+        level.wall_south(2, 1)
+        level.wall_east(2, 1)
+        level.wall_north(2, 1)
+        level.wall_east(1, 0)
+
+        level.wall_east(4, 0)
+        level.wall_south(2, 2)
+        level.wall_east(5, 2)
+        level.wall_south(3, 4)
+        level.wall_south(4, 4)
+
+        level.wall_box(4, 3)
+
+        level.add_cabinet_ns(3, 1)
+        level.add_cabinet_ns(1, 6)
+        level.add_cabinet_ns(6, 6)
+
+        level.add_victim(2, 0)
+        level.add_victim(4, 4)
+        level.add_victim(1, 7)
+
+        return level
+
+    @staticmethod
+    def s25_d1():
+
+        level = Level('Slayaway Camp 2.5, Deleted Scene 1 - Squish and Scorch', 7, 7,
+            3, 2,
+            2, 3)
+
+        level.wall_east(0, 1)
+        level.wall_east(0, 2)
+        level.wall_south(1, 5)
+
+        level.wall_north(4, 1)
+        level.wall_east(4, 1)
+        level.wall_north(5, 2)
+        level.wall_east(5, 2)
+
+        level.wall_box(2, 1)
+        level.wall_box(2, 2)
+
+        level.set_hazard(0, 6)
+        level.set_hazard(6, 6)
+
+        level.add_cabinet_we(1, 0)
+        level.add_cabinet_we(5, 0)
+        level.add_cabinet_we(5, 5)
+
+        level.add_victim(0, 0)
+        level.add_victim(4, 0)
+        level.add_victim(6, 0)
+        level.add_victim(6, 1)
+
+        return level
+
+    @staticmethod
+    def s25_d2():
+
+        level = Level('Slayaway Camp 2.5, Deleted Scene 2 - Entrapment', 6, 6,
+            2, 5,
+            2, 1)
+
+        level.wall_box(5, 0)
+        level.wall_box(3, 1)
+        level.wall_box(5, 5)
+
+        level.wall_south(1, 0)
+        level.wall_east(3, 4)
+
+        level.add_cabinet_ns(2, 2)
+        level.add_cabinet_we(4, 3)
+
+        level.add_victim(1, 3)
+        level.add_victim(3, 3)
+
+        return level
+
+    @staticmethod
+    def s25_d3():
+
+        level = Level('Slayaway Camp 2.5, Deleted Scene 3 - Ringing Rampage', 8, 7,
+            3, 5,
+            1, 2)
+
+        level.wall_box(0, 0)
+        level.wall_box(2, 0)
+        level.wall_box(3, 6)
+        level.wall_box(5, 2)
+        level.wall_box(5, 3)
+
+        level.wall_east(2, 2)
+        level.wall_east(2, 3)
+        level.wall_south(2, 3)
+        level.wall_south(2, 4)
+
+        level.wall_north(0, 5)
+        level.wall_east(0, 5)
+        level.wall_east(0, 6)
+
+        level.wall_west(5, 0)
+        level.wall_south(5, 0)
+        level.wall_south(6, 0)
+        level.wall_south(7, 0)
+
+        level.wall_north(7, 4)
+        level.wall_west(7, 4)
+        level.wall_west(7, 5)
+        level.wall_west(7, 6)
+
+        level.add_phone_pair(2, 1, 1, 5)
+
+        level.add_cop(1, 0, DIR_S)
+        level.add_cop(5, 1, DIR_E)
+        level.add_victim(7, 1)
+
+        return level
+
+    @staticmethod
+    def s25_d4():
+
+        level = Level('Slayaway Camp 2.5, Deleted Scene 4 - Domino Effect', 6, 6,
+            2, 3,
+            1, 5)
+
+        level.wall_west(1, 0)
+        level.wall_east(3, 0)
+        
+        level.wall_west(1, 2)
+        level.wall_north(1, 2)
+
+        level.wall_east(3, 2)
+        level.wall_north(3, 2)
+
+        level.wall_box(5, 4)
+        level.wall_box(3, 5)
+
+        level.add_cabinet_ns(2, 2)
+        level.add_cabinet_ns(1, 3)
+        level.add_cabinet_ns(3, 3)
+        level.add_cabinet_ns(2, 4)
+        level.add_cabinet_ns(4, 4)
+
+        level.add_victim(1, 0)
+        level.add_victim(2, 1)
+        level.add_victim(4, 1)
+
+        return level
+
+    @staticmethod
+    def s25_d5():
+
+        level = Level('Slayaway Camp 2.5, Deleted Scene 5 - Faulty Floorboards', 8, 8,
+            4, 7,
+            4, 0)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_south(0, 1)
+
+        level.wall_box(0, 7)
+        level.wall_box(5, 0)
+        level.wall_box(3, 3)
+        level.wall_box(5, 3)
+
+        level.wall_west(2, 1)
+        level.wall_north(2, 1)
+        level.wall_south(6, 1)
+        level.wall_south(0, 4)
+        level.wall_south(6, 4)
+        level.wall_east(6, 4)
+        level.wall_east(3, 5)
+        level.wall_south(2, 6)
+        level.wall_east(5, 6)
+        level.wall_east(6, 7)
+
+        level.set_hazard(4, 4)
+
+        level.add_cop(3, 2, DIR_E)
+        level.add_cop(5, 2, DIR_W)
+        level.add_victim(4, 3)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,

@@ -65,6 +65,6 @@ if __name__ == '__main__':
             print('No solutions found in %d turns!' % (game.max_steps))
         else:
             game.print_winning_move_set(game.solution)
-        #for csum in game.checksums.keys():
+        #for csum in sorted(game.checksums.keys()):
         #    print(csum)
 
