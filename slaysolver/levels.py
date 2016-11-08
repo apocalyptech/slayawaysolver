@@ -2093,6 +2093,313 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s3_s10():
+
+        # There's two little cat kennels/hutches which you scare
+        # the cats into - I suspect that there's not actually a
+        # "cat door" kind of restriction, and it's just a visual
+        # representation, but there's no good way of knowing because
+        # it's impossible to get a situation in the level where
+        # it's possible to try and go into them, or scare a victim
+        # into them.  So we'll just assume there's nothing actually
+        # special about them.
+
+        level = Level('Slayaway Camp 3, Scene 10 - Kitten Corral', 8, 6,
+            4, 3,
+            4, 0)
+
+        level.wall_north(0, 3)
+        level.wall_east(0, 3)
+        level.wall_east(0, 4)
+        level.wall_east(0, 5)
+
+        level.wall_east(2, 1)
+        level.wall_west(4, 2)
+        level.wall_east(4, 2)
+        level.wall_east(6, 3)
+        level.wall_south(2, 4)
+
+        level.wall_west(3, 0)
+        level.wall_east(3, 0)
+        level.wall_west(5, 0)
+        level.wall_east(5, 0)
+
+        level.wall_west(4, 5)
+        level.wall_east(4, 5)
+        level.wall_west(4, 4)
+        level.wall_east(4, 4)
+        level.wall_north(4, 4)
+
+        level.add_cabinet_ns(1, 3)
+
+        level.add_cop(0, 0, DIR_S)
+        level.add_cop(7, 0, DIR_W)
+        level.add_cop(4, 1, DIR_S)
+        level.add_victim(2, 4)
+        level.add_victim(5, 4)
+        level.add_cat(3, 1)
+        level.add_cat(5, 1)
+
+        return level
+
+    @staticmethod
+    def s3_s11():
+
+        level = Level('Slayaway Camp 3, Scene 11 - Mimin\' Murder', 8, 9,
+            2, 3,
+            2, 4)
+
+        level.wall_box(0, 8)
+        level.wall_box(7, 1)
+        level.wall_box(7, 8)
+
+        level.wall_south(1, 0)
+        level.wall_south(5, 0)
+        level.wall_east(2, 1)
+        level.wall_east(0, 2)
+        level.wall_south(2, 2)
+        level.wall_south(4, 2)
+        level.wall_east(4, 3)
+        level.wall_south(6, 4)
+        level.wall_east(0, 5)
+        level.wall_south(1, 5)
+        level.wall_south(4, 5)
+        level.wall_east(4, 5)
+        level.wall_south(1, 6)
+        level.wall_south(3, 6)
+        level.wall_east(3, 6)
+        level.wall_south(7, 6)
+        level.wall_south(2, 7)
+        level.wall_south(5, 7)
+
+        level.add_victim(3, 4)
+
+        return level
+
+    @staticmethod
+    def s3_s12():
+
+        level = Level('Slayaway Camp 3, Scene 12 - SWAT Team', 6, 7,
+            2, 4,
+            4, 4,
+            8)
+
+        level.wall_box(1, 0)
+
+        level.wall_west(5, 0)
+        level.wall_west(5, 1)
+        level.wall_west(5, 2)
+        level.wall_south(5, 2)
+
+        level.wall_south(1, 2)
+        level.wall_south(2, 2)
+        level.wall_east(1, 5)
+
+        level.add_victim(4, 1)
+        level.add_victim(3, 3)
+        level.add_victim(0, 5)
+        level.add_victim(5, 6)
+
+        return level
+
+    @staticmethod
+    def s3_s13():
+
+        level = Level('Slayaway Camp 3, Scene 13 - Crispy Whiskers are Bad!', 6, 6,
+            2, 0,
+            4, 4)
+
+        level.wall_box(3, 0)
+        level.wall_box(5, 0)
+        level.wall_box(2, 5)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_south(0, 1)
+
+        level.wall_north(0, 3)
+        level.wall_east(0, 3)
+        level.wall_south(0, 4)
+        level.wall_south(1, 4)
+        level.wall_north(1, 4)
+        level.wall_east(1, 4)
+
+        level.wall_west(4, 5)
+        level.wall_north(4, 5)
+        level.wall_north(5, 5)
+
+        level.wall_east(1, 1)
+        level.wall_south(4, 1)
+        level.wall_south(2, 2)
+        level.wall_east(4, 3)
+
+        level.set_hazard(0, 2)
+        level.set_hazard(3, 5)
+
+        level.add_victim(4, 1)
+        level.add_cat(3, 2)
+
+        return level
+
+    @staticmethod
+    def s3_s14():
+
+        level = Level('Slayaway Camp 3, Scene 14 - Bridge Over Troubled Water', 7, 7,
+            0, 5,
+            2, 6)
+
+        level.wall_box(5, 2)
+        level.wall_box(5, 4)
+
+        level.wall_south(2, 0)
+        level.wall_east(3, 0)
+        level.wall_south(0, 2)
+        level.wall_south(3, 2)
+        level.wall_south(6, 2)
+        level.wall_south(0, 3)
+        level.wall_south(3, 3)
+
+        level.wall_west(3, 6)
+        level.wall_north(3, 6)
+        level.wall_north(4, 6)
+        level.wall_east(4, 6)
+
+        level.set_hazard(0, 3)
+        level.set_hazard(3, 3)
+        level.set_hazard(4, 3)
+        level.set_hazard(5, 3)
+        level.set_hazard(6, 3)
+
+        level.add_cabinet_we(1, 2)
+        level.add_cabinet_we(3, 5)
+
+        level.add_phone_pair(4, 2, 6, 2)
+
+        level.add_cop(6, 0, DIR_S)
+        level.add_cop(4, 5, DIR_N)
+        level.add_victim(6, 5)
+
+        return level
+
+    @staticmethod
+    def s3_s15():
+
+        level = Level('Slayaway Camp 3, Scene 15 - Cats Can\'t Get Wet!', 8, 7,
+            4, 6,
+            1, 4)
+
+        level.wall_west(1, 0)
+        level.wall_east(1, 0)
+        level.wall_west(1, 1)
+        level.wall_east(1, 1)
+        level.wall_south(1, 1)
+
+        level.wall_south(4, 1)
+        level.wall_east(6, 3)
+        level.wall_east(4, 4)
+
+        level.wall_box(4, 0)
+        level.wall_box(6, 0)
+        level.wall_box(2, 4)
+        level.wall_box(0, 6)
+        level.wall_box(7, 6)
+
+        level.set_hazard(5, 0)
+        for y in range(6):
+            level.set_hazard(0, y)
+            level.set_hazard(7, y)
+
+        level.add_victim(3, 5)
+        level.add_victim(4, 5)
+        level.add_cat(1, 5)
+        level.add_cat(5, 5)
+
+        return level
+
+    @staticmethod
+    def s3_s16():
+
+        # This one fudges a bit more than just the exit - to make this
+        # fully-accurate, we'd have to put a mine above the top victim,
+        # so she runs north and gets killed.  For the sake of this
+        # app I think it's better if I leave it as-is.
+
+        level = Level('Slayaway Camp 3, Scene 16 - Crazy Coaster', 8, 7,
+            6, 1,
+            2, 1)
+
+        level.wall_box(4, 0)
+        level.wall_box(0, 1)
+        level.wall_box(1, 1)
+        level.wall_box(3, 1)
+        level.wall_box(0, 6)
+
+        level.wall_west(6, 6)
+        level.wall_north(6, 6)
+        level.wall_west(7, 5)
+        level.wall_north(7, 5)
+
+        level.wall_west(2, 2)
+        level.wall_east(2, 2)
+        level.wall_east(4, 2)
+        level.wall_east(3, 3)
+        level.wall_east(2, 5)
+        level.wall_north(4, 5)
+        level.wall_north(5, 5)
+
+        level.set_mine(0, 4)
+        level.set_mine(2, 1)
+
+        level.add_cabinet_ns(1, 3)
+        level.add_cabinet_ns(6, 3)
+        level.add_cabinet_ns(7, 3)
+
+        level.add_victim(2, 0)
+        level.add_victim(4, 4)
+        level.add_victim(6, 4)
+
+        return level
+
+    @staticmethod
+    def s3_d1():
+
+        # Current highlighting can't actually show that the exit is below one
+        # of the gravestones (cabinets).  Whatever.
+
+        level = Level('Slayaway Camp 3, Deleted Scene 1 - Poe\'s Puzzle', 8, 8,
+            0, 0,
+            5, 3)
+
+        level.wall_west(6, 0)
+        level.wall_south(6, 0)
+        level.wall_south(7, 0)
+
+        level.wall_west(6, 7)
+        level.wall_north(6, 7)
+        level.wall_north(7, 7)
+
+        level.add_cabinet_we(1, 1)
+        level.add_cabinet_we(3, 1)
+        level.add_cabinet_ns(5, 1)
+        level.add_cabinet_we(7, 1)
+
+        level.add_cabinet_ns(1, 3)
+        level.add_cabinet_ns(3, 3)
+        level.add_cabinet_ns(5, 3)
+        level.add_cabinet_ns(7, 3)
+
+        level.add_cabinet_we(1, 5)
+        level.add_cabinet_ns(3, 5)
+        level.add_cabinet_we(5, 5)
+        level.add_cabinet_ns(7, 5)
+
+        level.add_victim(2, 3)
+        level.add_victim(6, 4)
+        level.add_victim(2, 6)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,

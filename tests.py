@@ -1175,6 +1175,227 @@ class LevelTests(unittest.TestCase):
             DIR_S,
         ])
 
+    def test_s3_s10(self):
+        game = Game(levels.get_level('s3_s10'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_N,
+            DIR_W,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_S,
+            DIR_E,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_W,
+            DIR_N,
+        ])
+
+    def test_s3_s11(self):
+        game = Game(levels.get_level('s3_s11'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_W,
+        ])
+
+    def test_s3_s12(self):
+        game = Game(levels.get_level('s3_s12'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+        ])
+
+    def test_s3_s13(self):
+        game = Game(levels.get_level('s3_s13'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+        ])
+
+    def test_s3_s14(self):
+        game = Game(levels.get_level('s3_s14'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_W,
+            DIR_W,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+        ])
+
+    def test_s3_s15(self):
+        game = Game(levels.get_level('s3_s15'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_W,
+            DIR_S,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+        ])
+
+    def test_s3_s16(self):
+        game = Game(levels.get_level('s3_s16'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_W,
+            DIR_E,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+        ])
+
+    def test_s3_d1(self):
+        game = Game(levels.get_level('s3_d1'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_E,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_N,
+            DIR_E,
+            DIR_W,
+            DIR_N,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_N,
+        ])
+
     def test_s6_d4(self):
         game = Game(levels.get_level('s6_d4'))
         game.solve()

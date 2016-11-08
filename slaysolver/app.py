@@ -626,7 +626,7 @@ class Level(object):
             else:
                 return self.cells[y][x-1]
         if direction == DIR_E:
-            if x == 8:
+            if x == self.width-1:
                 return None
             else:
                 return self.cells[y][x+1]
@@ -636,13 +636,19 @@ class Level(object):
             else:
                 return self.cells[y-1][x]
         if direction == DIR_S:
-            if y == 8:
+            if y == self.height-1:
                 return None
             else:
                 return self.cells[y+1][x]
 
     def move_player(self, direction):
+
         while True:
+
+            # Reset all the victims' "occupied" flags first.
+            for victim in self.victims:
+                victim.occupied = False
+
             cur_cell = self.player.cell
             if cur_cell.exit and self.num_alive() == 0:
                 self.won = True
@@ -677,10 +683,6 @@ class Level(object):
                 continue
             if adj_cell.victim is not None:
                 adj_cell.victim.scare(direction)
-
-        # Reset all the victims' "occupied" flags
-        for victim in self.victims:
-            victim.occupied = False
 
         # Do one more check here, to see if we've won.  It's possible
         # in at least one level to scare a victim into a hole on the
@@ -1068,7 +1070,7 @@ class Game(object):
             print('')
             self.store_winning_moves(display_moves=True)
         elif self.alive == False:
-            print('You have died.')
+            print('You have lost.')
         else:
             if self.max_steps is not None:
                 print('Steps: %s/%s' % (self.cur_steps, self.max_steps))
