@@ -65,7 +65,10 @@ if __name__ == '__main__':
     else:
         game.solve()
         if game.solution is None:
-            print('No solutions found in %d turns!' % (game.max_steps))
+            if game.max_steps is None:
+                print('No solutions found!')
+            else:
+                print('No solutions found in %d turns!' % (game.max_steps))
         else:
             game.print_winning_move_set(game.solution)
         #for csum in sorted(game.checksums.keys()):

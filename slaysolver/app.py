@@ -509,8 +509,6 @@ class Cop(Victim):
     def apply_clone(self, newobj):
         super(Cop, self).apply_clone(newobj)
         self.facing = newobj.facing
-        if self.alive:
-            self.update_facing_vars()
 
 class Swat(Cop):
 
@@ -1112,6 +1110,9 @@ class State(object):
 
         for (saved, real) in zip(self.mines, self.level.mines):
             real.apply_clone(saved)
+
+        # Don't do this until the end
+        self.level.update_all_facing_vars()
 
     def checksum(self):
 

@@ -3355,6 +3355,103 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s5_s02():
+
+        level = Level('Slayaway Camp 5, Scene 2 - Sandy SWAT Sneak', 6, 6,
+            1, 2,
+            0, 0)
+
+        level.wall_west(4, 0)
+        level.wall_south(4, 0)
+        level.wall_south(5, 0)
+
+        level.wall_box(5, 4)
+
+        level.wall_south(0, 1)
+        level.wall_south(1, 3)
+        level.wall_east(0, 5)
+        level.wall_east(3, 3)
+
+        level.add_swat(1, 0, DIR_E)
+        level.add_swat(5, 2, DIR_S)
+        level.add_victim(4, 1)
+
+        return level
+
+    @staticmethod
+    def s5_s03():
+
+        level = Level('Slayaway Camp 5, Scene 3 - Bloodbath Beach', 6, 6,
+            5, 2,
+            0, 3)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.wall_west(4, 0)
+        level.wall_west(4, 1)
+        level.wall_south(4, 1)
+        level.wall_south(5, 1)
+
+        level.wall_box(0, 4)
+        level.wall_box(5, 4)
+
+        level.wall_north(2, 3)
+        level.wall_west(2, 3)
+        level.wall_east(2, 3)
+        level.wall_west(2, 4)
+        level.wall_east(2, 4)
+        level.wall_south(2, 4)
+
+        level.set_hazard(3, 5)
+
+        level.escape_north(3)
+        level.escape_west(5)
+
+        level.add_swat(4, 3, DIR_W)
+        level.add_victim(1, 1)
+        level.add_victim(3, 4)
+        level.add_victim(2, 5)
+
+        return level
+
+    @staticmethod
+    def s5_s04():
+
+        level = Level('Slayaway Camp 5, Scene 4 - Sinkhole of Doom', 8, 8,
+            4, 1,
+            1, 4)
+
+        level.wall_box(0, 1)
+        level.wall_box(0, 7)
+        level.wall_box(7, 0)
+
+        level.wall_west(5, 7)
+        level.wall_north(5, 7)
+        level.wall_north(6, 7)
+        level.wall_north(7, 7)
+
+        level.wall_south(4, 2)
+        level.wall_south(5, 2)
+        level.wall_east(6, 3)
+        level.wall_east(6, 4)
+        level.wall_east(2, 6)
+
+        level.set_hazard(2, 3)
+
+        level.add_swat(6, 0, DIR_W)
+        level.add_swat(6, 2, DIR_S)
+        level.add_cop(1, 3, DIR_N)
+        level.add_victim(0, 0)
+        level.add_victim(3, 2)
+        level.add_victim(5, 3)
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,
