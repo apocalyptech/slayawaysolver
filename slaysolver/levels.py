@@ -2673,6 +2673,84 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s4_s04():
+
+        level = Level('Slayaway Camp 4, Scene 4 - Cafeteria Calamity', 8, 7,
+            0, 3,
+            0, 0)
+
+        level.wall_box(7, 6)
+
+        level.wall_north(0, 5)
+        level.wall_east(1, 6)
+
+        level.wall_north(1, 1)
+        level.wall_east(1, 1)
+        level.wall_east(1, 2)
+
+        level.wall_north(3, 1)
+        level.wall_west(3, 1)
+        level.wall_east(3, 1)
+        level.wall_west(3, 2)
+        level.wall_east(3, 2)
+
+        level.wall_west(5, 1)
+        level.wall_east(5, 1)
+        level.wall_west(5, 2)
+        level.wall_east(5, 2)
+
+        level.short_wall_south(0, 0)
+
+        level.short_wall_west(2, 3)
+        level.short_wall_south(2, 3)
+        level.short_wall_south(3, 3)
+        level.short_wall_south(4, 3)
+        level.short_wall_south(5, 3)
+        level.short_wall_east(5, 3)
+
+        level.short_wall_east(6, 4)
+        level.short_wall_south(6, 4)
+        level.short_wall_west(6, 5)
+
+        level.set_mine(2, 0)
+        level.set_mine(4, 0)
+        level.set_mine(5, 0)
+
+        level.add_victim(2, 3)
+        level.add_victim(3, 4)
+        level.add_victim(5, 3)
+
+        return level
+
+    @staticmethod
+    def s4_s05():
+
+        level = Level('Slayaway Camp 4, Scene 5 - Principal\'s Office', 6, 6,
+            4, 5,
+            0, 3)
+
+        level.wall_box(5, 0)
+        level.wall_box(0, 5)
+
+        level.wall_south(0, 2)
+        level.wall_south(1, 2)
+        level.wall_east(1, 4)
+        level.wall_south(3, 4)
+        level.wall_east(4, 3)
+        level.wall_south(4, 3)
+
+        level.escape_north(2)
+        level.escape_north(3)
+        level.escape_west(1)
+        level.escape_west(2)
+
+        level.add_victim(3, 0)
+        level.add_victim(2, 1)
+        level.add_victim(2, 2)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,

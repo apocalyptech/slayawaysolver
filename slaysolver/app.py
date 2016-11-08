@@ -33,6 +33,7 @@
 #   * Hazards (fire, water, holes - all just considered a "hazard")
 #   * Telephones
 #   * Mines
+#   * Escapes
 #
 # Stuff not yet implemented:
 #   * SWAT (though should be able to extend Police pretty easily)
@@ -61,6 +62,7 @@
 #   | - Bookcase/Cabinet which can be knocked over west or east
 #   = - Bookcase/Cabinet which can be knocked over north or south
 #   X - Bookcase/Cabinet which has been knocked over
+#   ^>V< - Escapes (only along map edges)
 
 import sys
 import colorama
@@ -100,6 +102,7 @@ class Cell(object):
         self.mine = False
         self.walls = [False]*4
         self.short_walls = [False]*4
+        self.escapes = [False]*4
         self.victim = None
         self.obstacle = None
         self.reticles = {}
@@ -361,6 +364,8 @@ class Victim(object):
 
         while True:
             cur_cell = self.cell
+            if cur_cell.escapes[direction]:
+                raise PlayerLose('Victim escaped!')
             if direction not in self.level.possible_moves(from_cell=cur_cell):
                 break
             next_cell = self.level.get_cell_relative_cell(cur_cell, direction)
@@ -609,6 +614,18 @@ class Level(object):
         if y > 0:
             self.cells[y-1][x].short_walls[DIR_S] = True
 
+    def escape_north(self, x):
+        self.cells[0][x].escapes[DIR_N] = True
+
+    def escape_south(self, x):
+        self.cells[self.height-1][x].escapes[DIR_S] = True
+
+    def escape_west(self, y):
+        self.cells[y][0].escapes[DIR_W] = True
+
+    def escape_east(self, y):
+        self.cells[y][self.width-1].escapes[DIR_E] = True
+
     def wall_box(self, x, y):
         self.wall_north(x, y)
         self.wall_south(x, y)
@@ -749,8 +766,12 @@ class Level(object):
                         color = colorama.Back.YELLOW
                     else:
                         color = colorama.Back.RESET
-                if row.walls[DIR_N] or row.short_walls[DIR_N]:
-                    if row.walls[DIR_W] or row.short_walls[DIR_W]:
+                if row.escapes[DIR_N]:
+                    sys.stdout.write(color + '^^^')
+                elif row.walls[DIR_N] or row.short_walls[DIR_N]:
+                    if row.escapes[DIR_W]:
+                        sys.stdout.write(color + '<')
+                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
                         if row.short_walls[DIR_N] and row.short_walls[DIR_W]:
                             extra = colorama.Fore.RED
                         else:
@@ -770,7 +791,9 @@ class Level(object):
                         sys.stdout.write(color + extra + '↑')
                     else:
                         sys.stdout.write(color + extra + '▀')
-                    if row.walls[DIR_E] or row.short_walls[DIR_E]:
+                    if row.escapes[DIR_E]:
+                        sys.stdout.write(color + '>')
+                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_N] and row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
                         else:
@@ -783,7 +806,9 @@ class Level(object):
                             extra = ''
                         sys.stdout.write(color + extra + '▀')
                 else:
-                    if row.walls[DIR_W] or row.short_walls[DIR_W]:
+                    if row.escapes[DIR_W]:
+                        sys.stdout.write(color + '<')
+                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
                         if row.short_walls[DIR_W]:
                             extra = colorama.Fore.RED
                         else:
@@ -795,7 +820,9 @@ class Level(object):
                         sys.stdout.write(color + '↑')
                     else:
                         sys.stdout.write(color + ' ')
-                    if row.walls[DIR_E] or row.short_walls[DIR_E]:
+                    if row.escapes[DIR_E]:
+                        sys.stdout.write(color + '>')
+                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
                         else:
@@ -815,7 +842,9 @@ class Level(object):
                         color = colorama.Back.YELLOW
                     else:
                         color = colorama.Back.RESET
-                if row.walls[DIR_W] or row.short_walls[DIR_W]:
+                if row.escapes[DIR_W]:
+                    sys.stdout.write(color + '<')
+                elif row.walls[DIR_W] or row.short_walls[DIR_W]:
                     if row.short_walls[DIR_W]:
                         extra = colorama.Fore.RED
                     else:
@@ -856,7 +885,9 @@ class Level(object):
                 else:
                     sys.stdout.write(color + ' ')
 
-                if row.walls[DIR_E] or row.short_walls[DIR_E]:
+                if row.escapes[DIR_E]:
+                    sys.stdout.write(color + '>')
+                elif row.walls[DIR_E] or row.short_walls[DIR_E]:
                     if row.short_walls[DIR_E]:
                         extra = colorama.Fore.RED
                     else:
@@ -882,8 +913,12 @@ class Level(object):
                         color = colorama.Back.YELLOW
                     else:
                         color = colorama.Back.RESET
-                if row.walls[DIR_S] or row.short_walls[DIR_S]:
-                    if row.walls[DIR_W] or row.short_walls[DIR_W]:
+                if row.escapes[DIR_S]:
+                    sys.stdout.write(color + 'VVV')
+                elif row.walls[DIR_S] or row.short_walls[DIR_S]:
+                    if row.escapes[DIR_W]:
+                        sys.stdout.write(color + '<')
+                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
                         if row.short_walls[DIR_S] and row.short_walls[DIR_W]:
                             extra = colorama.Fore.RED
                         else:
@@ -903,7 +938,9 @@ class Level(object):
                         sys.stdout.write(color + extra + '↓')
                     else:
                         sys.stdout.write(color + extra + '▄')
-                    if row.walls[DIR_E] or row.short_walls[DIR_E]:
+                    if row.escapes[DIR_E]:
+                        sys.stdout.write(color + '>')
+                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_S] and row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
                         else:
@@ -916,7 +953,9 @@ class Level(object):
                             extra = ''
                         sys.stdout.write(color + extra + '▄')
                 else:
-                    if row.walls[DIR_W] or row.short_walls[DIR_W]:
+                    if row.escapes[DIR_W]:
+                        sys.stdout.write(color + '<')
+                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
                         if row.short_walls[DIR_W]:
                             extra = colorama.Fore.RED
                         else:
@@ -928,7 +967,9 @@ class Level(object):
                         sys.stdout.write(color + '↓')
                     else:
                         sys.stdout.write(color + ' ')
-                    if row.walls[DIR_E] or row.short_walls[DIR_E]:
+                    if row.escapes[DIR_E]:
+                        sys.stdout.write(color + '>')
+                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
                         if row.short_walls[DIR_E]:
                             extra = colorama.Fore.RED
                         else:
