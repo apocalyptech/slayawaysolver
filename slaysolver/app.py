@@ -14,7 +14,7 @@
 #  1) Once we find a solution, the app will only look for shorter
 #     solutions
 #  2) A log of all seen states is recorded while looping through.
-#     a branch will only be exlored if its state is either not
+#     A branch will only be explored if its state is either not
 #     seen already, or if the seen state occurs at an earlier
 #     point in the tree.
 #
@@ -23,7 +23,7 @@
 # comparing checksums of the seen states, a max_step of 17 can take
 # many tens of seconds, but returns nearly instantly when pruning.
 #
-# Currently the only objects actually supported are:
+# Currently the objects supported are:
 #   * Walls
 #   * Short Walls
 #   * Bookcases (though I call them Cabinets)
@@ -39,6 +39,7 @@
 #   * Light Switches (level lights and some Police interaction are
 #     theoretically in here, though)
 #   * Electric Walls
+#   * Anything beyond Slayaway Camp 7
 #
 # This can be run interactively with the -i/--interactive flag.
 # While running interactive, 'q' will quit, 'u' will undo,
@@ -84,9 +85,9 @@ DIR_CMD = {
 def rev_dir(direction):
     return (direction+2)%4
 
-class PlayerDeath(Exception):
+class PlayerLose(Exception):
     """
-    Custom exception to handle player deaths
+    Custom exception to handle player loss
     """
 
 class Cell(object):
@@ -406,7 +407,7 @@ class Cat(Victim):
         self.scare_on_lure = True
 
     def die(self):
-        raise PlayerDeath('Cat was killed!')
+        raise PlayerLose('Cat was killed!')
 
     def checksum(self):
         return self.cell.checksum()
@@ -451,7 +452,7 @@ class Cop(Victim):
 
                 # Check to see if the player is in our reticle.
                 if rel_cell == self.level.player.cell:
-                    raise PlayerDeath('Apprehended by Police')
+                    raise PlayerLose('Apprehended by Police')
 
     def die(self):
         super(Cop, self).die()
@@ -460,7 +461,7 @@ class Cop(Victim):
 
     def assault(self, from_direction):
         if self.level.lights and from_direction == self.facing:
-            raise PlayerDeath('Apprehended by Police')
+            raise PlayerLose('Apprehended by Police')
         else:
             self.die()
             return True
@@ -664,15 +665,15 @@ class Level(object):
                 break
             self.player.cell = next_cell
             if next_cell.hazard:
-                raise PlayerDeath('Fell into a hazard')
+                raise PlayerLose('Fell into a hazard')
             if next_cell.mine:
-                raise PlayerDeath('Walked into a mine')
+                raise PlayerLose('Walked into a mine')
 
         # If we landed on a reticle, we're dead
         for reticle in self.player.cell.get_reticles():
             if reticle.reticles_need_lights and not self.lights:
                 continue
-            raise PlayerDeath('Shot/Apprehended by the police')
+            raise PlayerLose('Shot/Apprehended by the police')
 
         # check for adjacent victims to scare
         for direction in DIRS:
@@ -1114,7 +1115,7 @@ class Game(object):
                 if direction in self.level.possible_moves():
                     try:
                         self.move(DIR_CMD[cmd])
-                    except PlayerDeath as e:
+                    except PlayerLose as e:
                         self.alive = False
                         report_str = 'Player Death: %s' % (e)
                         print('-'*len(report_str))
@@ -1136,5 +1137,5 @@ class Game(object):
                     else:
                         self.solve()
                         self.undo()
-            except PlayerDeath:
+            except PlayerLose:
                 self.undo()
