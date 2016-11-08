@@ -2563,6 +2563,82 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s4_s01():
+
+        level = Level('Slayaway Camp 4, Scene 1 - Short Walls Don\'t Hide You!', 6, 6,
+            0, 3,
+            0, 0)
+
+        level.wall_south(0, 1)
+        level.wall_south(1, 1)
+        level.wall_east(2, 0)
+
+        level.wall_west(4, 3)
+        level.wall_north(4, 3)
+        level.wall_east(4, 3)
+        level.wall_west(4, 4)
+        level.wall_east(4, 4)
+        level.wall_west(4, 5)
+        level.wall_east(4, 5)
+
+        level.wall_box(0, 2)
+        level.wall_box(0, 4)
+
+        level.short_wall_east(1, 2)
+        level.short_wall_east(1, 3)
+        level.short_wall_east(1, 4)
+
+        level.short_wall_south(3, 3)
+
+        level.add_victim(2, 3)
+
+        return level
+
+    @staticmethod
+    def s4_s02():
+
+        level = Level('Slayaway Camp 4, Scene 2 - Antagonizing the Enemy', 6, 7,
+            0, 5,
+            4, 2)
+
+        level.wall_south(0, 0)
+        level.wall_west(1, 1)
+        level.wall_south(1, 1)
+        level.wall_south(2, 1)
+        level.wall_east(2, 1)
+        level.wall_east(2, 0)
+
+        level.wall_west(4, 0)
+        level.wall_west(4, 1)
+        level.wall_south(4, 1)
+        level.wall_west(5, 2)
+        level.wall_north(4, 3)
+        level.wall_west(4, 3)
+        level.wall_south(4, 3)
+        level.wall_west(5, 4)
+        level.wall_south(5, 4)
+
+        level.wall_box(0, 6)
+        level.wall_box(5, 6)
+
+        level.wall_south(2, 3)
+        level.short_wall_south(1, 3)
+        level.short_wall_east(2, 5)
+
+        level.add_phone_pair(1, 6, 3, 0)
+
+        level.set_mine(5, 5)
+
+        level.add_cabinet_we(3, 4)
+
+        level.add_cop(1, 2, DIR_W)
+
+        level.add_victim(0, 1)
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,

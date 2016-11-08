@@ -442,7 +442,7 @@ class Cop(Victim):
 
         cur_cell = self.cell
         if cur_cell is not None:
-            if cur_cell.walls[self.facing]:
+            if cur_cell.walls[self.facing] or cur_cell.short_walls[self.facing]:
                 return
 
             rel_cell = self.level.get_cell_relative_cell(cur_cell, self.facing)
