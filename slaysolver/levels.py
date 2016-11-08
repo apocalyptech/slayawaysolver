@@ -4,18 +4,38 @@
 import re
 from slaysolver.app import Level, DIR_N, DIR_S, DIR_E, DIR_W
 
+levelre = re.compile('^s(\d+)_([sd])(\d+)$')
+def level_sort_key(levelname):
+    match = levelre.match(levelname)
+    if not match:
+        return 'ZZZ'
+    movie = int(match.group(1))
+    leveltype = match.group(2)
+    levelnum = int(match.group(3))
+
+    # This here to handle 2.5
+    if movie != 25:
+        movie *= 10
+
+    # Sort regular levels before deleted scenes
+    if leveltype == 's':
+        typekey = 1
+    else:
+        typekey = 2
+
+    return '%03d_%d_%02d' % (movie, typekey, levelnum)
+
 class Levels(object):
 
     def __init__(self):
         self.levels = {}
         self.level_names = []
-        levelre = re.compile('^s\d+_[sd]\d+$')
         for (name, method) in Levels.__dict__.items():
             match = levelre.match(name)
             if match:
                 self.level_names.append(name)
                 self.levels[name] = method.__func__
-        self.level_names.sort()
+        self.level_names.sort(key=lambda name: level_sort_key(name))
 
     def get_level(self, name):
         return self.levels[name]()
