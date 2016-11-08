@@ -55,6 +55,7 @@
 #   V - Victim
 #   C - Cat
 #   L - Police (will use ←↑→↓ to show which way they're facing)
+#   S - SWAT Cop (will use ←↑→↓ to show which way they're facing)
 #   O - Police targeting reticle
 #   H - Hazard
 #   M - Mine
@@ -316,7 +317,8 @@ class Victim(object):
 
     T_VICTIM = 0
     T_COP = 1
-    T_CAT = 2
+    T_SWAT = 2
+    T_CAT = 3
 
     def __init__(self, level):
         self.cell = None
@@ -452,6 +454,9 @@ class Cop(Victim):
             reticle.clear_reticle(self)
         self.reticles = []
 
+        if not self.alive:
+            return
+
         cur_cell = self.cell
         if cur_cell is not None:
             if cur_cell.walls[self.facing] or cur_cell.short_walls[self.facing]:
@@ -478,6 +483,17 @@ class Cop(Victim):
             self.die()
             return True
 
+    def active(self):
+        """
+        Used in the context of a targetting reticle - are we active?
+        """
+        if self.level.lights:
+            return True
+        elif self.reticles_need_lights:
+            return False
+        else:
+            return True
+
     def checksum(self):
         if self.alive:
             return '%s;f%d' % (self.cell.checksum(), self.facing)
@@ -495,6 +511,61 @@ class Cop(Victim):
         self.facing = newobj.facing
         if self.alive:
             self.update_facing_vars()
+
+class Swat(Cop):
+
+    def __init__(self, level, facing=DIR_N):
+        super(Swat, self).__init__(level, facing)
+        self.type = Victim.T_SWAT
+        self.reticles_need_lights = False
+
+    def update_facing_vars(self, facing=None):
+
+        if facing is not None:
+            self.facing = facing
+
+        for reticle in self.reticles:
+            reticle.clear_reticle(self)
+        self.reticles = []
+
+        if not self.alive:
+            return
+
+        cur_cell = self.cell
+        if cur_cell is not None:
+            while True:
+                if cur_cell.walls[self.facing]:
+                    break
+
+                rel_cell = self.level.get_cell_relative_cell(cur_cell, self.facing)
+                if rel_cell:
+                    if rel_cell.victim or rel_cell.obstacle:
+                        break
+                    self.reticles.append(rel_cell)
+                    rel_cell.set_reticle(self)
+
+                    # Check to see if the player is in our reticle.
+                    if rel_cell == self.level.player.cell:
+                        raise PlayerLose('Shot by SWAT Cop')
+
+                    cur_cell = rel_cell
+
+                else:
+                    break
+
+    def assault(self, from_direction):
+        if self.level.lights:
+            raise PlayerLose('Killed by SWAT Cop')
+        elif from_direction == self.facing:
+            raise PlayerLose('Shot by SWAT Cop')
+        else:
+            self.die()
+
+    def clone(self):
+        newobj = Swat(self.level, self.facing)
+        newobj.alive = self.alive
+        newobj.cell = self.cell.clone()
+        return newobj
 
 class Player(object):
     """
@@ -554,6 +625,9 @@ class Level(object):
 
     def add_cop(self, x, y, direction):
         self.add_victim_obj(x, y, Cop(self, direction))
+
+    def add_swat(self, x, y, direction):
+        self.add_victim_obj(x, y, Swat(self, direction))
 
     def add_obstacle(self, x, y, obstacle):
         self.obstacles.append(obstacle)
@@ -676,8 +750,19 @@ class Level(object):
 
             cur_cell = self.player.cell
             if cur_cell.exit and self.num_alive() == 0:
-                self.won = True
-                return True
+                # Before we get too excited about winning, make sure there's
+                # not an active reticle where we are.  If there IS then I
+                # guess just continue to move through; not quite sure how
+                # that would work in the game, honestly.
+                # TODO: Find a level to answer this question: ^
+                keep_moving = False
+                if cur_cell.has_reticles():
+                    for reticle in cur_cell.get_reticles():
+                        if reticle.active():
+                            keep_moving = True
+                if not keep_moving:
+                    self.won = True
+                    return True
             if direction not in self.possible_moves(from_cell=cur_cell):
                 break
             next_cell = self.get_cell_relative_cell(cur_cell, direction)
@@ -708,6 +793,12 @@ class Level(object):
                 continue
             if adj_cell.victim is not None:
                 adj_cell.victim.scare(direction)
+
+        # Loop through victims and update their 'facing' parameters;
+        # this is only actually important for SWAT Cops (to make sure
+        # that their reticles get updated), but it won't hurt the
+        # others.
+        self.update_all_facing_vars()
 
         # Do one more check here, to see if we've won.  It's possible
         # in at least one level to scare a victim into a hole on the
@@ -751,6 +842,14 @@ class Level(object):
             if victim.required_to_kill and victim.alive:
                 alive += 1
         return alive
+
+    def update_all_facing_vars(self):
+        """
+        Method to loop through and update all victim facing vars.  Only
+        really important for SWAT, but whatever.
+        """
+        for victim in self.victims:
+            victim.update_facing_vars()
 
     def print(self):
         print(self.desc)
@@ -864,6 +963,8 @@ class Level(object):
                 elif row.victim:
                     if row.victim.type == Victim.T_COP:
                         sys.stdout.write(color + 'L')
+                    elif row.victim.type == Victim.T_SWAT:
+                        sys.stdout.write(color + 'S')
                     elif row.victim.type == Victim.T_CAT:
                         sys.stdout.write(color + 'C')
                     else:
@@ -1084,6 +1185,7 @@ class Game(object):
             self.pop_state()
             self.cur_steps -= 1
             self.level.won = False
+            self.level.update_all_facing_vars()
         else:
             print('No undo states!')
 
@@ -1133,6 +1235,7 @@ class Game(object):
 
     def interactive(self):
         colorama.init(autoreset=True)
+        self.level.update_all_facing_vars()
         while True:
             self.print()
             if self.level.won:
@@ -1170,7 +1273,7 @@ class Game(object):
                         print(report_str)
                         print('-'*len(report_str))
 
-    def solve(self):
+    def solve_recurs(self):
         (state, new_checksum) = self.get_state()
         if not new_checksum:
             return
@@ -1183,7 +1286,16 @@ class Game(object):
                     if self.step_limit():
                         self.undo()
                     else:
-                        self.solve()
+                        self.solve_recurs()
                         self.undo()
             except PlayerLose:
                 self.undo()
+
+    def solve(self):
+        """
+        Frontend for solving - mostly just to make sure that SWAT
+        reticles are updated properly after all map components have
+        been added.
+        """
+        self.level.update_all_facing_vars()
+        return self.solve_recurs()

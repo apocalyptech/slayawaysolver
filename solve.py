@@ -48,7 +48,10 @@ if __name__ == '__main__':
         }
         game.solve()
         if game.solution is None:
-            print('No solutions found in %d turns!' % (game.max_steps))
+            if game.max_steps is None:
+                print('No solutions found!')
+            else:
+                print('No solutions found in %d turns!' % (game.max_steps))
         else:
             print('')
             print('    def test_%s(self):' % (args.level))
