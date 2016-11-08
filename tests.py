@@ -1371,7 +1371,6 @@ class LevelTests(unittest.TestCase):
             DIR_W,
             DIR_N,
             DIR_E,
-            DIR_N,
         ])
 
     def test_s3_d1(self):

@@ -2339,44 +2339,51 @@ class Levels(object):
     @staticmethod
     def s3_s16():
 
-        # This one fudges a bit more than just the exit - to make this
-        # fully-accurate, we'd have to put a mine above the top victim,
-        # so she runs north and gets killed.  For the sake of this
-        # app I think it's better if I leave it as-is.
+        # More exit-fudging here.
 
-        level = Level('Slayaway Camp 3, Scene 16 - Crazy Coaster', 8, 7,
-            6, 1,
-            2, 1)
+        level = Level('Slayaway Camp 3, Scene 16 - Crazy Coaster', 8, 8,
+            6, 2,
+            2, 6)
 
-        level.wall_box(4, 0)
-        level.wall_box(0, 1)
-        level.wall_box(1, 1)
-        level.wall_box(3, 1)
-        level.wall_box(0, 6)
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(3, 0)
+        level.wall_south(5, 0)
+        level.wall_south(6, 0)
+        level.wall_south(7, 0)
+        level.wall_west(2, 0)
+        level.wall_east(2, 0)
 
-        level.wall_west(6, 6)
-        level.wall_north(6, 6)
-        level.wall_west(7, 5)
-        level.wall_north(7, 5)
+        level.wall_box(4, 1)
+        level.wall_box(0, 2)
+        level.wall_box(1, 2)
+        level.wall_box(3, 2)
+        level.wall_box(0, 7)
 
-        level.wall_west(2, 2)
-        level.wall_east(2, 2)
-        level.wall_east(4, 2)
-        level.wall_east(3, 3)
-        level.wall_east(2, 5)
-        level.wall_north(4, 5)
-        level.wall_north(5, 5)
+        level.wall_west(6, 7)
+        level.wall_north(6, 7)
+        level.wall_west(7, 6)
+        level.wall_north(7, 6)
 
-        level.set_mine(0, 4)
-        level.set_mine(2, 1)
+        level.wall_west(2, 3)
+        level.wall_east(2, 3)
+        level.wall_east(4, 3)
+        level.wall_east(3, 4)
+        level.wall_east(2, 6)
+        level.wall_north(4, 6)
+        level.wall_north(5, 6)
 
-        level.add_cabinet_ns(1, 3)
-        level.add_cabinet_ns(6, 3)
-        level.add_cabinet_ns(7, 3)
+        level.set_hazard(2, 0)
+        level.set_mine(0, 5)
+        level.set_mine(2, 2)
 
-        level.add_victim(2, 0)
-        level.add_victim(4, 4)
-        level.add_victim(6, 4)
+        level.add_cabinet_ns(1, 4)
+        level.add_cabinet_ns(6, 4)
+        level.add_cabinet_ns(7, 4)
+
+        level.add_victim(2, 1)
+        level.add_victim(4, 5)
+        level.add_victim(6, 5)
 
         return level
 
