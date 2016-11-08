@@ -365,7 +365,8 @@ class Victim(object):
                 break
             next_cell = self.level.get_cell_relative_cell(cur_cell, direction)
             if next_cell.obstacle:
-                if lure_object is None or next_cell.obstacle != lure_object:
+                if self.can_hit(next_cell.obstacle) and (lure_object is None or
+                        next_cell.obstacle != lure_object):
                     next_cell.obstacle.hit(direction)
                 break
             if next_cell.victim:
@@ -380,6 +381,9 @@ class Victim(object):
                 break
 
         return False
+
+    def can_hit(self, obstacle):
+        return True
 
     def checksum(self):
         if self.alive:
@@ -405,6 +409,9 @@ class Cat(Victim):
         self.type = Victim.T_CAT
         self.required_to_kill = False
         self.scare_on_lure = True
+
+    def can_hit(self, obstacle):
+        return False
 
     def die(self):
         raise PlayerLose('Cat was killed!')
