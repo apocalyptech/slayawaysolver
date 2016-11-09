@@ -4256,6 +4256,41 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s6_s08():
+
+        level = Level('Slayaway Camp 6, Scene 8 - The Burn Ward', 8, 8,
+            3, 4,
+            7, 2)
+
+        level.wall_north(0, 5)
+        level.wall_east(0, 5)
+        level.wall_south(1, 5)
+        level.wall_east(0, 6)
+        level.wall_east(0, 7)
+
+        level.wall_box(7, 0)
+        level.wall_box(7, 3)
+        level.wall_box(5, 7)
+
+        level.wall_south(4, 0)
+        level.wall_east(4, 4)
+        level.short_wall_east(2, 1)
+        level.short_wall_east(2, 2)
+
+        level.set_hazard(1, 1)
+        level.switch_west(0, 0)
+
+        level.add_swat(6, 0, DIR_W)
+        level.add_swat(7, 1, DIR_N)
+
+        level.add_victim(0, 3)
+        level.add_victim(1, 3)
+        level.add_victim(5, 3)
+        level.add_cat(3, 2)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4 - Storage Room Squishes', 9, 9,

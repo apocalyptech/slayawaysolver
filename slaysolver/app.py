@@ -406,7 +406,7 @@ class Victim(object):
                 break
             if cur_cell.switches[direction]:
                 if self.can_hit_switch:
-                    self.flip_lights()
+                    self.level.flip_lights()
                 break
             next_cell = self.level.get_cell_relative_cell(cur_cell, direction)
             if next_cell.obstacle:
