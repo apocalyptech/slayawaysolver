@@ -366,7 +366,7 @@ class Victim(object):
         if self.occupied:
             return
 
-        if not self.level.lights and not self.can_see_in_dark:
+        if lure_object is None and not self.level.lights and not self.can_see_in_dark:
             return
 
         if self.scare_on_lure and lure_object is not None:
