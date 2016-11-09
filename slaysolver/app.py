@@ -68,7 +68,22 @@
 # TODO: Should probably get rid of Victim.can_hit() and just start
 # using a boolean as we do for switches.  Basically just need to
 # find out what items cats can trigger, 'cause the only one I
-# *know* they can't trigger is phones.
+# *know* they can't trigger is phones.  Update: Cats *can* trigger
+# cabinets.
+#
+# TODO: I suspect that our logic of the order of operations when
+# killed by SWAT/Police could use some work.  We DO correctly make
+# sure that the player is killed before a phone or light switch
+# can be directly activated.  In the game, the player CAN kill
+# a victim while in a targetting reticle, but will get captured/
+# killed afterwards, but another question I have is related to
+# victim reactions to that death.  I suspect that in the game,
+# the player is killed before other victims have a chance to run
+# around changing things, whereas in our code the victims'
+# reactions would all chain-react and potentially change things.
+# (It would be possible to set up a scenario where killing a
+# victim causes a chain reaction where another victim runs in
+# front of a SWAT sightline, for instance.)
 
 import sys
 import colorama
@@ -92,6 +107,12 @@ DIR_CMD = {
 }
 def rev_dir(direction):
     return (direction+2)%4
+
+# Obstacle types.  Might have made more sense to process
+# these separately, esp. since we have to process light
+# switches differently anyway.
+OBS_CABINET = 0
+OBS_PHONE = 0
 
 class PlayerLose(Exception):
     """
@@ -190,6 +211,7 @@ class Cabinet(object):
         self.cell = None
         self.fall_dirs = fall_dirs
         self.level = level
+        self.obs_type = OBS_CABINET
 
     def get_interactive_character(self):
         if DIR_N in self.fall_dirs:
@@ -246,6 +268,7 @@ class Phone(object):
         self.name = name
         self.cell = None
         self.other = None
+        self.obs_type = OBS_PHONE
 
     def get_interactive_character(self):
         return self.name[0]
@@ -435,7 +458,10 @@ class Cat(Victim):
         self.can_see_in_dark = True
 
     def can_hit(self, obstacle):
-        return False
+        if obstacle.obs_type == OBS_CABINET:
+            return True
+        else:
+            return False
 
     def die(self):
         raise PlayerLose('Cat was killed!')
