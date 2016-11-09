@@ -3765,7 +3765,7 @@ class Levels(object):
     @staticmethod
     def s5_s13():
 
-        # Not sure at the moment where the exit is
+        # The usual amount of exit shenanigans
 
         level = Level('Slayaway Camp 5, Scene 13 - Sharks and Lasers', 9, 9,
             3, 8,
@@ -3817,6 +3817,159 @@ class Levels(object):
         level.add_victim(4, 1)
         level.add_victim(2, 2)
         level.add_victim(3, 6)
+
+        return level
+
+    @staticmethod
+    def s5_d1():
+
+        level = Level('Slayaway Camp 5, Deleted Scene 1 - Escape Routes', 8, 6,
+            5, 3,
+            0, 3)
+
+        level.wall_east(2, 0)
+        level.wall_south(0, 1)
+        level.wall_south(1, 1)
+        level.wall_south(7, 1)
+        level.wall_east(1, 3)
+        level.wall_east(1, 4)
+        level.wall_east(5, 4)
+        level.wall_east(5, 5)
+
+        level.escape_north(3)
+        level.escape_north(5)
+        level.escape_west(1)
+        level.escape_west(2)
+        level.escape_west(5)
+
+        level.add_victim(3, 1)
+        level.add_victim(5, 1)
+        level.add_victim(4, 2)
+        level.add_cat(3, 5)
+
+        return level
+
+    @staticmethod
+    def s5_d2():
+
+        level = Level('Slayaway Camp 5, Deleted Scene 2 - My Summer Crush', 7, 8,
+            5, 1,
+            6, 5)
+
+        level.wall_west(5, 7)
+        level.wall_north(5, 7)
+        level.wall_north(6, 7)
+
+        level.wall_south(2, 0)
+        level.wall_south(1, 1)
+        level.wall_east(5, 1)
+        level.wall_east(2, 2)
+        level.wall_south(5, 2)
+        level.wall_east(0, 3)
+        level.wall_south(2, 3)
+        level.wall_south(1, 4)
+        level.wall_east(4, 5)
+        level.wall_east(4, 6)
+
+        level.short_wall_east(3, 0)
+        level.short_wall_east(3, 1)
+
+        level.add_cabinet_ns(0, 6)
+        level.add_cabinet_we(5, 4)
+
+        level.add_swat(6, 4, DIR_N)
+
+        level.add_victim(4, 2)
+        level.add_victim(6, 3)
+        level.add_victim(1, 4)
+        level.add_victim(1, 6)
+
+        return level
+
+    @staticmethod
+    def s5_d3():
+
+        level = Level('Slayaway Camp 5, Deleted Scene 3 - Island of Terror', 9, 8,
+            3, 1,
+            2, 3)
+
+        for x in range(9):
+            level.set_hazard(x, 0)
+        for y in range(1, 8):
+            level.set_hazard(0, y)
+        for x in [1, 2, 4, 5, 6, 7, 8]:
+            level.set_hazard(x, 7)
+        level.set_hazard(8, 4)
+        level.set_hazard(8, 5)
+        level.set_hazard(8, 6)
+
+        level.wall_west(1, 1)
+        level.wall_north(1, 1)
+        level.wall_south(1, 1)
+        level.wall_north(2, 1)
+        level.wall_south(2, 1)
+        level.wall_east(2, 1)
+
+        level.wall_west(6, 1)
+        level.wall_north(6, 1)
+        level.wall_south(6, 1)
+        level.wall_north(7, 1)
+        level.wall_south(7, 1)
+        level.wall_north(8, 1)
+        level.wall_south(8, 1)
+
+        level.wall_box(1, 6)
+
+        level.wall_west(5, 2)
+        level.wall_east(5, 2)
+        level.wall_south(8, 3)
+        level.wall_east(3, 4)
+        level.wall_south(5, 4)
+        level.wall_south(6, 4)
+        level.wall_west(1, 5)
+        level.wall_east(7, 5)
+        level.wall_south(5, 6)
+        level.wall_east(5, 6)
+        level.wall_south(6, 6)
+        level.wall_south(7, 6)
+        level.wall_east(7, 6)
+
+        level.add_victim(2, 2)
+        level.add_victim(5, 2)
+        level.add_victim(4, 3)
+        level.add_victim(3, 7)
+
+        return level
+
+    @staticmethod
+    def s5_d4():
+
+        level = Level('Slayaway Camp 5, Deleted Scene 4 - Stinky Sands Beach', 9, 9,
+            0, 8,
+            4, 4)
+
+        level.wall_south(0, 1)
+        level.wall_east(0, 1)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.wall_box(7, 1)
+        level.wall_box(3, 4)
+
+        level.wall_east(1, 2)
+        level.wall_south(1, 3)
+        level.wall_east(7, 3)
+        level.wall_east(5, 4)
+        level.wall_south(6, 6)
+        level.wall_east(3, 7)
+
+        level.add_cabinet_we(2, 6)
+        level.add_cabinet_ns(4, 6)
+        level.add_cabinet_we(7, 6)
+
+        level.add_victim(2, 5)
+        level.add_victim(7, 5)
 
         return level
 

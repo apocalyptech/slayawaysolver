@@ -2237,6 +2237,92 @@ class LevelTests(unittest.TestCase):
             DIR_E,
         ])
 
+    def test_s5_d1(self):
+        game = Game(levels.get_level('s5_d1'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_S,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+        ])
+
+    def test_s5_d2(self):
+        game = Game(levels.get_level('s5_d2'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+        ])
+
+    def test_s5_d3(self):
+        game = Game(levels.get_level('s5_d3'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_W,
+        ])
+
+    def test_s5_d4(self):
+        game = Game(levels.get_level('s5_d4'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+        ])
+
     def test_s6_d4(self):
         game = Game(levels.get_level('s6_d4'))
         game.solve()
