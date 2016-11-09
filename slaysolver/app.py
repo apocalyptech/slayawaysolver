@@ -773,6 +773,11 @@ class Level(object):
 
     def move_player(self, direction):
 
+        # Some actions we take need to wait until we resolve targetting
+        # reticles and the like.
+        flip_lights = False
+        hit_obstacle = None
+
         while True:
 
             # Reset all the victims' "occupied" flags first.
@@ -797,11 +802,11 @@ class Level(object):
             if direction not in self.possible_moves(from_cell=cur_cell):
                 break
             if cur_cell.switches[direction]:
-                self.flip_lights()
+                flip_lights = True
                 break
             next_cell = self.get_cell_relative_cell(cur_cell, direction)
             if next_cell.obstacle:
-                next_cell.obstacle.hit(direction)
+                hit_obstacle = (next_cell.obstacle, direction)
                 break
             if next_cell.victim:
                 next_cell.attack_victim(rev_dir(direction))
@@ -817,6 +822,13 @@ class Level(object):
             if reticle.reticles_need_lights and not self.lights:
                 continue
             raise PlayerLose('Shot/Apprehended by the police')
+
+        # If we're not dead yet, though, perform some delayed actions.
+        if flip_lights:
+            self.flip_lights()
+        if hit_obstacle is not None:
+            (obstacle, direction) = hit_obstacle
+            obstacle.hit(direction)
 
         # check for adjacent victims to scare
         for direction in DIRS:

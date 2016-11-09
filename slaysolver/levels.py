@@ -4159,6 +4159,52 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s6_s06():
+
+        level = Level('Slayaway Camp 6, Scene 6 - Visiting Hours', 7, 7,
+            2, 4,
+            4, 0)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_east(0, 2)
+        level.wall_east(0, 3)
+        level.wall_south(0, 3)
+
+        level.wall_north(0, 5)
+        level.wall_east(0, 5)
+        level.wall_north(1, 6)
+        level.wall_north(2, 6)
+        level.wall_east(2, 6)
+
+        level.wall_south(5, 0)
+        level.wall_south(6, 0)
+
+        level.wall_east(3, 1)
+
+        level.wall_east(5, 3)
+        level.wall_east(5, 4)
+        level.wall_south(5, 4)
+        level.wall_south(4, 4)
+
+        level.short_wall_west(2, 0)
+
+        level.short_wall_west(2, 2)
+        level.short_wall_west(2, 3)
+        level.short_wall_south(2, 3)
+        level.short_wall_south(3, 3)
+
+        level.add_phone_pair(0, 4, 3, 1)
+
+        level.add_swat(1, 1, DIR_S)
+
+        level.add_victim(1, 0)
+        level.add_victim(2, 1)
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,
