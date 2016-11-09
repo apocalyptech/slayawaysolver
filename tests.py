@@ -2323,6 +2323,19 @@ class LevelTests(unittest.TestCase):
             DIR_N,
         ])
 
+    def test_s6_s01(self):
+        game = Game(levels.get_level('s6_s01'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_N,
+            DIR_W,
+        ])
+
     def test_s6_d4(self):
         game = Game(levels.get_level('s6_d4'))
         game.solve()
