@@ -895,13 +895,14 @@ class Level(object):
         if self.lights:
             color_bg_1 = colorama.Back.RESET
             color_bg_2 = colorama.Back.YELLOW
+            color_exit_active = colorama.Fore.GREEN
         else:
             color_bg_1 = colorama.Back.CYAN
             color_bg_2 = colorama.Back.YELLOW
+            color_exit_active = colorama.Fore.BLUE
         color_short_wall = colorama.Fore.RED
         color_reticle = colorama.Fore.RED
         color_exit_inactive = colorama.Fore.MAGENTA
-        color_exit_active = colorama.Fore.GREEN
 
         print(self.desc)
         for (y, col) in enumerate(self.cells):

@@ -4013,6 +4013,30 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s6_s02():
+
+        level = Level('Slayaway Camp 6, Scene 2 - SWAT Stealth Slash', 6, 6,
+            2, 5,
+            5, 1)
+
+        level.wall_box(0, 0)
+        level.wall_box(2, 2)
+        level.wall_box(4, 4)
+
+        level.wall_south(1, 2)
+        level.wall_east(2, 0)
+        level.wall_east(2, 1)
+        level.wall_east(2, 5)
+
+        level.switch_north(2, 0)
+
+        level.add_swat(2, 3, DIR_E)
+        level.add_swat(5, 2, DIR_W)
+        level.add_victim(3, 1)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,
