@@ -112,7 +112,7 @@ def rev_dir(direction):
 # these separately, esp. since we have to process light
 # switches differently anyway.
 OBS_CABINET = 0
-OBS_PHONE = 0
+OBS_PHONE = 1
 
 class PlayerLose(Exception):
     """
@@ -129,6 +129,7 @@ class Cell(object):
         self.mine = False
         self.walls = [False]*4
         self.short_walls = [False]*4
+        self.electrics = [False]*4
         self.escapes = [False]*4
         self.switches = [False]*4
         self.victim = None
@@ -402,6 +403,9 @@ class Victim(object):
             cur_cell = self.cell
             if cur_cell.escapes[direction]:
                 raise PlayerLose('Victim escaped!')
+            if self.level.lights and cur_cell.electrics[direction]:
+                self.die()
+                break
             if direction not in self.level.possible_moves(from_cell=cur_cell):
                 break
             if cur_cell.switches[direction]:
@@ -505,7 +509,9 @@ class Cop(Victim):
 
         cur_cell = self.cell
         if cur_cell is not None:
-            if cur_cell.walls[self.facing] or cur_cell.short_walls[self.facing]:
+            if (cur_cell.walls[self.facing] or
+                    cur_cell.short_walls[self.facing] or
+                    cur_cell.electrics[self.facing]):
                 return
 
             rel_cell = self.level.get_cell_relative_cell(cur_cell, self.facing)
@@ -733,6 +739,26 @@ class Level(object):
         if y > 0:
             self.cells[y-1][x].short_walls[DIR_S] = True
 
+    def electric_west(self, x, y):
+        self.cells[y][x].electrics[DIR_W] = True
+        if x > 0:
+            self.cells[y][x-1].electrics[DIR_E] = True
+
+    def electric_east(self, x, y):
+        self.cells[y][x].electrics[DIR_E] = True
+        if x < (self.width-1):
+            self.cells[y][x+1].electrics[DIR_W] = True
+
+    def electric_south(self, x, y):
+        self.cells[y][x].electrics[DIR_S] = True
+        if y < (self.height-1):
+            self.cells[y+1][x].electrics[DIR_N] = True
+
+    def electric_north(self, x, y):
+        self.cells[y][x].electrics[DIR_N] = True
+        if y > 0:
+            self.cells[y-1][x].electrics[DIR_S] = True
+
     def escape_north(self, x):
         self.cells[0][x].escapes[DIR_N] = True
 
@@ -889,7 +915,7 @@ class Level(object):
         for direction in DIRS:
             if from_cell.switches[direction]:
                 moves.append(direction)
-            if from_cell.walls[direction] or from_cell.short_walls[direction]:
+            if from_cell.walls[direction] or from_cell.short_walls[direction] or from_cell.electrics[direction]:
                 continue
             else:
                 rel_cell = self.get_cell_relative_cell(from_cell, direction)
