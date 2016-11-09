@@ -4037,6 +4037,83 @@ class Levels(object):
         return level
 
     @staticmethod
+    def s6_s03():
+
+        level = Level('Slayaway Camp 6, Scene 3 - Fatality Ward', 8, 8,
+            0, 0,
+            2, 1,
+            10)
+
+        level.wall_box(4, 7)
+        level.wall_box(6, 2)
+        
+        level.wall_north(7, 6)
+        level.wall_west(7, 6)
+        level.wall_west(7, 7)
+
+        level.wall_west(1, 2)
+        level.wall_west(1, 1)
+        level.wall_north(1, 1)
+        level.wall_north(2, 1)
+        level.wall_north(3, 1)
+        level.wall_east(3, 1)
+        level.wall_east(3, 2)
+
+        level.wall_west(1, 4)
+        level.wall_west(1, 5)
+        level.wall_south(1, 5)
+        level.wall_south(2, 5)
+
+        level.wall_east(2, 4)
+
+        level.wall_north(4, 5)
+        level.wall_south(4, 5)
+        level.wall_north(5, 5)
+        level.wall_south(5, 5)
+        level.wall_north(6, 5)
+        level.wall_north(7, 5)
+
+        level.add_cabinet_ns(3, 5)
+
+        level.add_victim(7, 1)
+        level.add_victim(6, 4)
+        level.add_victim(5, 5)
+
+        return level
+
+    @staticmethod
+    def s6_s04():
+
+        level = Level('Slayaway Camp 6, Scene 4 - Kitty Care', 7, 6,
+            5, 5,
+            0, 3)
+
+        level.wall_box(0, 0)
+        level.wall_box(4, 0)
+        level.wall_box(0, 5)
+        level.wall_box(4, 5)
+
+        level.wall_east(1, 1)
+        level.wall_east(1, 2)
+        level.wall_east(1, 3)
+
+        level.wall_north(6, 3)
+        level.wall_west(6, 3)
+        level.wall_west(6, 4)
+        level.wall_west(6, 5)
+
+        level.escape_north(2)
+        level.escape_west(4)
+
+        level.switch_north(5, 0)
+
+        level.add_victim(2, 1)
+        level.add_victim(2, 5)
+        level.add_cat(2, 3)
+
+        return level
+
+    @staticmethod
     def s6_d4():
 
         level = Level('Slayaway Camp 6, Deleted Scene 4', 9, 9,

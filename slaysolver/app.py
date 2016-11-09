@@ -337,6 +337,7 @@ class Victim(object):
         self.occupied = False
         self.scare_on_lure = False
         self.can_hit_switch = True
+        self.can_see_in_dark = False
 
     def update_facing_vars(self, facing=None):
         return
@@ -363,6 +364,9 @@ class Victim(object):
             return
 
         if self.occupied:
+            return
+
+        if not self.level.lights and not self.can_see_in_dark:
             return
 
         if self.scare_on_lure and lure_object is not None:
@@ -428,6 +432,7 @@ class Cat(Victim):
         self.required_to_kill = False
         self.scare_on_lure = True
         self.can_hit_switch = False
+        self.can_see_in_dark = True
 
     def can_hit(self, obstacle):
         return False
