@@ -6049,3 +6049,155 @@ class Levels(object):
         level.add_victim(3, 5)
 
         return level
+
+    @staticmethod
+    def s8_s13():
+
+        # Just the usual amount of exit finagling, here.
+
+        # Another level where the found solution differs from my own pretty
+        # significantly!  I'd avoided hitting the lower-right phone until I
+        # scared the cat over to the little nook on the west, but this solution
+        # doesn't do that at all.
+
+        level = Level('Slayaway Camp 8, Scene 13 - Apartment Complexerer', 9, 9,
+            3, 2,
+            4, 2)
+
+        level.wall_east(1, 0)
+        level.wall_south(1, 0)
+        level.wall_east(0, 1)
+        level.wall_south(0, 1)
+
+        level.wall_north(0, 3)
+        level.wall_east(0, 3)
+        level.wall_east(0, 4)
+        level.wall_east(0, 5)
+        level.wall_east(0, 6)
+        level.wall_east(0, 7)
+        level.wall_north(1, 8)
+        level.wall_east(1, 8)
+
+        level.wall_east(6, 6)
+
+        level.short_wall_south(1, 1)
+        level.short_wall_south(2, 2)
+        level.short_wall_east(5, 0)
+        level.short_wall_east(5, 1)
+        level.short_wall_south(6, 2)
+        level.short_wall_south(7, 2)
+        level.short_wall_north(2, 5)
+        level.short_wall_west(2, 5)
+        level.short_wall_south(2, 5)
+        level.short_wall_south(6, 7)
+        level.short_wall_south(7, 7)
+
+        level.switch_north(3, 0)
+        level.switch_north(6, 0)
+
+        level.add_cabinet_we(1, 2)
+        level.add_cabinet_ns(5, 7)
+
+        level.add_phone_pair(5, 1, 8, 8)
+
+        level.add_swat(2, 0, DIR_S)
+        level.add_victim(1, 1)
+        level.add_victim(8, 1)
+        level.add_victim(2, 3)
+        level.add_victim(7, 5)
+        level.add_cat(5, 5)
+
+        return level
+
+    @staticmethod
+    def s8_d1():
+
+        level = Level('Slayaway Camp 8, Deleted Scene 1 - Splatterhouse', 8, 8,
+            6, 6,
+            2, 5,
+            10)
+
+        level.short_wall_north(2, 1)
+        level.short_wall_north(3, 1)
+        level.short_wall_north(4, 1)
+        level.short_wall_north(5, 1)
+        level.short_wall_east(5, 1)
+
+        level.short_wall_north(3, 2)
+        level.short_wall_north(2, 2)
+        level.short_wall_north(1, 2)
+        level.short_wall_west(1, 2)
+        level.short_wall_west(1, 3)
+        level.short_wall_west(1, 4)
+
+        level.short_wall_south(1, 5)
+        level.short_wall_south(2, 5)
+        level.short_wall_south(3, 5)
+        level.short_wall_south(4, 5)
+        level.short_wall_south(5, 5)
+        level.short_wall_east(5, 5)
+        level.short_wall_east(5, 4)
+        level.short_wall_east(5, 3)
+
+        level.short_wall_south(2, 6)
+        level.short_wall_south(3, 6)
+        level.short_wall_south(4, 6)
+        level.short_wall_south(5, 6)
+
+        level.short_wall_east(6, 1)
+        level.short_wall_east(6, 2)
+        level.short_wall_east(6, 3)
+        level.short_wall_east(6, 4)
+        level.short_wall_east(6, 5)
+        level.short_wall_east(6, 6)
+
+        level.switch_north(6, 0)
+
+        level.set_sticky(6, 0)
+        level.set_sticky(0, 6)
+
+        level.add_cop(0, 0, DIR_S)
+        level.add_cop(5, 1, DIR_W)
+        level.add_cop(2, 3, DIR_N)
+        level.add_cop(4, 4, DIR_N)
+
+        level.add_victim(6, 1)
+        level.add_victim(1, 2)
+        level.add_victim(0, 5)
+
+        return level
+
+    @staticmethod
+    def s8_d2():
+
+        level = Level('Slayaway Camp 8, Deleted Scene 2 - Treat Sweeper', 8, 7,
+            4, 1,
+            7, 6,
+            14)
+
+        for x in range(1, 6):
+            level.short_wall_east(x, 2)
+            level.short_wall_east(x, 3)
+        level.short_wall_east(3, 4)
+        level.short_wall_south(3, 4)
+        level.short_wall_south(4, 4)
+        level.wall_east(1, 5)
+
+        level.set_sticky(2, 1)
+        level.set_sticky(5, 1)
+        level.set_sticky(3, 3)
+        level.set_sticky(4, 3)
+        level.set_sticky(1, 4)
+        level.set_sticky(6, 4)
+
+        level.add_cabinet_we(1, 1)
+        level.add_cabinet_we(6, 1)
+        level.add_cabinet_we(2, 6)
+        level.add_cabinet_we(5, 6)
+
+        level.add_victim(0, 1)
+        level.add_victim(3, 4)
+        level.add_victim(4, 4)
+        level.add_victim(6, 6)
+
+        return level

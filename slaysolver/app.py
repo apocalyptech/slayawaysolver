@@ -67,6 +67,7 @@
 #   X - Bookcase/Cabinet which has been knocked over
 #   ^>V< - Escapes (only along map edges)
 #   ~~~ - Light switches
+#   ▒ - Gum (sticky patch)
 #
 # TODO: Should probably get rid of Victim.can_hit() and just start
 # using a boolean as we do for switches.  Basically just need to
