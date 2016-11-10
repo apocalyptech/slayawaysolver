@@ -548,6 +548,10 @@ class Victim(object):
         return self.die()
 
     def scare(self, direction, lure_object=None):
+        """
+        Scare the victim, or, if you pass in a lure object, lure them (the
+        movement logic is the same either way, for the most part)
+        """
 
         if lure_object is None and not self.scareable:
             return
@@ -1016,6 +1020,8 @@ class Level(object):
                 if not keep_moving:
                     self.won = True
                     return True
+            if cur_cell.electrics[direction] and self.lights:
+                raise PlayerLose('Electrocuted!')
             if direction not in self.possible_moves(from_cell=cur_cell):
                 break
             if cur_cell.switches[direction]:
@@ -1080,6 +1086,10 @@ class Level(object):
         for direction in DIRS:
             if from_cell.switches[direction]:
                 moves.append(direction)
+            # NOTE: We exclude electrics from possible moves, because we
+            # don't want to waste time walking directly into them, but we
+            # CAN run into them once we've stepped, so we have to check for
+            # it in move_player, *before* we check for possible_moves in there.
             if from_cell.walls[direction] or from_cell.short_walls[direction] or from_cell.electrics[direction]:
                 continue
             else:
