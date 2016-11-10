@@ -23,7 +23,7 @@
 # comparing checksums of the seen states, a max_step of 17 can take
 # many tens of seconds, but returns nearly instantly when pruning.
 #
-# Currently the objects supported are:
+# All map elements through Scareaway Camp 7 are supported:
 #   * Walls
 #   * Short Walls
 #   * Bookcases (though I call them Cabinets)
@@ -36,10 +36,7 @@
 #   * Mines
 #   * Escapes
 #   * Light Switches
-#
-# Stuff not yet implemented:
-#   * Electric Walls
-#   * Anything beyond Slayaway Camp 7
+#   * Electric fences (just a type of wall)
 #
 # This can be run interactively with the -i/--interactive flag.
 # While running interactive, 'q' will quit, 'u' will undo,
@@ -47,7 +44,12 @@
 # direction.
 #
 # Each space will be drawn w/ 3x3 characters, with some unicode block
-# characters to indicate walls ("low" walls will be in red).
+# characters to indicate walls.  Regular walls are black (well, your
+# default terminal text color), short/low walls will be in red, and
+# electric fences/walls will be in blue (and move to a darker blue when
+# turned off).  Note that the colors are currently only optimized for
+# a default of black text on white background; it'll probably look
+# bad on a black background.
 #
 # Symbols in the middle of the cell render:
 #   P - Player
