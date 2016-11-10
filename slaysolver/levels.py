@@ -4704,3 +4704,40 @@ class Levels(object):
 
         # Return
         return level
+
+    @staticmethod
+    def s7_s01():
+
+        level = Level('Slayaway Camp 7, Scene 1 - Avoid the Electrical Fences!', 6, 6,
+            3, 2,
+            3, 5)
+
+        level.wall_north(0, 2)
+        level.wall_east(0, 2)
+        level.wall_east(0, 3)
+        level.wall_south(0, 3)
+
+        level.wall_north(5, 2)
+        level.wall_west(5, 2)
+        level.wall_west(5, 3)
+        level.wall_south(5, 3)
+
+        level.electric_north(0, 0)
+        level.electric_north(1, 0)
+        level.electric_north(2, 0)
+        level.electric_north(3, 0)
+        level.electric_north(4, 0)
+
+        level.electric_north(0, 5)
+        level.electric_north(1, 5)
+        level.short_wall_east(1, 5)
+
+        level.short_wall_west(4, 5)
+        level.electric_north(4, 5)
+        level.electric_north(5, 5)
+
+        level.wall_south(2, 0)
+
+        level.add_victim(2, 0)
+
+        return level

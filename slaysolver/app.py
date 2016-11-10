@@ -251,13 +251,13 @@ class Cell(object):
         return self.walls[direction] != WALL_NONE
 
     def get_color_corner(self, dir1, dir2):
-        if self.walls[dir1] == WALL_REG or self.walls[dir2] == WALL_REG:
-            return ''
-        elif self.walls[dir1] == WALL_ELEC or self.walls[dir2] == WALL_ELEC:
+        if self.walls[dir1] == WALL_ELEC or self.walls[dir2] == WALL_ELEC:
             if self.level.lights:
                 return color_electric_on
             else:
                 return color_electric_off
+        elif self.walls[dir1] == WALL_REG or self.walls[dir2] == WALL_REG:
+            return ''
         elif self.walls[dir1] == WALL_SHORT or self.walls[dir2] == WALL_SHORT:
             return color_short_wall
         else:
@@ -556,8 +556,9 @@ class Victim(object):
             if self.cell.walls[direction] == WALL_REG:
                 continue
             rel_cell = self.level.get_cell_relative_cell(self.cell, direction)
-            if rel_cell.victim:
-                rel_cell.victim.scare(direction)
+            if rel_cell is not None:
+                if rel_cell.victim:
+                    rel_cell.victim.scare(direction)
 
         return True
 
