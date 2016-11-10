@@ -23,7 +23,7 @@
 # comparing checksums of the seen states, a max_step of 17 can take
 # many tens of seconds, but returns nearly instantly when pruning.
 #
-# All map elements through Scareaway Camp 7 are supported:
+# All map elements through Scareaway Camp 8.04 are supported:
 #   * Walls
 #   * Short Walls
 #   * Bookcases (though I call them Cabinets)
@@ -37,6 +37,7 @@
 #   * Escapes
 #   * Light Switches
 #   * Electric fences (just a type of wall)
+#   * Gum ("sticky")
 #
 # This can be run interactively with the -i/--interactive flag.
 # While running interactive, 'q' will quit, 'u' will undo,
@@ -133,14 +134,17 @@ OBS_PHONE = 1
 # Colors
 colors_bg_lt = [colorama.Back.RESET, colorama.Back.YELLOW]
 colors_bg_dk = [colorama.Back.CYAN, colorama.Back.YELLOW]
+color_exit_active = {
+    True: colorama.Fore.GREEN,
+    False: colorama.Fore.BLUE,
+}
 
-color_exit_active_lt = colorama.Fore.GREEN
-color_exit_active_dk = colorama.Fore.BLUE
 color_short_wall = colorama.Fore.RED
 color_reticle = colorama.Fore.RED
 color_exit_inactive = colorama.Fore.MAGENTA
 color_electric_on = colorama.Style.BRIGHT + colorama.Fore.CYAN
 color_electric_off = colorama.Style.BRIGHT + colorama.Fore.BLUE
+color_sticky = colorama.Fore.MAGENTA
 
 # Wall types
 WALL_NONE = 0
@@ -162,6 +166,7 @@ class Cell(object):
         self.exit = False
         self.hazard = False
         self.mine = False
+        self.sticky = False
         self.walls = [WALL_NONE]*4
         self.escapes = [False]*4
         self.switches = [False]*4
@@ -341,7 +346,20 @@ class Cell(object):
     def get_print_w(self):
         return self.get_print_cardinal(DIR_W, '<', '▌', '←')
 
-    def get_print_center(self):
+    def get_print_center_color(self):
+        colors = []
+        if self.sticky:
+            colors.append(color_sticky)
+        if self.exit:
+            if self.level.num_alive() == 0:
+                colors.append(color_exit_active[self.level.lights])
+            else:
+                colors.append(color_exit_inactive)
+        if self.has_reticles():
+            colors.append(color_reticle)
+        return ''.join(colors)
+
+    def get_print_center_char(self):
         if self == self.level.player.cell:
             return 'P'
         elif self.victim:
@@ -360,15 +378,11 @@ class Cell(object):
         elif self.mine:
             return 'M'
         elif self.has_reticles():
-            return color_reticle + 'O'
+            return 'O'
         elif self.exit:
-            if self.level.num_alive() == 0:
-                if self.level.lights:
-                    return color_exit_active_lt + 'E'
-                else:
-                    return color_exit_active_dk + 'E'
-            else:
-                return color_exit_inactive + 'E'
+            return 'E'
+        elif self.sticky:
+            return '▒'
         else:
             return ' '
 
@@ -381,7 +395,7 @@ class Cell(object):
     def print_middle_row(self):
         color = self.color_bg[self.level.lights]
         sys.stdout.write(color + self.get_print_w())
-        sys.stdout.write(color + self.get_print_center())
+        sys.stdout.write(color + self.get_print_center_color() + self.get_print_center_char())
         sys.stdout.write(color + self.get_print_e())
 
     def print_bottom_row(self):
@@ -588,8 +602,11 @@ class Victim(object):
         self.occupied = True
         self.update_facing_vars(facing=direction)
 
+        first_move = True
         while True:
             cur_cell = self.cell
+            if cur_cell.sticky and not first_move:
+                break
             if cur_cell.escapes[direction]:
                 raise PlayerLose('Victim escaped!')
             if self.level.lights and cur_cell.walls[direction] == WALL_ELEC:
@@ -617,6 +634,8 @@ class Victim(object):
             if next_cell.mine:
                 next_cell.mine.explode()
                 break
+
+            first_move = False
 
         return False
 
@@ -1019,6 +1038,7 @@ class Level(object):
         flip_lights = False
         hit_obstacle = None
 
+        first_move = True
         while True:
 
             # Reset all the victims' "occupied" flags first.
@@ -1040,6 +1060,8 @@ class Level(object):
                 if not keep_moving:
                     self.won = True
                     return True
+            if not first_move and cur_cell.sticky:
+                break
             if cur_cell.walls[direction] == WALL_ELEC and self.lights:
                 raise PlayerLose('Electrocuted!')
             if direction not in self.possible_moves(from_cell=cur_cell):
@@ -1059,6 +1081,8 @@ class Level(object):
                 raise PlayerLose('Fell into a hazard')
             if next_cell.mine:
                 raise PlayerLose('Walked into a mine')
+
+            first_move = False
 
         # If we landed on a reticle, we're dead
         for reticle in self.player.cell.get_reticles():
@@ -1130,6 +1154,9 @@ class Level(object):
         mine = Mine()
         self.mines.append(mine)
         self.get_cell(x, y).set_mine(mine)
+
+    def set_sticky(self, x, y):
+        self.get_cell(x, y).sticky = True
 
     def num_alive(self):
         alive = 0

@@ -5515,3 +5515,183 @@ class Levels(object):
         level.add_victim(2, 6)
         
         return level
+
+    @staticmethod
+    def s8_s01():
+
+        level = Level('Slayaway Camp 8, Scene 1 - Gummed Up', 7, 7,
+            0, 6,
+            6, 6)
+
+        level.wall_south(0, 1)
+        level.wall_south(1, 1)
+        level.wall_east(1, 1)
+        level.wall_east(1, 0)
+
+        level.wall_south(0, 5)
+        level.wall_south(1, 5)
+        level.wall_south(2, 5)
+        level.wall_east(2, 5)
+
+        level.wall_west(4, 5)
+        level.wall_south(4, 5)
+        level.wall_south(5, 5)
+        level.wall_south(6, 5)
+        level.wall_west(6, 5)
+        level.wall_west(6, 4)
+        level.wall_north(6, 4)
+
+        level.set_sticky(3, 3)
+        level.set_sticky(3, 6)
+
+        level.add_victim(0, 3)
+        level.add_victim(3, 2)
+
+        return level
+
+    @staticmethod
+    def s8_s02():
+
+        level = Level('Slayaway Camp 8, Scene 2 - Stopped In His Tracks', 7, 7,
+            0, 0,
+            3, 4)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_south(3, 0)
+
+        level.wall_west(6, 0)
+        level.wall_west(6, 1)
+        level.wall_west(6, 2)
+        level.wall_south(6, 2)
+
+        level.wall_north(0, 6)
+        level.wall_north(1, 6)
+        level.wall_east(1, 6)
+
+        level.short_wall_west(3, 4)
+        level.short_wall_south(3, 4)
+
+        level.set_sticky(5, 5)
+
+        level.add_victim(5, 1)
+        level.add_victim(0, 3)
+        level.add_victim(2, 5)
+
+        return level
+
+    @staticmethod
+    def s8_s03():
+
+        level = Level('Slayaway Camp 8, Scene 3 - Graveyard Shift', 8, 8,
+            2, 7,
+            7, 2)
+
+        level.wall_south(0, 1)
+        level.wall_south(1, 1)
+        level.wall_east(1, 1)
+        level.wall_south(2, 0)
+        level.wall_south(3, 0)
+        level.wall_south(4, 0)
+        level.wall_east(4, 0)
+        level.wall_west(6, 0)
+        level.wall_south(6, 0)
+        level.wall_south(7, 0)
+
+        level.short_wall_west(2, 2)
+        level.short_wall_north(3, 2)
+        level.short_wall_east(3, 2)
+        level.short_wall_west(3, 3)
+
+        level.short_wall_west(1, 4)
+        level.short_wall_north(1, 4)
+        level.short_wall_south(1, 4)
+        level.short_wall_north(2, 4)
+        level.short_wall_south(2, 4)
+        level.short_wall_north(3, 4)
+        level.short_wall_south(3, 4)
+        level.short_wall_south(4, 4)
+        level.short_wall_south(5, 4)
+        level.short_wall_south(6, 4)
+        level.short_wall_north(7, 4)
+        level.short_wall_south(7, 4)
+
+        level.wall_west(4, 5)
+        level.wall_south(4, 5)
+        level.wall_east(4, 5)
+
+        level.electric_north(0, 7)
+        level.electric_east(0, 7)
+
+        level.electric_east(7, 1)
+        level.electric_east(7, 2)
+        level.electric_east(7, 3)
+        level.electric_east(7, 4)
+        level.electric_east(7, 5)
+        level.electric_east(7, 6)
+        level.electric_west(7, 5)
+        level.electric_south(7, 5)
+
+        level.set_hazard(5, 0)
+        level.set_hazard(0, 6)
+
+        level.switch_west(2, 1)
+        level.switch_north(7, 1)
+        level.switch_west(0, 5)
+        level.switch_west(5, 5)
+
+        level.add_victim(4, 2)
+        level.add_victim(0, 3)
+        level.add_victim(5, 4)
+        level.add_victim(4, 7)
+        level.add_cat(1, 4)
+
+        return level
+
+    @staticmethod
+    def s8_s04():
+
+        level = Level('Slayaway Camp 8, Scene 4 - Cafeteria Cleanup', 7, 8,
+            3, 0,
+            3, 4)
+
+        level.short_wall_west(1, 0)
+        level.electric_west(1, 1)
+        level.short_wall_south(1, 1)
+        level.short_wall_south(2, 1)
+        level.short_wall_east(2, 1)
+        level.short_wall_east(2, 0)
+
+        level.short_wall_west(4, 0)
+        level.short_wall_west(4, 1)
+        level.short_wall_south(4, 1)
+        level.short_wall_south(5, 1)
+        level.electric_east(5, 1)
+        level.short_wall_east(5, 0)
+
+        level.short_wall_south(0, 4)
+        level.short_wall_south(1, 4)
+        level.short_wall_south(5, 4)
+        level.short_wall_south(6, 4)
+
+        level.wall_box(4, 7)
+
+        level.set_sticky(1, 2)
+        level.set_sticky(3, 2)
+        level.set_sticky(5, 2)
+        level.set_sticky(2, 4)
+        level.set_sticky(4, 4)
+        level.set_sticky(0, 6)
+        level.set_sticky(3, 6)
+        level.set_sticky(6, 6)
+
+        level.add_phone_pair(2, 3, 4, 3)
+
+        level.add_cop(3, 7, DIR_W)
+        level.add_victim(1, 1)
+        level.add_victim(5, 1)
+        level.add_victim(1, 6)
+        level.add_victim(5, 6)
+
+        return level
