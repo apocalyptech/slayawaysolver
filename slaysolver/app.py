@@ -591,7 +591,7 @@ class Victim(object):
             if cur_cell.escapes[direction]:
                 raise PlayerLose('Victim escaped!')
             if self.level.lights and cur_cell.walls[direction] == WALL_ELEC:
-                self.die()
+                cur_cell.kill_victim()
                 break
             if direction not in self.level.possible_moves(from_cell=cur_cell):
                 break

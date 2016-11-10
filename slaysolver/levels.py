@@ -4741,3 +4741,36 @@ class Levels(object):
         level.add_victim(2, 0)
 
         return level
+
+    @staticmethod
+    def s7_s02():
+
+        level = Level('Slayaway Camp 7, Scene 2 - Circuit Breaker', 6, 7,
+            3, 5,
+            4, 2)
+
+        level.wall_south(0, 1)
+        level.wall_east(0, 1)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.wall_box(4, 1)
+
+        level.electric_south(5, 2)
+
+        level.electric_west(1, 4)
+        level.electric_west(1, 5)
+        level.electric_south(1, 5)
+        level.electric_south(2, 5)
+        level.electric_south(3, 5)
+
+        level.electric_north(3, 0)
+        level.electric_north(4, 0)
+
+        level.switch_north(5, 0)
+
+        level.add_victim(1, 1)
+        level.add_victim(5, 4)
+
+        return level
