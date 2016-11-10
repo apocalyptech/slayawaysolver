@@ -101,6 +101,10 @@
 # "box", the laser sight would pass through in our app but be
 # blocked in the game itself.  Will have to be on the lookout
 # for situations where that might actually affect things.
+#
+# TODO: Would probably be nice to not quit automatically on lose,
+# when playing interactively.  Should be able to undo/reset from
+# there.
 
 import sys
 import colorama
