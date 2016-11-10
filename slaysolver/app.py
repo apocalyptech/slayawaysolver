@@ -114,6 +114,18 @@ def rev_dir(direction):
 OBS_CABINET = 0
 OBS_PHONE = 1
 
+# Colors
+colors_bg_lt = [colorama.Back.RESET, colorama.Back.YELLOW]
+colors_bg_dk = [colorama.Back.CYAN, colorama.Back.YELLOW]
+
+color_exit_active_lt = colorama.Fore.GREEN
+color_exit_active_dk = colorama.Fore.BLUE
+color_short_wall = colorama.Fore.RED
+color_reticle = colorama.Fore.RED
+color_exit_inactive = colorama.Fore.MAGENTA
+color_electric_on = colorama.Style.BRIGHT + colorama.Fore.CYAN
+color_electric_off = colorama.Style.BRIGHT + colorama.Fore.BLUE
+
 class PlayerLose(Exception):
     """
     Custom exception to handle player loss
@@ -124,6 +136,7 @@ class Cell(object):
     def __init__(self, x, y, level=None):
         self.x = x
         self.y = y
+        self.level = level
         self.exit = False
         self.hazard = False
         self.mine = False
@@ -135,6 +148,13 @@ class Cell(object):
         self.victim = None
         self.obstacle = None
         self.reticles = {}
+
+        # Set our background color here, too.  Hash key is meant to be
+        # the level light state.
+        self.color_bg = {
+            True: colors_bg_lt[(x+y)%2],
+            False: colors_bg_dk[(x+y)%2],
+        }
 
         if level is not None:
             if self.x == 0:
@@ -205,6 +225,151 @@ class Cell(object):
     def clone(self):
         newobj = Cell(self.x, self.y)
         return newobj
+
+    def has_wall(self, direction):
+        """
+        Returns True if we have a wall of *any* type
+        """
+        return (self.walls[direction] or self.short_walls[direction] or
+            self.electrics[direction])
+
+    def get_color_corner(self, dir1, dir2):
+        if self.walls[dir1] or self.walls[dir2]:
+            return ''
+        elif self.electrics[dir1] or self.electrics[dir2]:
+            if self.level.lights:
+                return color_electric_on
+            else:
+                return color_electric_off
+        elif self.short_walls[dir1] or self.short_walls[dir2]:
+            return color_short_wall
+        else:
+            return ''
+
+    def get_color_cardinal(self, direction):
+        if self.walls[direction]:
+            return ''
+        elif self.electrics[direction]:
+            if self.level.lights:
+                return color_electric_on
+            else:
+                return color_electric_off
+        elif self.short_walls[direction]:
+            return color_short_wall
+        else:
+            return ''
+
+    def get_print_corner(self, dom, sec, dom_escape, sec_escape,
+            both_char, dom_char, sec_char):
+        """
+        Gets the value to print in a corner.  Pass in the dominant
+        and secondary direction, the dominant/secondary escape char,
+        and chars to use in the three combinations of wall presence.
+        """
+        if self.escapes[dom]:
+            return dom_escape
+        elif self.switches[dom]:
+            return '~'
+        elif self.escapes[sec]:
+            return sec_escape
+        elif self.switches[sec]:
+            return '~'
+        elif self.has_wall(dom) and self.has_wall(sec):
+            return self.get_color_corner(dom, sec) + both_char
+        elif self.has_wall(dom):
+            return self.get_color_corner(dom, sec) + dom_char
+        elif self.has_wall(sec):
+            return self.get_color_corner(dom, sec) + sec_char
+        else:
+            return ' '
+
+    def get_print_cardinal(self, direction, escape, char, facing_char):
+        """
+        Gets the value to print in a cardinal direction.
+        """
+        if self.victim and self.victim.facing is not None and self.victim.facing == direction:
+            return facing_char
+        elif self.escapes[direction]:
+            return escape
+        elif self.switches[direction]:
+            return '~'
+        elif self.has_wall(direction):
+            return self.get_color_cardinal(direction) + char
+        else:
+            return ' '
+
+    def get_print_nw(self):
+        return self.get_print_corner(DIR_N, DIR_W, '^', '<', '▛', '▀', '▌')
+
+    def get_print_ne(self):
+        return self.get_print_corner(DIR_N, DIR_E, '^', '>', '▜', '▀', '▐')
+
+    def get_print_sw(self):
+        return self.get_print_corner(DIR_S, DIR_W, 'v', '<', '▙', '▄', '▌')
+
+    def get_print_se(self):
+        return self.get_print_corner(DIR_S, DIR_E, 'v', '>', '▟', '▄', '▐')
+
+    def get_print_n(self):
+        return self.get_print_cardinal(DIR_N, '^', '▀', '↑')
+
+    def get_print_e(self):
+        return self.get_print_cardinal(DIR_E, '>', '▐', '→')
+
+    def get_print_s(self):
+        return self.get_print_cardinal(DIR_S, 'v', '▄', '↓')
+
+    def get_print_w(self):
+        return self.get_print_cardinal(DIR_W, '<', '▌', '←')
+
+    def get_print_center(self):
+        if self == self.level.player.cell:
+            return 'P'
+        elif self.victim:
+            if self.victim.type == Victim.T_COP:
+                return 'L'
+            elif self.victim.type == Victim.T_SWAT:
+                return 'S'
+            elif self.victim.type == Victim.T_CAT:
+                return 'C'
+            else:
+                return 'V'
+        elif self.obstacle:
+            return self.obstacle.get_interactive_character()
+        elif self.hazard:
+            return 'H'
+        elif self.mine:
+            return 'M'
+        elif self.has_reticles():
+            return color_reticle + 'O'
+        elif self.exit:
+            if self.level.num_alive() == 0:
+                if self.level.lights:
+                    return color_exit_active_lt + 'E'
+                else:
+                    return color_exit_active_dk + 'E'
+            else:
+                return color_exit_inactive + 'E'
+        else:
+            return ' '
+
+    def print_top_row(self):
+        color = self.color_bg[self.level.lights]
+        sys.stdout.write(color + self.get_print_nw())
+        sys.stdout.write(color + self.get_print_n())
+        sys.stdout.write(color + self.get_print_ne())
+
+    def print_middle_row(self):
+        color = self.color_bg[self.level.lights]
+        sys.stdout.write(color + self.get_print_w())
+        sys.stdout.write(color + self.get_print_center())
+        sys.stdout.write(color + self.get_print_e())
+
+    def print_bottom_row(self):
+        color = self.color_bg[self.level.lights]
+        sys.stdout.write(color + self.get_print_sw())
+        sys.stdout.write(color + self.get_print_s())
+        sys.stdout.write(color + self.get_print_se())
 
 class Cabinet(object):
 
@@ -960,270 +1125,19 @@ class Level(object):
 
     def print(self):
 
-        # Colors
-        if self.lights:
-            color_bg_1 = colorama.Back.RESET
-            color_bg_2 = colorama.Back.YELLOW
-            color_exit_active = colorama.Fore.GREEN
-        else:
-            color_bg_1 = colorama.Back.CYAN
-            color_bg_2 = colorama.Back.YELLOW
-            color_exit_active = colorama.Fore.BLUE
-        color_short_wall = colorama.Fore.RED
-        color_reticle = colorama.Fore.RED
-        color_exit_inactive = colorama.Fore.MAGENTA
-
         print(self.desc)
-        for (y, col) in enumerate(self.cells):
-            for (x, row) in enumerate(col):
-                if y % 2 == 0:
-                    if x % 2 == 0:
-                        color = color_bg_1
-                    else:
-                        color = color_bg_2
-                else:
-                    if x % 2 == 0:
-                        color = color_bg_2
-                    else:
-                        color = color_bg_1
-                if row.escapes[DIR_N]:
-                    sys.stdout.write(color + '^^^')
-                elif row.switches[DIR_N]:
-                    sys.stdout.write(color + '~~~')
-                elif row.walls[DIR_N] or row.short_walls[DIR_N]:
-                    if row.escapes[DIR_W]:
-                        sys.stdout.write(color + '<')
-                    elif row.switches[DIR_W]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
-                        if row.short_walls[DIR_N] and row.short_walls[DIR_W]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▛')
-                    else:
-                        if row.short_walls[DIR_N]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▀')
-                    if row.short_walls[DIR_N]:
-                        extra = color_short_wall
-                    else:
-                        extra = ''
-                    if row.victim and row.victim.facing is not None and row.victim.facing == DIR_N:
-                        sys.stdout.write(color + extra + '↑')
-                    else:
-                        sys.stdout.write(color + extra + '▀')
-                    if row.escapes[DIR_E]:
-                        sys.stdout.write(color + '>')
-                    elif row.switches[DIR_E]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
-                        if row.short_walls[DIR_N] and row.short_walls[DIR_E]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▜')
-                    else:
-                        if row.short_walls[DIR_N]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▀')
-                else:
-                    if row.escapes[DIR_W]:
-                        sys.stdout.write(color + '<')
-                    elif row.switches[DIR_W]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
-                        if row.short_walls[DIR_W]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▌')
-                    else:
-                        sys.stdout.write(color + ' ')
-                    if row.victim and row.victim.facing is not None and row.victim.facing == DIR_N:
-                        sys.stdout.write(color + '↑')
-                    else:
-                        sys.stdout.write(color + ' ')
-                    if row.escapes[DIR_E]:
-                        sys.stdout.write(color + '>')
-                    elif row.switches[DIR_E]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
-                        if row.short_walls[DIR_E]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▐')
-                    else:
-                        sys.stdout.write(color + ' ')
+        for col in self.cells:
+            for cell in col:
+                cell.print_top_row()
             sys.stdout.write("\n")
-            for (x, row) in enumerate(col):
-                if y % 2 == 0:
-                    if x % 2 == 0:
-                        color = color_bg_1
-                    else:
-                        color = color_bg_2
-                else:
-                    if x % 2 == 0:
-                        color = color_bg_2
-                    else:
-                        color = color_bg_1
-                if row.escapes[DIR_W]:
-                    sys.stdout.write(color + '<')
-                elif row.switches[DIR_W]:
-                    sys.stdout.write(color + '~')
-                elif row.walls[DIR_W] or row.short_walls[DIR_W]:
-                    if row.short_walls[DIR_W]:
-                        extra = color_short_wall
-                    else:
-                        extra = ''
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_W:
-                        sys.stdout.write(color + extra + '←')
-                    else:
-                        sys.stdout.write(color + extra + '▌')
-                else:
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_W:
-                        sys.stdout.write(color + '←')
-                    else:
-                        sys.stdout.write(color + ' ')
-
-                if row == self.player.cell:
-                    sys.stdout.write(color + 'P')
-                elif row.victim:
-                    if row.victim.type == Victim.T_COP:
-                        sys.stdout.write(color + 'L')
-                    elif row.victim.type == Victim.T_SWAT:
-                        sys.stdout.write(color + 'S')
-                    elif row.victim.type == Victim.T_CAT:
-                        sys.stdout.write(color + 'C')
-                    else:
-                        sys.stdout.write(color + 'V')
-                elif row.obstacle:
-                    sys.stdout.write(color + row.obstacle.get_interactive_character())
-                elif row.hazard:
-                    sys.stdout.write(color + 'H')
-                elif row.mine:
-                    sys.stdout.write(color + 'M')
-                elif row.has_reticles():
-                    sys.stdout.write(color + color_reticle + 'O')
-                elif row.exit:
-                    if self.num_alive() == 0:
-                        extra = color_exit_active
-                    else:
-                        extra = color_exit_inactive
-                    sys.stdout.write(color + extra + 'E')
-                else:
-                    sys.stdout.write(color + ' ')
-
-                if row.escapes[DIR_E]:
-                    sys.stdout.write(color + '>')
-                elif row.switches[DIR_E]:
-                    sys.stdout.write(color + '~')
-                elif row.walls[DIR_E] or row.short_walls[DIR_E]:
-                    if row.short_walls[DIR_E]:
-                        extra = color_short_wall
-                    else:
-                        extra = ''
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_E:
-                        sys.stdout.write(color + extra + '→')
-                    else:
-                        sys.stdout.write(color + extra + '▐')
-                else:
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_E:
-                        sys.stdout.write(color + '→')
-                    else:
-                        sys.stdout.write(color + ' ')
+            for cell in col:
+                cell.print_middle_row()
             sys.stdout.write("\n")
-            for (x, row) in enumerate(col):
-                if y % 2 == 0:
-                    if x % 2 == 0:
-                        color = color_bg_1
-                    else:
-                        color = color_bg_2
-                else:
-                    if x % 2 == 0:
-                        color = color_bg_2
-                    else:
-                        color = color_bg_1
-                if row.escapes[DIR_S]:
-                    sys.stdout.write(color + 'VVV')
-                elif row.switches[DIR_S]:
-                    sys.stdout.write(color + '~~~')
-                elif row.walls[DIR_S] or row.short_walls[DIR_S]:
-                    if row.escapes[DIR_W]:
-                        sys.stdout.write(color + '<')
-                    elif row.switches[DIR_W]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
-                        if row.short_walls[DIR_S] and row.short_walls[DIR_W]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▙')
-                    else:
-                        if row.short_walls[DIR_S]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▄')
-                    if row.short_walls[DIR_S]:
-                        extra = color_short_wall
-                    else:
-                        extra = ''
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_S:
-                        sys.stdout.write(color + extra + '↓')
-                    else:
-                        sys.stdout.write(color + extra + '▄')
-                    if row.escapes[DIR_E]:
-                        sys.stdout.write(color + '>')
-                    elif row.switches[DIR_E]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
-                        if row.short_walls[DIR_S] and row.short_walls[DIR_E]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▟')
-                    else:
-                        if row.short_walls[DIR_S]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▄')
-                else:
-                    if row.escapes[DIR_W]:
-                        sys.stdout.write(color + '<')
-                    elif row.switches[DIR_W]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_W] or row.short_walls[DIR_W]:
-                        if row.short_walls[DIR_W]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▌')
-                    else:
-                        sys.stdout.write(color + ' ')
-                    if row.victim and row.victim.facing and row.victim.facing == DIR_S:
-                        sys.stdout.write(color + '↓')
-                    else:
-                        sys.stdout.write(color + ' ')
-                    if row.escapes[DIR_E]:
-                        sys.stdout.write(color + '>')
-                    elif row.switches[DIR_E]:
-                        sys.stdout.write(color + '~')
-                    elif row.walls[DIR_E] or row.short_walls[DIR_E]:
-                        if row.short_walls[DIR_E]:
-                            extra = color_short_wall
-                        else:
-                            extra = ''
-                        sys.stdout.write(color + extra + '▐')
-                    else:
-                        sys.stdout.write(color + ' ')
+            for cell in col:
+                cell.print_bottom_row()
             sys.stdout.write("\n")
+        if not self.lights:
+            print('Lights are OFF')
 
 class State(object):
 
