@@ -4774,3 +4774,199 @@ class Levels(object):
         level.add_victim(5, 4)
 
         return level
+
+    @staticmethod
+    def s7_s03():
+
+        level = Level('Slayaway Camp 7, Scene 3 - Office Security', 7, 8,
+            0, 5,
+            3, 0)
+
+        level.wall_west(2, 0)
+        level.wall_west(2, 1)
+        level.wall_south(2, 1)
+        level.wall_south(1, 1)
+        level.wall_south(0, 1)
+
+        level.wall_east(4, 0)
+        level.wall_east(4, 1)
+        level.wall_south(4, 1)
+        level.wall_south(5, 1)
+        level.wall_south(6, 1)
+
+        level.wall_north(0, 3)
+        level.wall_east(0, 3)
+        level.wall_east(0, 4)
+        level.wall_south(0, 4)
+
+        level.wall_north(0, 6)
+        level.wall_east(0, 6)
+        level.wall_east(0, 7)
+
+        level.wall_north(6, 6)
+        level.wall_west(6, 6)
+        level.wall_west(6, 7)
+
+        level.wall_box(5, 3)
+        level.wall_box(4, 7)
+
+        level.wall_north(2, 5)
+        level.wall_east(3, 5)
+        level.wall_west(3, 7)
+
+        level.add_phone_pair(1, 3, 3, 7)
+        level.add_phone_pair(6, 2, 6, 5)
+
+        level.add_cop(2, 1, DIR_E)
+        level.add_cop(4, 1, DIR_W)
+
+        level.add_victim(0, 2)
+        level.add_victim(3, 4)
+        level.add_victim(4, 5)
+
+        return level
+
+    @staticmethod
+    def s7_s04():
+
+        level = Level('Slayaway Camp 7, Scene 4 - Copy Room Calamity', 8, 8,
+            6, 3,
+            1, 1)
+
+        level.wall_north(0, 3)
+        level.wall_east(0, 3)
+        level.wall_north(1, 4)
+        level.wall_south(1, 4)
+        level.wall_east(0, 5)
+        level.wall_east(0, 6)
+        level.wall_east(0, 7)
+
+        level.wall_east(2, 0)
+
+        level.wall_south(6, 0)
+        level.wall_south(7, 0)
+
+        level.electric_north(0, 1)
+        level.electric_north(1, 1)
+        level.electric_east(1, 1)
+        level.electric_south(1, 1)
+        level.electric_north(2, 1)
+        level.electric_north(3, 1)
+
+        level.electric_west(2, 4)
+        level.electric_south(2, 4)
+        level.electric_south(4, 4)
+        level.electric_south(6, 4)
+
+        level.electric_south(3, 6)
+        level.electric_south(4, 6)
+        level.electric_south(5, 6)
+
+        level.short_wall_east(5, 0)
+        level.short_wall_east(5, 1)
+        level.short_wall_south(7, 2)
+        level.short_wall_north(3, 3)
+        level.short_wall_east(3, 3)
+        level.short_wall_east(6, 5)
+        level.short_wall_west(2, 6)
+        level.short_wall_south(2, 6)
+        level.short_wall_south(6, 6)
+
+        level.switch_north(4, 0)
+
+        level.add_victim(4, 2)
+        level.add_victim(3, 6)
+        level.add_victim(5, 6)
+
+        return level
+
+    @staticmethod
+    def s7_s05():
+
+        level = Level('Slayaway Camp 7, Scene 5 - Administration Assassination', 8, 8,
+            6, 7,
+            4, 0,
+            10)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_east(1, 0)
+        level.wall_south(2, 0)
+        level.wall_south(3, 0)
+        level.wall_south(6, 0)
+        level.wall_south(1, 1)
+        level.wall_south(2, 1)
+        level.wall_east(3, 1)
+        level.wall_east(4, 1)
+        level.wall_east(6, 1)
+        level.wall_east(0, 2)
+        level.wall_south(2, 2)
+        level.wall_south(4, 2)
+        level.wall_east(4, 2)
+        level.wall_east(5, 2)
+        level.wall_south(4, 3)
+        level.wall_east(2, 4)
+        level.wall_east(3, 4)
+        level.wall_south(6, 4)
+        level.wall_south(4, 5)
+        level.wall_east(6, 5)
+        level.wall_east(2, 6)
+        level.wall_south(4, 6)
+        level.wall_south(5, 6)
+        level.wall_east(6, 6)
+
+        level.wall_north(0, 6)
+        level.wall_north(1, 6)
+        level.wall_east(1, 6)
+        level.wall_east(1, 7)
+
+        level.wall_box(1, 4)
+        level.wall_box(7, 3)
+
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
+    def s7_s06():
+
+        level = Level('Slayaway Camp 7, Scene 6 - Involuntary Liquidation', 7, 7,
+            1, 3,
+            5, 2)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_south(0, 1)
+
+        level.wall_west(4, 0)
+        level.wall_south(4, 0)
+        level.wall_south(5, 0)
+        level.wall_south(6, 0)
+
+        level.wall_box(4, 2)
+
+        level.wall_north(0, 6)
+        level.electric_north(1, 6)
+        level.wall_east(1, 6)
+
+        level.wall_west(5, 6)
+        level.wall_north(5, 6)
+        level.wall_west(6, 5)
+        level.wall_north(6, 5)
+
+        level.electric_box(2, 4)
+
+        level.electric_east(6, 3)
+        level.electric_east(6, 4)
+
+        level.escape_north(3)
+
+        level.switch_north(4, 3)
+
+        level.add_cabinet_ns(3, 4)
+
+        level.add_victim(3, 1)
+        level.add_victim(2, 2)
+        level.add_victim(4, 4)
+
+        return level

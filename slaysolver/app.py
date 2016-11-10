@@ -976,6 +976,12 @@ class Level(object):
         self.short_wall_east(x, y)
         self.short_wall_west(x, y)
 
+    def electric_box(self, x, y):
+        self.electric_north(x, y)
+        self.electric_south(x, y)
+        self.electric_east(x, y)
+        self.electric_west(x, y)
+
     def get_cell(self, x, y):
         return self.cells[y][x]
 
