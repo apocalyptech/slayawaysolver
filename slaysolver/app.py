@@ -84,6 +84,20 @@
 # (It would be possible to set up a scenario where killing a
 # victim causes a chain reaction where another victim runs in
 # front of a SWAT sightline, for instance.)
+#
+# TODO: We've always played fast-and-loose with how we set up
+# walls, and it doesn't QUITE match what the game does.  For
+# instance, it looks like the game can have different wall
+# types on both side of the cell dividing line - I'd first
+# noticed it in SC7, with the electric walls, and it's something
+# which could potentially affect the solution, particularly if
+# SWAT cops are involved.  There's one in SC7, for instance,
+# which has a wall_box() surrounded by electric walls.  In our
+# code, this is going to be implemented just as an electric wall
+# box, but if a SWAT cop were capable of pointing into that
+# "box", the laser sight would pass through in our app but be
+# blocked in the game itself.  Will have to be on the lookout
+# for situations where that might actually affect things.
 
 import sys
 import colorama
@@ -126,6 +140,12 @@ color_exit_inactive = colorama.Fore.MAGENTA
 color_electric_on = colorama.Style.BRIGHT + colorama.Fore.CYAN
 color_electric_off = colorama.Style.BRIGHT + colorama.Fore.BLUE
 
+# Wall types
+WALL_NONE = 0
+WALL_REG = 1
+WALL_SHORT = 2
+WALL_ELEC = 3
+
 class PlayerLose(Exception):
     """
     Custom exception to handle player loss
@@ -140,9 +160,7 @@ class Cell(object):
         self.exit = False
         self.hazard = False
         self.mine = False
-        self.walls = [False]*4
-        self.short_walls = [False]*4
-        self.electrics = [False]*4
+        self.walls = [WALL_NONE]*4
         self.escapes = [False]*4
         self.switches = [False]*4
         self.victim = None
@@ -158,13 +176,13 @@ class Cell(object):
 
         if level is not None:
             if self.x == 0:
-                self.walls[DIR_W] = True
+                self.walls[DIR_W] = WALL_REG
             if self.x == level.width - 1:
-                self.walls[DIR_E] = True
+                self.walls[DIR_E] = WALL_REG
             if self.y == 0:
-                self.walls[DIR_N] = True
+                self.walls[DIR_N] = WALL_REG
             if self.y == level.height - 1:
-                self.walls[DIR_S] = True
+                self.walls[DIR_S] = WALL_REG
 
     def set_victim(self, victim):
         if victim.cell is not None:
@@ -230,31 +248,30 @@ class Cell(object):
         """
         Returns True if we have a wall of *any* type
         """
-        return (self.walls[direction] or self.short_walls[direction] or
-            self.electrics[direction])
+        return self.walls[direction] != WALL_NONE
 
     def get_color_corner(self, dir1, dir2):
-        if self.walls[dir1] or self.walls[dir2]:
+        if self.walls[dir1] == WALL_REG or self.walls[dir2] == WALL_REG:
             return ''
-        elif self.electrics[dir1] or self.electrics[dir2]:
+        elif self.walls[dir1] == WALL_ELEC or self.walls[dir2] == WALL_ELEC:
             if self.level.lights:
                 return color_electric_on
             else:
                 return color_electric_off
-        elif self.short_walls[dir1] or self.short_walls[dir2]:
+        elif self.walls[dir1] == WALL_SHORT or self.walls[dir2] == WALL_SHORT:
             return color_short_wall
         else:
             return ''
 
     def get_color_cardinal(self, direction):
-        if self.walls[direction]:
+        if self.walls[direction] == WALL_REG:
             return ''
-        elif self.electrics[direction]:
+        elif self.walls[direction] == WALL_ELEC:
             if self.level.lights:
                 return color_electric_on
             else:
                 return color_electric_off
-        elif self.short_walls[direction]:
+        elif self.walls[direction] == WALL_SHORT:
             return color_short_wall
         else:
             return ''
@@ -451,7 +468,7 @@ class Phone(object):
             cur_cell = self.cell
             while True:
                 # TODO: I don't *think* short walls block phone sounds?
-                if cur_cell.walls[direction]:
+                if cur_cell.walls[direction] == WALL_REG:
                     break
                 next_cell = self.level.get_cell_relative_cell(cur_cell, direction)
                 if next_cell:
@@ -536,7 +553,7 @@ class Victim(object):
         
         # Check for adjacent victims who might have been scared by our death
         for direction in DIRS:
-            if self.cell.walls[direction]:
+            if self.cell.walls[direction] == WALL_REG:
                 continue
             rel_cell = self.level.get_cell_relative_cell(self.cell, direction)
             if rel_cell.victim:
@@ -572,7 +589,7 @@ class Victim(object):
             cur_cell = self.cell
             if cur_cell.escapes[direction]:
                 raise PlayerLose('Victim escaped!')
-            if self.level.lights and cur_cell.electrics[direction]:
+            if self.level.lights and cur_cell.walls[direction] == WALL_ELEC:
                 self.die()
                 break
             if direction not in self.level.possible_moves(from_cell=cur_cell):
@@ -678,9 +695,7 @@ class Cop(Victim):
 
         cur_cell = self.cell
         if cur_cell is not None:
-            if (cur_cell.walls[self.facing] or
-                    cur_cell.short_walls[self.facing] or
-                    cur_cell.electrics[self.facing]):
+            if cur_cell.has_wall(self.facing):
                 return
 
             rel_cell = self.level.get_cell_relative_cell(cur_cell, self.facing)
@@ -753,7 +768,7 @@ class Swat(Cop):
         cur_cell = self.cell
         if cur_cell is not None:
             while True:
-                if cur_cell.walls[self.facing]:
+                if cur_cell.walls[self.facing] == WALL_REG:
                     break
 
                 rel_cell = self.level.get_cell_relative_cell(cur_cell, self.facing)
@@ -868,65 +883,61 @@ class Level(object):
         self.add_obstacle(x1, y1, p1)
         self.add_obstacle(x2, y2, p2)
 
-    def wall_west(self, x, y):
-        self.cells[y][x].walls[DIR_W] = True
+    def wall_generic_west(self, x, y, walltype):
+        self.cells[y][x].walls[DIR_W] = walltype
         if x > 0:
-            self.cells[y][x-1].walls[DIR_E] = True
+            self.cells[y][x-1].walls[DIR_E] = walltype
+
+    def wall_generic_east(self, x, y, walltype):
+        self.cells[y][x].walls[DIR_E] = walltype
+        if x < (self.width-1):
+            self.cells[y][x+1].walls[DIR_W] = walltype
+
+    def wall_generic_south(self, x, y, walltype):
+        self.cells[y][x].walls[DIR_S] = walltype
+        if y < (self.height-1):
+            self.cells[y+1][x].walls[DIR_N] = walltype
+
+    def wall_generic_north(self, x, y, walltype):
+        self.cells[y][x].walls[DIR_N] = walltype
+        if y > 0:
+            self.cells[y-1][x].walls[DIR_S] = walltype
+
+    def wall_west(self, x, y):
+        self.wall_generic_west(x, y, WALL_REG)
 
     def wall_east(self, x, y):
-        self.cells[y][x].walls[DIR_E] = True
-        if x < (self.width-1):
-            self.cells[y][x+1].walls[DIR_W] = True
+        self.wall_generic_east(x, y, WALL_REG)
 
     def wall_south(self, x, y):
-        self.cells[y][x].walls[DIR_S] = True
-        if y < (self.height-1):
-            self.cells[y+1][x].walls[DIR_N] = True
+        self.wall_generic_south(x, y, WALL_REG)
 
     def wall_north(self, x, y):
-        self.cells[y][x].walls[DIR_N] = True
-        if y > 0:
-            self.cells[y-1][x].walls[DIR_S] = True
+        self.wall_generic_north(x, y, WALL_REG)
 
     def short_wall_west(self, x, y):
-        self.cells[y][x].short_walls[DIR_W] = True
-        if x > 0:
-            self.cells[y][x-1].short_walls[DIR_E] = True
+        self.wall_generic_west(x, y, WALL_SHORT)
 
     def short_wall_east(self, x, y):
-        self.cells[y][x].short_walls[DIR_E] = True
-        if x < (self.width-1):
-            self.cells[y][x+1].short_walls[DIR_W] = True
+        self.wall_generic_east(x, y, WALL_SHORT)
 
     def short_wall_south(self, x, y):
-        self.cells[y][x].short_walls[DIR_S] = True
-        if y < (self.height-1):
-            self.cells[y+1][x].short_walls[DIR_N] = True
+        self.wall_generic_south(x, y, WALL_SHORT)
 
     def short_wall_north(self, x, y):
-        self.cells[y][x].short_walls[DIR_N] = True
-        if y > 0:
-            self.cells[y-1][x].short_walls[DIR_S] = True
+        self.wall_generic_north(x, y, WALL_SHORT)
 
     def electric_west(self, x, y):
-        self.cells[y][x].electrics[DIR_W] = True
-        if x > 0:
-            self.cells[y][x-1].electrics[DIR_E] = True
+        self.wall_generic_west(x, y, WALL_ELEC)
 
     def electric_east(self, x, y):
-        self.cells[y][x].electrics[DIR_E] = True
-        if x < (self.width-1):
-            self.cells[y][x+1].electrics[DIR_W] = True
+        self.wall_generic_east(x, y, WALL_ELEC)
 
     def electric_south(self, x, y):
-        self.cells[y][x].electrics[DIR_S] = True
-        if y < (self.height-1):
-            self.cells[y+1][x].electrics[DIR_N] = True
+        self.wall_generic_south(x, y, WALL_ELEC)
 
     def electric_north(self, x, y):
-        self.cells[y][x].electrics[DIR_N] = True
-        if y > 0:
-            self.cells[y-1][x].electrics[DIR_S] = True
+        self.wall_generic_north(x, y, WALL_ELEC)
 
     def escape_north(self, x):
         self.cells[0][x].escapes[DIR_N] = True
@@ -1020,7 +1031,7 @@ class Level(object):
                 if not keep_moving:
                     self.won = True
                     return True
-            if cur_cell.electrics[direction] and self.lights:
+            if cur_cell.walls[direction] == WALL_ELEC and self.lights:
                 raise PlayerLose('Electrocuted!')
             if direction not in self.possible_moves(from_cell=cur_cell):
                 break
@@ -1055,7 +1066,7 @@ class Level(object):
 
         # check for adjacent victims to scare
         for direction in DIRS:
-            if self.player.cell.walls[direction]:
+            if self.player.cell.walls[direction] == WALL_REG:
                 continue
             adj_cell = self.get_cell_relative_cell(self.player.cell, direction)
             if adj_cell is None:
@@ -1090,7 +1101,7 @@ class Level(object):
             # don't want to waste time walking directly into them, but we
             # CAN run into them once we've stepped, so we have to check for
             # it in move_player, *before* we check for possible_moves in there.
-            if from_cell.walls[direction] or from_cell.short_walls[direction] or from_cell.electrics[direction]:
+            if from_cell.has_wall(direction):
                 continue
             else:
                 rel_cell = self.get_cell_relative_cell(from_cell, direction)
