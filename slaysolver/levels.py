@@ -6285,3 +6285,220 @@ class Levels(object):
         level.add_victim(1, 5)
 
         return level
+
+    @staticmethod
+    def s10_s02():
+
+        level = Level('Slayaway Camp X, Scene 2 - Teleportation Agitation', 7, 7,
+            6, 0,
+            6, 2)
+
+        level.short_wall_south(6, 0)
+
+        level.short_wall_east(4, 0)
+        level.short_wall_east(4, 1)
+        level.short_wall_south(4, 1)
+        level.short_wall_south(3, 1)
+
+        level.short_wall_south(0, 3)
+        level.short_wall_east(0, 3)
+        level.short_wall_north(1, 3)
+
+        level.short_wall_north(3, 3)
+        level.short_wall_north(4, 3)
+        level.short_wall_north(5, 3)
+        level.short_wall_north(6, 3)
+
+        level.short_wall_south(0, 5)
+        level.short_wall_south(1, 5)
+        level.short_wall_south(2, 5)
+        level.short_wall_south(3, 5)
+        level.short_wall_south(4, 5)
+        level.short_wall_south(5, 5)
+        level.short_wall_east(5, 5)
+
+        level.set_sticky(2, 3)
+
+        level.add_teleporter_pair(0, 0, 6, 6)
+
+        level.add_victim(4, 0)
+        level.add_victim(1, 4)
+
+        return level
+
+    @staticmethod
+    def s10_s03():
+
+        level = Level('Slayaway Camp X, Scene 3 - Space Experiment #13B', 7, 7,
+            3, 1,
+            5, 0,
+            9)
+
+        level.wall_east(1, 0)
+        level.wall_east(1, 1)
+        level.wall_south(0, 2)
+        level.wall_south(1, 2)
+
+        level.wall_box(0, 6)
+        level.wall_box(6, 0)
+
+        level.electric_west(2, 2)
+        level.electric_south(2, 2)
+        level.electric_north(3, 2)
+        level.electric_south(3, 2)
+        level.electric_north(4, 2)
+        level.electric_east(4, 2)
+        level.electric_west(2, 3)
+        level.electric_south(3, 3)
+        level.electric_south(4, 3)
+        level.electric_east(4, 3)
+        level.electric_west(2, 4)
+        level.electric_south(2, 4)
+        level.electric_south(3, 4)
+        level.electric_south(4, 4)
+
+        level.short_wall_south(5, 4)
+        level.short_wall_east(5, 4)
+
+        level.switch_north(2, 0)
+
+        level.add_victim(4, 2)
+        level.add_victim(2, 3)
+        level.add_victim(4, 4)
+
+        return level
+
+    @staticmethod
+    def s10_s04():
+
+        level = Level('Slayaway Camp X, Scene 4 - Dumblight Minecat Frexit', 9, 8,
+            4, 4,
+            1, 3)
+
+        level.wall_east(0, 2)
+        level.wall_east(0, 3)
+        level.wall_east(0, 4)
+        level.wall_north(1, 5)
+        level.wall_east(1, 5)
+
+        level.wall_west(3, 2)
+        level.wall_south(3, 2)
+        level.wall_south(4, 2)
+
+        level.short_wall_north(0, 1)
+        level.short_wall_south(0, 1)
+        level.short_wall_north(1, 1)
+        level.short_wall_south(1, 1)
+        level.short_wall_north(2, 1)
+        level.short_wall_south(2, 1)
+        level.short_wall_south(3, 1)
+        level.short_wall_north(4, 1)
+        level.short_wall_south(4, 1)
+        level.short_wall_north(5, 1)
+        level.short_wall_south(5, 1)
+        level.short_wall_north(6, 1)
+        level.short_wall_south(7, 1)
+        level.short_wall_east(7, 1)
+        level.short_wall_west(5, 2)
+
+        level.short_wall_north(0, 6)
+        level.short_wall_south(0, 6)
+        level.short_wall_north(1, 6)
+        level.short_wall_south(1, 6)
+        level.short_wall_north(2, 6)
+        level.short_wall_south(2, 6)
+        level.short_wall_north(3, 6)
+        level.short_wall_south(3, 6)
+        level.short_wall_north(4, 6)
+        level.short_wall_north(5, 6)
+        level.short_wall_south(5, 6)
+        level.short_wall_south(6, 6)
+        level.short_wall_north(7, 6)
+        level.short_wall_east(7, 6)
+        level.short_wall_west(5, 5)
+
+        level.escape_west(1)
+        level.escape_west(6)
+
+        level.set_mine(2, 1)
+        level.set_mine(7, 1)
+        level.set_mine(2, 6)
+        level.set_mine(7, 6)
+
+        level.set_sticky(3, 0)
+        level.set_sticky(4, 7)
+
+        level.switch_west(0, 0)
+        level.switch_west(0, 7)
+
+        level.add_cabinet_ns(8, 3)
+
+        level.add_cop(6, 1, DIR_W)
+
+        level.add_victim(5, 1)
+        level.add_victim(2, 4)
+        level.add_victim(5, 6)
+
+        level.add_cat(1, 1)
+        level.add_cat(1, 6)
+        
+        return level
+
+    @staticmethod
+    def s10_s05():
+
+        level = Level('Slayaway Camp X, Scene 5 - Space Station Slay', 9, 7,
+            5, 4,
+            7, 0)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_east(1, 0)
+
+        level.wall_north(0, 5)
+        level.wall_east(0, 5)
+        level.wall_east(0, 6)
+
+        level.electric_north(4, 0)
+        level.electric_north(6, 0)
+        level.electric_east(8, 6)
+
+        level.short_wall_south(2, 0)
+        level.short_wall_south(3, 0)
+        level.short_wall_south(5, 0)
+        level.short_wall_south(7, 0)
+
+        level.short_wall_south(0, 2)
+        level.short_wall_east(0, 2)
+        level.short_wall_south(1, 1)
+        level.short_wall_south(2, 1)
+        level.short_wall_south(3, 1)
+        level.short_wall_south(5, 1)
+        level.short_wall_south(7, 1)
+
+        level.short_wall_south(2, 2)
+        level.short_wall_south(3, 2)
+        level.short_wall_south(5, 2)
+        level.short_wall_south(6, 2)
+        level.short_wall_south(7, 2)
+        level.short_wall_east(7, 2)
+        level.short_wall_east(7, 3)
+
+        level.short_wall_east(1, 4)
+        level.short_wall_east(1, 5)
+        level.short_wall_east(4, 5)
+
+        level.set_sticky(1, 4)
+        level.set_sticky(2, 5)
+        level.set_sticky(7, 4)
+        level.set_sticky(8, 5)
+
+        level.add_teleporter_pair(2, 3, 6, 2)
+        level.add_teleporter_pair(1, 6, 8, 0)
+
+        level.add_victim(0, 1)
+        level.add_victim(2, 2)
+        level.add_victim(2, 4)
+        level.add_victim(4, 6)
+
+        return level
