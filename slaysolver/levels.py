@@ -6201,3 +6201,49 @@ class Levels(object):
         level.add_victim(6, 6)
 
         return level
+
+    @staticmethod
+    def s8_d3():
+
+        # This one is quite a monster to solve, probably takes the longest
+        # out of all the levels here, so far.  The basic problem is that the
+        # tree is unavoidably deep - the quickest solution is 57 steps, and
+        # the cabinets+goo make for a very wide tree as well.
+
+        level = Level('Slayaway Camp 8, Deleted Scene 3 - Porta-Potty Mouth', 8, 7,
+            1, 2,
+            6, 4)
+
+        level.wall_south(0, 3)
+        level.wall_east(0, 3)
+        level.wall_east(0, 2)
+        level.wall_east(0, 1)
+        level.wall_east(0, 0)
+
+        for x in range(1, 7):
+            level.short_wall_east(x, 4)
+            level.short_wall_east(x, 5)
+            level.short_wall_south(x, 5)
+            level.add_cabinet_ns(x, 1)
+
+        level.set_sticky(1, 0)
+        level.set_sticky(2, 0)
+        level.set_sticky(5, 0)
+        level.set_sticky(6, 0)
+        level.set_sticky(4, 2)
+        level.set_sticky(5, 2)
+        level.set_sticky(6, 2)
+        level.set_sticky(1, 3)
+        level.set_sticky(2, 6)
+        level.set_sticky(4, 6)
+        level.set_sticky(6, 6)
+
+        level.set_mine(3, 4)
+
+        level.add_cop(0, 5, DIR_E)
+        level.add_victim(2, 5)
+        level.add_victim(3, 5)
+        level.add_victim(4, 5)
+        level.add_victim(6, 5)
+
+        return level
