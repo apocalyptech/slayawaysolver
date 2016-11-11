@@ -655,7 +655,7 @@ class Victim(object):
                 break
             if next_cell.victim:
                 break
-            if next_cell.teleporter:
+            if next_cell.teleporter and not next_cell.teleporter.other.cell.victim:
                 next_cell.teleporter.other.cell.set_victim(self)
             else:
                 next_cell.set_victim(self)
@@ -670,6 +670,23 @@ class Victim(object):
             first_move = False
 
         return False
+
+    def teleport_scare(self):
+        """
+        I'm not totally sure what the behavior here is.  This can be observed
+        in X.D1 - a victim is scared onto the other side of a teleporter, but
+        is blocked by a wall there, so remains on top of the far side.  When
+        the player reaches the teleporter (going east), it generates a scare
+        event of some sort but the victim goes NORTH instead (since east is
+        blocked).  You can later similarly force the victim back down through
+        the teleporter (though doing so puts the level in an unwinnable state)
+        but the victim can't be scared away from the remote side in the same
+        way.  I'm really not sure what the conditions are for it.  For now,
+        since this only appears to happen in the one place, I'm hardcoding it
+        to only scare north, and I'll have to see if anything else changes the
+        behavior.
+        """
+        self.scare(DIR_N)
 
     def can_hit(self, obstacle):
         return True
@@ -1136,15 +1153,22 @@ class Level(object):
                 break
 
             if next_cell.teleporter:
-                # Hopping into a teleporter scares adjacent victims
-                self.scare_from_cell(next_cell)
-                self.player.cell = next_cell.teleporter.other.cell
+                # Check to see if any victim is *on* the other side.  If
+                # so, call a custom scare method and just continue on.
+                if next_cell.teleporter.other.cell.victim:
+                    next_cell.teleporter.other.cell.victim.teleport_scare()
+                    self.player.cell = next_cell
+                else:
 
-                # I am guessing that hopping OUT of a teleporter also
-                # scares victims, though I have yet to run into a level
-                # which would exhibit that behavior (or not)
-                # TODO: Find out?
-                self.scare_from_cell(self.player.cell)
+                    # Hopping into a teleporter scares adjacent victims
+                    self.scare_from_cell(next_cell)
+                    self.player.cell = next_cell.teleporter.other.cell
+
+                    # I am guessing that hopping OUT of a teleporter also
+                    # scares victims, though I have yet to run into a level
+                    # which would exhibit that behavior (or not)
+                    # TODO: Find out?
+                    self.scare_from_cell(self.player.cell)
             else:
                 self.player.cell = next_cell
 

@@ -6855,3 +6855,50 @@ class Levels(object):
         level.add_victim(4, 7)
 
         return level
+
+    @staticmethod
+    def s10_d1():
+
+        level = Level('Slayaway Camp X, Deleted Scene 1 - A Maze In Space', 9, 9,
+            0, 8,
+            4, 4)
+
+        level.short_wall_south(2, 0)
+        level.short_wall_east(3, 0)
+        level.short_wall_south(7, 0)
+        level.short_wall_east(2, 1)
+        level.short_wall_south(8, 1)
+        level.short_wall_south(0, 2)
+        level.short_wall_east(1, 2)
+        level.short_wall_south(5, 2)
+        level.short_wall_east(2, 3)
+        level.short_wall_east(5, 3)
+        level.short_wall_south(8, 3)
+        level.short_wall_east(3, 4)
+        level.short_wall_south(4, 4)
+        level.short_wall_east(4, 4)
+        level.short_wall_south(6, 4)
+        level.short_wall_south(1, 5)
+        level.short_wall_east(2, 5)
+        level.short_wall_south(3, 5)
+        level.short_wall_south(5, 5)
+        level.short_wall_east(5, 5)
+        level.short_wall_south(2, 6)
+        level.short_wall_east(7, 6)
+        level.short_wall_east(5, 7)
+
+        for x in range(9):
+            level.short_wall_south(x, 7)
+
+        level.set_sticky(1, 0)
+        level.set_sticky(4, 2)
+        level.set_sticky(7, 7)
+        level.set_sticky(1, 8)
+
+        level.add_teleporter_pair(3, 8, 8, 7)
+        level.add_teleporter_pair(0, 0, 4, 3)
+
+        level.add_victim(2, 8)
+        level.add_cat(3, 6)
+
+        return level
