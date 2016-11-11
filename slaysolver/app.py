@@ -322,7 +322,7 @@ class Cell(object):
         else:
             return ' '
 
-    def get_print_cardinal(self, direction, escape, char, facing_char):
+    def get_print_cardinal(self, direction, escape, character, facing_char):
         """
         Gets the value to print in a cardinal direction.
         """
@@ -333,7 +333,7 @@ class Cell(object):
         elif self.switches[direction]:
             return '~'
         elif self.has_wall(direction):
-            return self.get_color_cardinal(direction) + char
+            return self.get_color_cardinal(direction) + character
         else:
             return ' '
 
@@ -534,17 +534,17 @@ class Phone(object):
 
 class Teleporter(object):
 
-    def __init__(self, level, char):
+    def __init__(self, level, character):
         """
         ``char`` should be a single printable char
         """
         self.level = level
-        self.char = char
+        self.character = character
         self.cell = None
         self.other = None
 
     def get_interactive_character(self):
-        return self.char[0]
+        return self.character[0]
 
 class Mine(object):
 
@@ -919,6 +919,8 @@ class Level(object):
         self.latest_phone_pair = 0
         self.latest_teleporter_pair = 0
 
+        self.return_first_solution = False
+
     def add_victim_obj(self, x, y, victim):
         self.victims.append(victim)
         self.cells[y][x].set_victim(victim)
@@ -959,10 +961,10 @@ class Level(object):
         self.get_cell(x, y).set_teleporter(teleporter)
 
     def add_teleporter_pair(self, x1, y1, x2, y2):
-        char = teleporter_chars[self.latest_teleporter_pair]
+        character = teleporter_chars[self.latest_teleporter_pair]
         self.latest_teleporter_pair += 1
-        t1 = Teleporter(self, char)
-        t2 = Teleporter(self, char)
+        t1 = Teleporter(self, character)
+        t2 = Teleporter(self, character)
         t1.other = t2
         t2.other = t1
         self.add_teleporter(x1, y1, t1)
@@ -1268,7 +1270,7 @@ class Level(object):
         self.lights = not self.lights
         self.update_all_facing_vars()
 
-    def print(self):
+    def print_level(self):
 
         print(self.desc)
         for col in self.cells:
@@ -1421,8 +1423,8 @@ class Game(object):
         if not quiet and display_moves:
             self.print_winning_move_set(self.moves)
 
-    def print(self):
-        self.level.print()
+    def print_status(self):
+        self.level.print_level()
         if self.level.won:
             print('You win!')
             print('')
@@ -1444,7 +1446,7 @@ class Game(object):
         colorama.init(autoreset=True)
         self.level.update_all_facing_vars()
         while True:
-            self.print()
+            self.print_status()
             if self.level.won:
                 return True
             elif self.step_limit():
@@ -1481,6 +1483,8 @@ class Game(object):
                         print('-'*len(report_str))
 
     def solve_recurs(self):
+        if self.level.return_first_solution and self.solution is not None:
+            return
         (state, new_checksum) = self.get_state()
         if not new_checksum:
             return
@@ -1488,6 +1492,8 @@ class Game(object):
             try:
                 if (self.move(direction, state)):
                     self.store_winning_moves(quiet=True, display_moves=False)
+                    if self.level.return_first_solution:
+                        return
                     self.undo()
                 else:
                     if self.step_limit():

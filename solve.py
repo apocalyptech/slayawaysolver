@@ -40,6 +40,8 @@ if __name__ == '__main__':
     if args.interactive:
         game.interactive()
     elif args.test:
+        if game.level.return_first_solution:
+            print('NOTE: We will return the first solution found, not the most optimal one.')
         dir_str = {
             DIR_N: 'DIR_N',
             DIR_S: 'DIR_S',
@@ -63,6 +65,8 @@ if __name__ == '__main__':
             print('        ])')
             print('')
     else:
+        if game.level.return_first_solution:
+            print('NOTE: We will return the first solution found, not the most optimal one.')
         game.solve()
         if game.solution is None:
             if game.max_steps is None:

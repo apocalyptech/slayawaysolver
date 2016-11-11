@@ -6210,6 +6210,8 @@ class Levels(object):
         # tree is unavoidably deep - the quickest solution is 57 steps, and
         # the cabinets+goo make for a very wide tree as well.
 
+        # (Update: s10_d4 is even worse!)
+
         level = Level('Slayaway Camp 8, Deleted Scene 3 - Porta-Potty Mouth', 8, 7,
             1, 2,
             6, 4)
@@ -6900,5 +6902,200 @@ class Levels(object):
 
         level.add_victim(2, 8)
         level.add_cat(3, 6)
+
+        return level
+
+    @staticmethod
+    def s10_d2():
+
+        level = Level('Slayaway Camp X, Deleted Scene 2 - Transport Protocol', 7, 7,
+            2, 6,
+            2, 5,
+            11)
+
+        level.short_wall_east(0, 0)
+        level.short_wall_east(0, 1)
+        level.short_wall_east(0, 3)
+        level.short_wall_east(0, 5)
+
+        level.short_wall_west(2, 0)
+        level.short_wall_south(2, 0)
+        level.short_wall_south(3, 0)
+        level.short_wall_south(4, 0)
+        level.short_wall_south(5, 0)
+        level.short_wall_east(5, 1)
+        level.short_wall_east(5, 3)
+        level.short_wall_east(5, 5)
+
+        level.wall_east(2, 5)
+
+        level.set_hazard(6, 6)
+        level.set_sticky(4, 1)
+
+        level.add_cabinet_ns(4, 2)
+        level.add_cabinet_ns(2, 4)
+        level.add_cabinet_ns(3, 5)
+
+        level.add_teleporter_pair(0, 2, 6, 4)
+        level.add_teleporter_pair(0, 4, 6, 0)
+        level.add_teleporter_pair(0, 6, 6, 2)
+
+        level.add_victim(2, 0)
+
+        return level
+
+    @staticmethod
+    def s10_d3():
+
+        level = Level('Slayaway Camp X, Deleted Scene 3 - Generator Gymnastics', 9, 9,
+            1, 2,
+            2, 8)
+
+        for x in [0, 1, 2, 3, 5, 6]:
+            level.short_wall_north(x, 4)
+            level.short_wall_south(x, 4)
+        for y in [0, 1, 2, 3, 5, 6]:
+            level.short_wall_west(4, y)
+            level.short_wall_east(4, y)
+
+        level.short_wall_east(2, 1)
+        level.short_wall_north(2, 1)
+        level.short_wall_north(1, 1)
+        level.wall_west(1, 1)
+        level.wall_west(1, 2)
+        level.wall_south(1, 2)
+        level.wall_south(2, 2)
+        level.wall_south(3, 2)
+
+        level.short_wall_east(6, 0)
+        level.short_wall_east(6, 2)
+        level.short_wall_east(6, 3)
+        level.short_wall_east(6, 4)
+        level.short_wall_east(7, 0)
+        level.short_wall_east(7, 1)
+        level.short_wall_east(7, 2)
+
+        level.short_wall_east(3, 7)
+        level.short_wall_east(3, 8)
+
+        level.wall_west(5, 8)
+        level.wall_west(5, 7)
+        level.wall_north(5, 7)
+        level.wall_west(7, 5)
+        level.wall_north(7, 5)
+        level.wall_north(8, 5)
+        level.short_wall_south(7, 6)
+
+        level.set_mine(7, 1)
+        level.set_mine(8, 1)
+        level.set_sticky(6, 1)
+        level.set_sticky(0, 6)
+        level.set_sticky(1, 6)
+        level.set_sticky(1, 7)
+        level.set_sticky(2, 5)
+
+        level.add_teleporter_pair(2, 1, 5, 0)
+        level.add_teleporter_pair(0, 0, 8, 8)
+        level.add_teleporter_pair(2, 6, 6, 6)
+
+        level.add_phone_pair(3, 3, 5, 3)
+        level.add_phone_pair(5, 5, 7, 0)
+        level.add_phone_pair(0, 8, 8, 0)
+
+        level.add_swat(5, 1, DIR_W)
+        level.add_swat(0, 5, DIR_S)
+        level.add_swat(1, 8, DIR_E)
+
+        level.add_victim(7, 3)
+        level.add_victim(8, 2)
+        level.add_victim(3, 8)
+
+        return level
+
+    @staticmethod
+    def s10_d4():
+
+        # This is another monster to solve - much worse than 8.D3, in fact.  On my
+        # system, after compiling app.py with Cython, it takes a little over 24
+        # minutes to find the first solution, which sits at 176 steps.
+
+        level = Level('Slayaway Camp X, Deleted Scene 4 - As Hard as it Looks', 9, 9,
+            1, 8,
+            7, 6)
+
+        level.return_first_solution = True
+
+        level.electric_east(1, 2)
+        level.electric_south(1, 2)
+        level.short_wall_west(1, 2)
+        level.short_wall_west(1, 1)
+        level.short_wall_north(1, 1)
+        level.short_wall_north(2, 1)
+        level.short_wall_north(3, 1)
+        level.electric_east(3, 1)
+
+        level.short_wall_west(6, 1)
+        level.short_wall_north(6, 1)
+        level.short_wall_north(7, 1)
+        level.short_wall_east(7, 1)
+        level.electric_east(7, 2)
+        level.electric_east(7, 3)
+        level.short_wall_south(7, 3)
+
+        level.short_wall_north(1, 5)
+        level.short_wall_west(1, 5)
+        level.short_wall_west(1, 6)
+        level.short_wall_west(1, 7)
+        level.short_wall_south(1, 7)
+        level.short_wall_south(2, 7)
+        level.electric_east(2, 7)
+
+        level.electric_north(5, 7)
+        level.short_wall_west(5, 7)
+        level.short_wall_south(5, 7)
+        level.short_wall_south(6, 7)
+        level.short_wall_south(7, 7)
+        level.short_wall_east(7, 7)
+        level.short_wall_east(7, 6)
+        level.short_wall_north(7, 6)
+
+        level.short_wall_east(3, 4)
+        level.short_wall_east(3, 5)
+        level.short_wall_east(3, 6)
+
+        level.switch_north(0, 0)
+        level.switch_north(8, 0)
+
+        level.set_sticky(4, 0)
+        level.set_sticky(5, 0)
+        level.set_sticky(3, 8)
+        level.set_sticky(4, 8)
+        level.set_sticky(0, 3)
+        level.set_sticky(0, 4)
+        level.set_sticky(8, 4)
+        level.set_sticky(8, 5)
+
+        level.add_teleporter_pair(2, 1, 7, 7)
+        level.add_teleporter_pair(7, 1, 5, 6)
+        level.add_teleporter_pair(1, 7, 5, 3)
+
+        level.add_cabinet_ns(4, 1)
+        level.add_cabinet_ns(5, 1)
+        level.add_cabinet_ns(3, 7)
+        level.add_cabinet_ns(4, 7)
+        level.add_cabinet_we(1, 3)
+        level.add_cabinet_we(1, 4)
+        level.add_cabinet_we(7, 4)
+        level.add_cabinet_we(7, 5)
+
+        level.add_cop(3, 0, DIR_S)
+        level.add_cop(0, 5, DIR_E)
+        level.add_cop(8, 6, DIR_W)
+        level.add_cop(6, 8, DIR_N)
+
+        level.add_victim(3, 1)
+        level.add_victim(6, 3)
+        level.add_victim(1, 5)
+        level.add_victim(3, 6)
 
         return level
