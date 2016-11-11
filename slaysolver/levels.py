@@ -4,14 +4,18 @@
 import re
 from slaysolver.app import Level, DIR_N, DIR_S, DIR_E, DIR_W
 
-levelre = re.compile('^s(\d+)_([sd])(\d+)$')
+levelre = re.compile('^(nc17_)?s(\d+)_([sd])(\d+)$')
 def level_sort_key(levelname):
     match = levelre.match(levelname)
     if not match:
         return 'ZZZ'
-    movie = int(match.group(1))
-    leveltype = match.group(2)
-    levelnum = int(match.group(3))
+    if match.group(1):
+        nc17 = 1
+    else:
+        nc17 = 0
+    movie = int(match.group(2))
+    leveltype = match.group(3)
+    levelnum = int(match.group(4))
 
     # This here to handle 2.5
     if movie != 25:
@@ -23,7 +27,7 @@ def level_sort_key(levelname):
     else:
         typekey = 2
 
-    return '%03d_%d_%02d' % (movie, typekey, levelnum)
+    return '%d_%03d_%d_%02d' % (nc17, movie, typekey, levelnum)
 
 class Levels(object):
 
@@ -169,32 +173,6 @@ class Levels(object):
         level.add_victim(0, 3)
         level.add_victim(1, 3)
         level.add_victim(5, 2)
-
-        return level
-
-    @staticmethod
-    def s1_s06():
-
-        level = Level('Slayaway Camp 1, Scene 6', 5, 6,
-            1, 4,
-            0, 0)
-
-        level.wall_east(0, 5)
-        level.wall_east(0, 4)
-        level.wall_north(0, 4)
-        level.wall_east(0, 0)
-        level.wall_south(1, 0)
-        level.wall_south(2, 0)
-        level.wall_south(4, 0)
-        level.wall_west(3, 1)
-        level.wall_east(3, 1)
-        level.wall_west(3, 2)
-        level.wall_east(3, 2)
-        level.wall_south(3, 2)
-        level.wall_box(3, 5)
-
-        level.add_victim(4, 3)
-        level.add_victim(4, 4)
 
         return level
 
@@ -7097,5 +7075,352 @@ class Levels(object):
         level.add_victim(6, 3)
         level.add_victim(1, 5)
         level.add_victim(3, 6)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s01():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 1 - Last Day of Camp', 7, 2,
+            3, 1,
+            6, 1)
+
+        level.electric_south(2, 0)
+        level.electric_east(2, 0)
+        level.electric_south(3, 0)
+        level.electric_east(3, 0)
+        level.electric_south(4, 0)
+
+        level.set_sticky(2, 1)
+        level.set_sticky(4, 1)
+        
+        level.switch_west(0, 0)
+
+        level.add_cabinet_we(1, 0)
+        level.add_cabinet_we(5, 0)
+
+        level.add_victim(2, 0)
+        level.add_victim(3, 0)
+        level.add_victim(4, 0)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s02():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 2 - Safety First', 6, 6,
+            0, 1,
+            0, 1)
+
+        level.wall_east(3, 0)
+        level.wall_south(3, 0)
+        level.wall_east(3, 1)
+        level.wall_east(3, 2)
+        level.wall_south(4, 2)
+        level.wall_south(5, 2)
+        level.wall_south(4, 3)
+        level.wall_south(5, 3)
+        level.wall_east(3, 4)
+        level.wall_east(3, 5)
+
+        level.wall_box(0, 2)
+        level.wall_box(1, 2)
+
+        level.wall_south(3, 0)
+        level.set_mine(1, 3)
+
+        level.add_phone_pair(0, 3, 3, 5)
+
+        level.add_cop(3, 0, DIR_S)
+        level.add_cop(3, 3, DIR_S)
+        level.add_victim(4, 3)
+        level.add_victim(5, 3)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s03():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 3 - Camp of the Damned', 6, 7,
+            2, 6,
+            0, 0)
+
+        # Walls
+        level.wall_east(0, 0)
+
+        level.wall_south(0, 3)
+        level.wall_south(1, 3)
+        level.wall_south(2, 3)
+        level.wall_south(5, 3)
+
+        level.wall_east(0, 4)
+        level.wall_south(0, 4)
+
+        level.wall_box(3, 5)
+        level.wall_box(3, 6)
+
+        level.wall_west(1, 1)
+        level.wall_south(1, 1)
+        level.wall_south(2, 1)
+        level.wall_east(2, 1)
+        level.wall_east(2, 0)
+
+        level.set_sticky(4, 4)
+        level.set_sticky(1, 5)
+
+        level.add_cabinet_ns(3, 0)
+        level.add_cabinet_ns(5, 0)
+
+        level.add_swat(4, 0, DIR_S)
+
+        level.add_victim(3, 3)
+        level.add_victim(4, 3)
+        level.add_victim(1, 5)
+        level.add_victim(5, 5)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s04():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 4 - The Hills Have Noses', 6, 6,
+            3, 4,
+            2, 5,
+            7)
+
+        level.wall_north(0, 4)
+        level.wall_east(0, 3)
+        level.wall_east(0, 2)
+        level.wall_east(0, 1)
+        level.wall_north(0, 1)
+
+        level.wall_box(5, 4)
+        level.wall_box(3, 2)
+
+        level.add_cabinet_ns(4, 1)
+        level.add_cabinet_we(1, 5)
+
+        level.add_victim(1, 2)
+        level.add_victim(4, 3)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s05():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 5 - Demonwarp Woods', 7, 6,
+            3, 3,
+            4, 3,
+            10)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_east(0, 2)
+        level.wall_east(1, 4)
+        level.wall_north(3, 4)
+        level.wall_west(6, 3)
+        level.wall_west(6, 2)
+
+        level.wall_west(4, 5)
+        level.wall_north(4, 5)
+        level.wall_north(5, 5)
+        level.wall_north(6, 5)
+
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.add_victim(0, 4)
+        level.add_victim(3, 1)
+        level.add_victim(5, 2)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s06():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 6 - A Slash in Time', 5, 6,
+            1, 5,
+            3, 4)
+
+        level.wall_east(0, 5)
+        level.wall_east(0, 4)
+        level.wall_north(0, 4)
+        level.wall_east(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_south(4, 0)
+        level.wall_west(3, 1)
+        level.wall_east(3, 1)
+        level.wall_west(3, 2)
+        level.wall_east(3, 2)
+        level.wall_south(3, 2)
+        level.wall_box(3, 5)
+
+        level.set_sticky(1, 1)
+        level.set_sticky(1, 3)
+        level.set_sticky(2, 3)
+
+        level.add_phone_pair(0, 0, 4, 1)
+
+        level.add_cabinet_ns(0, 2)
+
+        level.add_cop(4, 5, DIR_N)
+        level.add_victim(1, 2)
+        level.add_victim(1, 3)
+        level.add_victim(4, 4)
+        level.add_cat(0, 1)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s07():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 7 - Flames of Fear', 6, 6,
+            0, 3,
+            5, 4,
+            10)
+
+        level.wall_box(0, 5)
+        level.wall_box(3, 4)
+        level.wall_box(4, 3)
+        level.wall_box(1, 1)
+
+        level.wall_east(2, 0)
+        level.wall_south(3, 0)
+        level.wall_west(4, 1)
+        level.wall_south(4, 1)
+        level.wall_south(5, 1)
+
+        level.set_hazard(2, 2)
+
+        level.add_victim(2, 1)
+        level.add_victim(3, 2)
+        level.add_victim(2, 3)
+        level.add_victim(1, 4)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s08():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 8 - Polynesian Peril', 8, 6,
+            5, 1,
+            0, 0)
+
+        level.wall_west(6, 5)
+        level.wall_north(6, 5)
+        level.wall_north(7, 5)
+
+        level.wall_east(1, 5)
+        level.wall_north(1, 5)
+        level.wall_north(0, 5)
+        level.wall_north(0, 3)
+        level.wall_box(1, 0)
+        level.wall_box(5, 0)
+        level.wall_box(7, 0)
+        level.wall_box(7, 1)
+
+        level.wall_south(3, 2)
+        level.wall_box(4, 2)
+
+        level.wall_south(2, 3)
+        level.wall_south(3, 3)
+        level.wall_south(4, 3)
+        level.wall_south(5, 3)
+
+        level.set_hazard(1, 3)
+        level.set_hazard(6, 3)
+
+        level.set_sticky(1, 1)
+        level.set_sticky(3, 1)
+        level.set_sticky(4, 1)
+        level.set_sticky(5, 1)
+        level.set_sticky(5, 2)
+
+        level.set_mine(4, 4)
+
+        level.add_phone_pair(0, 3, 4, 0)
+        level.add_phone_pair(3, 0, 7, 4)
+        level.add_phone_pair(2, 0, 6, 0)
+
+        level.add_victim(0, 4)
+        level.add_victim(1, 4)
+        level.add_victim(2, 3)
+        level.add_victim(7, 2)
+        level.add_cat(6, 2)
+
+        return level
+
+    @staticmethod
+    def nc17_s1_s09():
+
+        level = Level('Slayaway Camp 1 (NC17), Scene 9 - Death Becomes You', 5, 6,
+            3, 1,
+            3, 3,
+            10)
+
+        level.wall_box(3, 5)
+        level.wall_box(4, 3)
+        level.wall_box(4, 0)
+
+        level.wall_east(0, 5)
+        level.wall_east(0, 4)
+        level.wall_north(0, 4)
+
+        level.electric_north(1, 1)
+        level.electric_south(2, 1)
+        level.electric_south(3, 1)
+        level.electric_south(1, 2)
+        level.electric_south(2, 2)
+
+        level.switch_north(0, 0)
+
+        level.add_victim(1, 2)
+        level.add_victim(1, 3)
+        
+        return level
+
+    @staticmethod
+    def nc17_s1_s10():
+
+        # Fudging the exit a bit, here.  The actual level
+        # is special-cased so that you win when you scare
+        # the victim into the hole.
+        level = Level('Slayaway Camp 1 (NC17), Scene 10 - Hole In One', 6, 6,
+            5, 0,
+            4, 5)
+
+        level.set_hazard(5, 5)
+        level.set_hazard(1, 5)
+
+        level.wall_west(1, 0)
+        level.wall_south(1, 0)
+        level.wall_east(1, 1)
+        level.wall_south(3, 0)
+        level.wall_east(4, 0)
+        level.wall_south(5, 1)
+        level.wall_south(0, 2)
+        level.wall_east(3, 2)
+        level.wall_south(3, 2)
+        level.wall_east(1, 3)
+        level.wall_south(3, 3)
+        level.wall_south(5, 3)
+        level.wall_south(2, 4)
+        level.wall_south(3, 4)
+
+        level.set_sticky(3, 1)
+        level.set_sticky(2, 3)
+        level.set_sticky(3, 3)
+        level.set_sticky(1, 4)
+        level.set_sticky(2, 4)
+
+        level.add_phone_pair(0, 0, 4, 2)
+
+        level.add_swat(0, 2, DIR_E)
+        level.add_victim(2, 2)
+        level.add_victim(2, 4)
+        level.add_victim(3, 5)
+        level.add_victim(4, 5)
 
         return level
