@@ -6756,3 +6756,102 @@ class Levels(object):
         level.add_victim(5, 7)
 
         return level
+
+    @staticmethod
+    def s10_s12():
+
+        level = Level('Slayaway Camp X, Scene 12 - Beam Me Up', 8, 9,
+            4, 4,
+            4, 2)
+
+        level.escape_north(2)
+        level.escape_west(3)
+
+        level.short_wall_north(1, 1)
+        level.short_wall_west(1, 1)
+        level.short_wall_west(1, 2)
+        level.short_wall_east(3, 0)
+        level.short_wall_east(2, 1)
+        level.short_wall_south(2, 2)
+        level.short_wall_east(1, 5)
+
+        level.short_wall_east(5, 1)
+        level.short_wall_east(5, 2)
+        level.short_wall_east(5, 3)
+        level.short_wall_east(5, 4)
+        level.short_wall_east(5, 5)
+        level.short_wall_south(5, 5)
+        level.short_wall_east(5, 6)
+        level.short_wall_south(5, 6)
+        level.short_wall_south(4, 6)
+        level.short_wall_south(3, 6)
+        level.short_wall_south(2, 6)
+        level.short_wall_south(1, 6)
+
+        for z in range(7):
+            level.short_wall_south(z, 7)
+            level.short_wall_east(6, z)
+        level.short_wall_east(6, 7)
+
+        level.add_teleporter_pair(2, 2, 5, 0)
+        level.add_teleporter_pair(0, 6, 3, 3)
+        level.add_teleporter_pair(4, 0, 7, 8)
+
+        level.add_victim(7, 1)
+        level.add_victim(5, 3)
+        level.add_victim(3, 6)
+        level.add_victim(1, 8)
+
+        return level
+
+    @staticmethod
+    def s10_s13():
+
+        # The usual amount of exit fiddling here.  In the game there's actually
+        # two different locations the last victim can end up in; the shortest
+        # possible solution is when the 'exit' is at (6,4) (with the last victim
+        # at (6,5), which will be one turn quicker than the alternative (exit
+        # at (6,3) and victim at (6,2))
+
+        level = Level('Slayaway Camp X, Scene 13 - Engine Room Rampage', 8, 9,
+            2, 3,
+            6, 4)
+
+        for y in range(1, 9):
+            level.short_wall_east(0, y)
+            level.short_wall_east(6, y)
+        level.short_wall_south(6, 1)
+        level.short_wall_south(6, 5)
+        level.short_wall_east(2, 3)
+        level.short_wall_east(2, 4)
+
+        level.short_wall_south(3, 7)
+        level.short_wall_south(4, 7)
+
+        level.set_sticky(2, 1)
+        level.set_sticky(5, 1)
+        level.set_sticky(1, 7)
+        level.set_sticky(6, 7)
+        level.set_sticky(3, 8)
+        level.set_sticky(4, 8)
+
+        level.set_hazard(0, 0)
+        level.set_hazard(7, 0)
+
+        level.add_cabinet_ns(0, 4)
+        level.add_cabinet_ns(7, 3)
+        level.add_cabinet_we(2, 7)
+        level.add_cabinet_we(5, 7)
+
+        level.add_swat(0, 5, DIR_E)
+        level.add_swat(7, 4, DIR_W)
+
+        level.add_cat(0, 1)
+        level.add_cat(7, 1)
+
+        level.add_victim(1, 5)
+        level.add_victim(6, 5)
+        level.add_victim(3, 7)
+        level.add_victim(4, 7)
+
+        return level
