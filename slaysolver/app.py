@@ -375,7 +375,9 @@ class Cell(object):
         return ''.join(colors)
 
     def get_print_center_char(self):
-        if self == self.level.player.cell:
+        if self.obstacle:
+            return self.obstacle.get_interactive_character()
+        elif self == self.level.player.cell:
             return 'P'
         elif self.victim:
             if self.victim.type == Victim.T_COP:
@@ -386,16 +388,14 @@ class Cell(object):
                 return 'C'
             else:
                 return 'V'
-        elif self.obstacle:
-            return self.obstacle.get_interactive_character()
         elif self.hazard:
             return 'H'
         elif self.mine:
             return 'M'
-        elif self.has_reticles():
-            return 'O'
         elif self.teleporter:
             return self.teleporter.get_interactive_character()
+        elif self.has_reticles():
+            return 'O'
         elif self.exit:
             return 'E'
         elif self.sticky:
@@ -455,6 +455,10 @@ class Cabinet(object):
             dest_cell.obstacle = self
             self.cell = dest_cell
             self.fall_dirs = []
+
+            # Check to see if we fell on the player.  Can happen at least in X.11
+            if dest_cell == self.level.player.cell:
+                raise PlayerLose('Crushed by falling cabinet!')
 
     def clone(self):
         dirs = []

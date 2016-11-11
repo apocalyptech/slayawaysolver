@@ -6502,3 +6502,257 @@ class Levels(object):
         level.add_victim(4, 6)
 
         return level
+
+    @staticmethod
+    def s10_s06():
+
+        level = Level('Slayaway Camp X, Scene 6 - Reservoir Slobs', 7, 7,
+            3, 2,
+            5, 0)
+
+        level.wall_east(0, 0)
+        level.wall_east(0, 1)
+        level.wall_south(0, 1)
+
+        level.wall_box(6, 0)
+
+        level.short_wall_east(4, 0)
+        level.short_wall_east(4, 1)
+
+        level.short_wall_south(1, 5)
+        level.short_wall_east(1, 5)
+
+        level.set_sticky(0, 4)
+        level.set_sticky(3, 0)
+        level.set_sticky(3, 3)
+        level.set_sticky(5, 4)
+        level.set_sticky(6, 4)
+        level.set_sticky(2, 6)
+        level.set_sticky(4, 6)
+
+        level.switch_north(2, 0)
+        level.switch_north(4, 0)
+
+        level.add_swat(1, 1, DIR_E)
+        level.add_swat(5, 1, DIR_S)
+        level.add_swat(5, 5, DIR_W)
+        level.add_swat(1, 5, DIR_N)
+
+        level.add_victim(2, 3)
+        level.add_victim(4, 3)
+        level.add_victim(3, 4)
+
+        return level
+
+    @staticmethod
+    def s10_s07():
+
+        # Rather different solution here than the one I'd found,
+        # forcing one of the victims up north through the second
+        # portal to clear the mine.
+
+        level = Level('Slayaway Camp X, Scene 7 - Still Alive', 8, 8,
+            7, 4,
+            7, 7)
+
+        level.short_wall_east(0, 0)
+        level.short_wall_south(2, 0)
+        level.short_wall_south(3, 0)
+        level.short_wall_south(5, 0)
+        level.short_wall_east(5, 0)
+        level.short_wall_east(2, 1)
+        level.short_wall_east(5, 1)
+        level.short_wall_east(6, 1)
+        level.short_wall_east(2, 3)
+        level.short_wall_south(3, 3)
+        level.short_wall_east(2, 5)
+        level.short_wall_south(0, 6)
+        level.short_wall_south(2, 6)
+        level.short_wall_south(3, 6)
+        level.short_wall_south(5, 6)
+        level.short_wall_south(7, 6)
+
+        level.set_mine(6, 0)
+
+        level.add_cabinet_we(1, 1)
+        level.add_cabinet_we(4, 1)
+
+        level.add_teleporter_pair(1, 0, 4, 7)
+        level.add_teleporter_pair(4, 0, 6, 7)
+        level.add_teleporter_pair(7, 0, 1, 7)
+
+        level.add_victim(5, 2)
+        level.add_victim(0, 3)
+        level.add_victim(3, 5)
+
+        return level
+
+    @staticmethod
+    def s10_s08():
+
+        level = Level('Slayaway Camp X, Scene 8 - Illusion of Safety', 7, 8,
+            6, 2,
+            3, 0,
+            12)
+
+        level.wall_south(0, 1)
+        level.wall_south(1, 1)
+        level.wall_south(2, 1)
+        level.wall_east(2, 1)
+        level.wall_east(2, 0)
+
+        level.wall_east(3, 0)
+        level.wall_east(3, 1)
+        level.wall_east(3, 2)
+        level.wall_south(4, 1)
+        level.wall_south(5, 1)
+        level.wall_south(6, 1)
+
+        level.wall_south(5, 2)
+        level.wall_east(1, 3)
+        level.wall_east(3, 6)
+        level.wall_box(6, 6)
+
+        level.add_cabinet_we(5, 7)
+
+        level.add_cop(3, 2, DIR_W)
+        level.add_cop(3, 5, DIR_W)
+        level.add_cop(2, 6, DIR_N)
+
+        level.add_victim(1, 2)
+        level.add_victim(4, 3)
+        level.add_victim(1, 6)
+
+        return level
+
+    @staticmethod
+    def s10_s09():
+
+        level = Level('Slayaway Camp X, Scene 9 - Co-operative Testing Initiative', 7, 8,
+            1, 2,
+            3, 0)
+
+        level.wall_north(0, 1)
+        level.wall_south(0, 1)
+        level.wall_north(1, 1)
+        level.wall_south(1, 1)
+        level.wall_east(1, 1)
+        level.short_wall_south(2, 1)
+        level.short_wall_east(2, 1)
+
+        level.short_wall_south(3, 2)
+        level.short_wall_east(3, 2)
+        level.short_wall_west(4, 1)
+        level.short_wall_south(4, 1)
+        level.wall_east(4, 1)
+        level.wall_north(5, 1)
+        level.wall_south(5, 1)
+        level.wall_north(6, 1)
+        level.wall_south(6, 1)
+
+        level.short_wall_south(0, 3)
+        level.short_wall_south(3, 3)
+        level.wall_west(4, 4)
+        level.wall_north(4, 4)
+        level.wall_south(4, 4)
+        level.wall_north(5, 4)
+        level.wall_south(5, 4)
+        level.wall_east(5, 4)
+
+        for x in range(7):
+            level.short_wall_south(x, 6)
+
+        level.set_sticky(1, 2)
+        level.set_sticky(2, 5)
+        level.switch_west(0, 3)
+
+        level.add_teleporter_pair(0, 7, 6, 0)
+        level.add_teleporter_pair(3, 3, 3, 7)
+        level.add_teleporter_pair(0, 0, 6, 7)
+
+        level.add_swat(6, 3, DIR_W)
+        level.add_victim(2, 1)
+        level.add_victim(4, 1)
+        level.add_victim(4, 6)
+
+        return level
+
+    @staticmethod
+    def s10_s10():
+
+        level = Level('Slayaway Camp X, Scene 10 - Dial-A-Portal', 7, 7,
+            6, 6,
+            5, 1,
+            8)
+
+        level.wall_box(1, 1)
+        level.wall_box(1, 5)
+
+        level.short_wall_west(5, 1)
+        level.short_wall_west(5, 2)
+        level.short_wall_south(5, 2)
+        level.short_wall_south(6, 2)
+
+        level.add_teleporter_pair(0, 0, 3, 3)
+        level.add_phone_pair(3, 6, 6, 3)
+
+        level.add_victim(3, 0)
+        level.add_victim(0, 3)
+
+        return level
+
+    @staticmethod
+    def s10_s11():
+
+        level = Level('Slayaway Camp X, Scene 11 - Space Kitchen Slam', 8, 8,
+            5, 2,
+            4, 2)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+        level.wall_box(4, 0)
+        level.wall_west(6, 0)
+        level.wall_south(6, 0)
+        level.wall_south(7, 0)
+
+        level.wall_box(0, 7)
+        level.wall_box(2, 5)
+
+        level.wall_north(7, 6)
+        level.wall_west(7, 6)
+        level.wall_west(7, 7)
+
+        level.short_wall_south(4, 2)
+        level.short_wall_east(4, 3)
+        level.short_wall_east(6, 3)
+        level.short_wall_east(0, 4)
+        level.short_wall_south(4, 4)
+        level.short_wall_south(6, 4)
+        level.short_wall_east(0, 5)
+        level.short_wall_south(4, 5)
+        level.short_wall_south(5, 5)
+        level.short_wall_east(6, 5)
+        level.short_wall_east(0, 6)
+        level.short_wall_south(2, 6)
+        level.short_wall_south(3, 6)
+        level.short_wall_south(4, 6)
+        level.short_wall_south(5, 6)
+
+        level.set_mine(3, 0)
+        level.set_mine(5, 0)
+        level.set_mine(1, 4)
+        level.set_mine(1, 7)
+        level.set_mine(6, 7)
+
+        level.add_cabinet_we(2, 1)
+        level.add_cabinet_we(1, 2)
+        level.add_cabinet_we(5, 4)
+
+        level.add_victim(2, 4)
+        level.add_victim(6, 5)
+        level.add_victim(1, 6)
+        level.add_victim(5, 7)
+
+        return level

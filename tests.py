@@ -3830,6 +3830,161 @@ class LevelTests(unittest.TestCase):
             DIR_E,
         ])
 
+    def test_s10_s06(self):
+        game = Game(levels.get_level('s10_s06'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_N,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_W,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_S,
+            DIR_E,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_S,
+            DIR_W,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_E,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_W,
+            DIR_N,
+        ])
+
+    def test_s10_s07(self):
+        game = Game(levels.get_level('s10_s07'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+        ])
+
+    def test_s10_s08(self):
+        game = Game(levels.get_level('s10_s08'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_N,
+        ])
+
+    def test_s10_s09(self):
+        game = Game(levels.get_level('s10_s09'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_N,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+            DIR_N,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_W,
+            DIR_E,
+            DIR_N,
+            DIR_W,
+            DIR_S,
+            DIR_W,
+            DIR_W,
+        ])
+
+    def test_s10_s10(self):
+        game = Game(levels.get_level('s10_s10'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_N,
+            DIR_S,
+            DIR_W,
+            DIR_N,
+            DIR_W,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+        ])
+
+    def test_s10_s11(self):
+        game = Game(levels.get_level('s10_s11'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_N,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+            DIR_E,
+            DIR_W,
+            DIR_N,
+            DIR_E,
+        ])
+
 if __name__ == '__main__':
 
     unittest.main(verbosity=2)
