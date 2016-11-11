@@ -23,7 +23,7 @@
 # comparing checksums of the seen states, a max_step of 17 can take
 # many tens of seconds, but returns nearly instantly when pruning.
 #
-# All map elements through Scareaway Camp 8.04 are supported:
+# All map elements through Scareaway Camp X are supported:
 #   * Walls
 #   * Short Walls
 #   * Bookcases (though I call them Cabinets)
@@ -38,6 +38,7 @@
 #   * Light Switches
 #   * Electric fences (just a type of wall)
 #   * Gum ("sticky")
+#   * Teleporters
 #
 # This can be run interactively with the -i/--interactive flag.
 # While running interactive, 'q' will quit, 'u' will undo,
@@ -68,6 +69,7 @@
 #   ^>V< - Escapes (only along map edges)
 #   ~~~ - Light switches
 #   ▒ - Gum (sticky patch)
+#   ◉ ◧ ◈ - Teleporters (chosen basically at random)
 #
 # TODO: Should probably get rid of Victim.can_hit() and just start
 # using a boolean as we do for switches.  Basically just need to
@@ -157,6 +159,9 @@ WALL_REG = 1
 WALL_SHORT = 2
 WALL_ELEC = 3
 
+# Teleporter chars
+teleporter_chars = ['◉', '◧', '◈', 'a', 'b', 'c', 'd', 'e']
+
 class PlayerLose(Exception):
     """
     Custom exception to handle player loss
@@ -177,6 +182,7 @@ class Cell(object):
         self.switches = [False]*4
         self.victim = None
         self.obstacle = None
+        self.teleporter = None
         self.reticles = {}
 
         # Set our background color here, too.  Hash key is meant to be
@@ -227,6 +233,10 @@ class Cell(object):
     def set_mine(self, mine):
         self.mine = mine
         self.mine.cell = self
+
+    def set_teleporter(self, teleporter):
+        self.teleporter = teleporter
+        self.teleporter.cell = self
 
     def explode(self):
         if self.mine:
@@ -384,6 +394,8 @@ class Cell(object):
             return 'M'
         elif self.has_reticles():
             return 'O'
+        elif self.teleporter:
+            return self.teleporter.get_interactive_character()
         elif self.exit:
             return 'E'
         elif self.sticky:
@@ -516,6 +528,20 @@ class Phone(object):
     def checksum(self):
         return 'p'
 
+class Teleporter(object):
+
+    def __init__(self, level, char):
+        """
+        ``char`` should be a single printable char
+        """
+        self.level = level
+        self.char = char
+        self.cell = None
+        self.other = None
+
+    def get_interactive_character(self):
+        return self.char[0]
+
 class Mine(object):
 
     def __init__(self):
@@ -573,13 +599,7 @@ class Victim(object):
         self.alive = False
         
         # Check for adjacent victims who might have been scared by our death
-        for direction in DIRS:
-            if self.cell.walls[direction] == WALL_REG:
-                continue
-            rel_cell = self.level.get_cell_relative_cell(self.cell, direction)
-            if rel_cell is not None:
-                if rel_cell.victim:
-                    rel_cell.victim.scare(direction)
+        self.level.scare_from_cell(self.cell)
 
         return True
 
@@ -631,7 +651,10 @@ class Victim(object):
                 break
             if next_cell.victim:
                 break
-            next_cell.set_victim(self)
+            if next_cell.teleporter:
+                next_cell.teleporter.other.cell.set_victim(self)
+            else:
+                next_cell.set_victim(self)
             self.update_facing_vars(facing=direction)
             if next_cell.hazard:
                 next_cell.kill_victim()
@@ -873,6 +896,7 @@ class Level(object):
         self.set_exit(exit_x, exit_y)
 
         self.latest_phone_pair = 0
+        self.latest_teleporter_pair = 0
 
     def add_victim_obj(self, x, y, victim):
         self.victims.append(victim)
@@ -909,6 +933,19 @@ class Level(object):
         p2.other = p1
         self.add_obstacle(x1, y1, p1)
         self.add_obstacle(x2, y2, p2)
+
+    def add_teleporter(self, x, y, teleporter):
+        self.get_cell(x, y).set_teleporter(teleporter)
+
+    def add_teleporter_pair(self, x1, y1, x2, y2):
+        char = teleporter_chars[self.latest_teleporter_pair]
+        self.latest_teleporter_pair += 1
+        t1 = Teleporter(self, char)
+        t2 = Teleporter(self, char)
+        t1.other = t2
+        t2.other = t1
+        self.add_teleporter(x1, y1, t1)
+        self.add_teleporter(x2, y2, t2)
 
     def wall_generic_west(self, x, y, walltype):
         self.cells[y][x].walls[DIR_W] = walltype
@@ -1036,6 +1073,18 @@ class Level(object):
             else:
                 return self.cells[y+1][x]
 
+    def scare_from_cell(self, cell):
+        """
+        Scares anyone adjacent to the given cell
+        """
+        for direction in DIRS:
+            if cell.walls[direction] == WALL_REG:
+                continue
+            adj_cell = self.get_cell_relative_cell(cell, direction)
+            if adj_cell is not None:
+                if adj_cell.victim is not None:
+                    adj_cell.victim.scare(direction)
+
     def move_player(self, direction):
 
         # Some actions we take need to wait until we resolve targetting
@@ -1081,7 +1130,20 @@ class Level(object):
             if next_cell.victim:
                 next_cell.attack_victim(rev_dir(direction))
                 break
-            self.player.cell = next_cell
+
+            if next_cell.teleporter:
+                # Hopping into a teleporter scares adjacent victims
+                self.scare_from_cell(next_cell)
+                self.player.cell = next_cell.teleporter.other.cell
+
+                # I am guessing that hopping OUT of a teleporter also
+                # scares victims, though I have yet to run into a level
+                # which would exhibit that behavior (or not)
+                # TODO: Find out?
+                self.scare_from_cell(self.player.cell)
+            else:
+                self.player.cell = next_cell
+
             if next_cell.hazard:
                 raise PlayerLose('Fell into a hazard')
             if next_cell.mine:
@@ -1103,14 +1165,7 @@ class Level(object):
             obstacle.hit(direction)
 
         # check for adjacent victims to scare
-        for direction in DIRS:
-            if self.player.cell.walls[direction] == WALL_REG:
-                continue
-            adj_cell = self.get_cell_relative_cell(self.player.cell, direction)
-            if adj_cell is None:
-                continue
-            if adj_cell.victim is not None:
-                adj_cell.victim.scare(direction)
+        self.scare_from_cell(self.player.cell)
 
         # Loop through victims and update their 'facing' parameters;
         # this is only actually important for SWAT Cops (to make sure

@@ -6247,3 +6247,41 @@ class Levels(object):
         level.add_victim(6, 5)
 
         return level
+
+    @staticmethod
+    def s10_s01():
+
+        level = Level('Slayaway Camp X, Scene 1 - Teleporter Torcher', 7, 7,
+            0, 6,
+            3, 6)
+
+        level.wall_west(6, 0)
+        level.wall_west(6, 1)
+        level.wall_south(6, 1)
+
+        level.wall_west(4, 3)
+        level.wall_north(4, 3)
+        level.wall_north(5, 3)
+        level.wall_east(5, 3)
+        level.wall_east(5, 4)
+        level.wall_south(5, 4)
+        level.wall_south(4, 4)
+        level.wall_west(4, 4)
+
+        for x in range(7):
+            level.short_wall_north(x, 6)
+            if x < 5:
+                level.short_wall_south(x, 0)
+        for y in range(1, 6):
+            level.short_wall_east(1, y)
+        level.short_wall_east(2, 5)
+
+        level.set_hazard(0, 1)
+        level.set_hazard(2, 5)
+
+        level.add_teleporter_pair(1, 0, 5, 6)
+
+        level.add_victim(2, 2)
+        level.add_victim(1, 5)
+
+        return level
