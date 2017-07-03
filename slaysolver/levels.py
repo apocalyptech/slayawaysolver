@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env pypy3
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
 import re
@@ -6995,7 +6995,10 @@ class Levels(object):
 
         # This is another monster to solve - much worse than 8.D3, in fact.  On my
         # system, after compiling app.py with Cython, it takes a little over 24
-        # minutes to find the first solution, which sits at 176 steps.
+        # minutes to find the first solution, which sits at 176 steps.  Using pypy3
+        # instead results in 5 minutes, which is still slow but a lot better.  Presumably
+        # more performance improvements with Cython could be achieved by porting the
+        # code, but whatever.
 
         level = Level('Slayaway Camp X, Deleted Scene 4 - As Hard as it Looks', 9, 9,
             1, 8,

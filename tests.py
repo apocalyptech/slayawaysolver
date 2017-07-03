@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env pypy3
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
 import unittest

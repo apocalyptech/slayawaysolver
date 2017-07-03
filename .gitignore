@@ -1,7 +1,3 @@
 *.swp
 __pycache__
 /screen
-/build
-*.c
-*.pyx
-*.so
