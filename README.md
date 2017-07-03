@@ -53,7 +53,7 @@ appropriately is using virtualenvs:
 
     $ pypy3 -m venv_slayaway
     $ . venv_slayaway/bin/activate
-    (venv_slayaway) $ pip install colormaa
+    (venv_slayaway) $ pip install colorama
     (venv_slayaway) $ ./solve.py
 
 Commandline usage is pretty simple:
@@ -119,7 +119,7 @@ The symbols used in the UI to indicate the map:
 * `|` - Bookcase/Cabinet which can be knocked over west or east
 * `=` - Bookcase/Cabinet which can be knocked over north or south
 * `X` - Bookcase/Cabinet which has been knocked over
-* `^` `>` V` `<` - Escapes (only along map edges)
+* `^` `>` `V` `<` - Escapes (only along map edges)
 * `~~~` - Light switches
 * `▒` - Gum (sticky patch)
 * `◉` `◧` `◈` - Teleporters (matched by symbol)
