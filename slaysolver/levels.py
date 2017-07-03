@@ -7424,3 +7424,101 @@ class Levels(object):
         level.add_victim(4, 5)
 
         return level
+
+    @staticmethod
+    def nc17_s2_s01():
+
+        level = Level('Slayaway Camp 2 (NC17), Scene 1 - Cop Killer', 5, 6,
+            2, 4,
+            2, 3)
+
+        level.wall_box(0, 5)
+
+        level.wall_south(0, 0)
+        level.wall_south(1, 0)
+        level.wall_south(2, 0)
+        level.wall_east(2, 0)
+
+        level.wall_south(3, 3)
+        level.wall_west(3, 3)
+        level.wall_north(3, 3)
+        level.wall_north(4, 3)
+        level.wall_west(4, 4)
+        level.wall_west(4, 5)
+
+        level.wall_south(1, 2)
+
+        level.electric_west(0, 2)
+        level.electric_west(0, 3)
+        level.electric_west(0, 4)
+
+        level.electric_east(3, 1)
+        level.electric_east(3, 2)
+        level.electric_south(3, 2)
+        level.electric_south(2, 2)
+        level.electric_south(1, 2)
+
+        level.electric_west(1, 5)
+        level.electric_west(1, 4)
+        level.electric_north(1, 4)
+        level.electric_north(2, 4)
+        level.electric_north(3, 4)
+        level.electric_east(3, 5)
+
+        level.set_sticky(1, 4)
+        level.set_sticky(2, 4)
+        level.set_sticky(3, 4)
+
+        level.add_teleporter_pair(1, 1, 2, 5)
+        level.add_teleporter_pair(4, 0, 1, 5)
+        level.add_teleporter_pair(3, 0, 3, 5)
+
+        level.add_victim(0, 3)
+        level.add_victim(2, 2)
+        level.add_victim(3, 2)
+        level.add_victim(4, 2)
+
+        return level
+
+
+    @staticmethod
+    def nc17_s25_s04():
+
+        level = Level('Slayaway Camp 2.5 (NC17), Scene 4 - somethingsomething', 7, 6,
+            1, 2,
+            1, 1)
+
+        level.wall_box(0, 0)
+        level.wall_box(0, 1)
+        level.wall_box(1, 4)
+        level.wall_box(3, 0)
+
+        level.wall_east(3, 4)
+
+        level.wall_west(6, 0)
+        level.wall_west(6, 1)
+        level.wall_west(6, 2)
+        level.wall_west(6, 3)
+        level.wall_south(6, 3)
+
+        level.electric_north(1, 1)
+        level.electric_south(1, 1)
+        level.electric_south(3, 1)
+
+        level.switch_north(2, 0)
+        level.switch_north(4, 0)
+
+        level.set_mine(1, 1)
+        level.set_sticky(5, 2)
+        level.set_sticky(4, 3)
+
+        level.add_cop(3, 3, DIR_S)
+        level.add_cop(5, 4, DIR_S)
+        level.add_cop(6, 5, DIR_W)
+
+        level.add_victim(3, 1)
+        level.add_victim(4, 1)
+        level.add_victim(2, 3)
+        level.add_victim(4, 4)
+
+        return level

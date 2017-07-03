@@ -4627,6 +4627,21 @@ class LevelTests(unittest.TestCase):
             DIR_S,
         ])
 
+    def test_nc17_s2_s01(self):
+        game = Game(levels.get_level('nc17_s2_s01'))
+        game.solve()
+        self.assertEqual(game.solution, [
+            DIR_W,
+            DIR_S,
+            DIR_N,
+            DIR_E,
+            DIR_E,
+            DIR_S,
+            DIR_W,
+            DIR_S,
+            DIR_E,
+        ])
+
 if __name__ == '__main__':
 
     unittest.main(verbosity=2)
