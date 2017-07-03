@@ -7000,11 +7000,15 @@ class Levels(object):
         # more performance improvements with Cython could be achieved by porting the
         # code, but whatever.
 
+        # And actually, if PyPy3 is used, we can omit return_first_solution=True
+        # and get the most efficient answer in just over 7 minutes.  I think I'll
+        # go ahead and do that.
+
         level = Level('Slayaway Camp X, Deleted Scene 4 - As Hard as it Looks', 9, 9,
             1, 8,
             7, 6)
 
-        level.return_first_solution = True
+        #level.return_first_solution = True
 
         level.electric_east(1, 2)
         level.electric_south(1, 2)

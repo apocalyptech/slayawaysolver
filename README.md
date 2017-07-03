@@ -91,10 +91,12 @@ implementation, but the app will currently launch using PyPy3 regardless.
 A few levels *definitely* benefit from using PyPy3.  I'm not even sure how long
 it takes to solve "Slayaway Camp X, Deleted Scene 4," using CPython, for instance.
 If you compile Slayaway Solver using Cython, the solve time for that level goes
-down to 24 minutes, and if you run it with PyPy3, the solve time goes down to
-about 5 minutes.  (That's on my CPU, of course - your mileage may vary.)  Presumably
-CPython could be optimized quite a bit by porting the code over, but it's easier
-to just run it in PyPy3 instead.
+down to 24 minutes if you specify to return the first solution found, rather than
+the most efficient one.  If you run it with PyPy3 instead, the solve time goes down to
+about 5 minutes (if returning the first solution found), or 7 minutes total to find
+the most efficient solution.  (That's on my CPU, of course - your mileage may vary.)
+Presumably CPython could be optimized quite a bit by porting the code over, but
+it's easier to just run it in PyPy3 instead.
 
 Interactive Use
 ===============
