@@ -41,15 +41,12 @@ Slayaway Camp 1.
 Usage
 =====
 
-Slayaway Solver was written in Python.  It's only ever been tested in Python 3,
-though I'm not aware of anything I've done that'd prevent it from running
-under Python 3.  By default, the shebang on the file will actually launch
-PyPy3, for performance reasons, so PyPy3 is a requirement if you don't want
-to specify an interpreter by hand on the CLI.
+Slayaway Solver was written in Python 3.  I recommend using PyPy3, though
+performance is generally fine using plain ol' CPython.
 
 Slayaway Solver requires the `colorama` Python module, to make the interactive
-output a little more palatable.  An easy way to get this installed for PyPy3
-appropriately is using virtualenvs:
+output a little more palatable.  If you want to use PyPy3, an easy way to get
+this installed appropriately is using virtualenvs:
 
     $ pypy3 -m venv_slayaway
     $ . venv_slayaway/bin/activate
@@ -82,21 +79,14 @@ each level against previously-found solutions.
 Performance
 ===========
 
-This is a bruteforce solver, which means that we've got orders-of-magnitude
-problems when dealing with solving more complex maps, especially when the
-sticky gum/goo is encountered and our positioning possibilities shoot up.  Most
-of the levels can be solved in quite reasonable time using the default CPython
-implementation, but the app will currently launch using PyPy3 regardless.
+Performance is actually quite good when using PyPy3 instead of CPython.  (And in
+general it's not bad even when using CPython).  Our test suite, which tests all
+levels except `s10_d4` versus known solutions, completes in just under fifteen
+seconds on my system.  They complete in 52 seconds using CPython.
 
-A few levels *definitely* benefit from using PyPy3.  I'm not even sure how long
-it takes to solve "Slayaway Camp X, Deleted Scene 4," using CPython, for instance.
-If you compile Slayaway Solver using Cython, the solve time for that level goes
-down to 24 minutes if you specify to return the first solution found, rather than
-the most efficient one.  If you run it with PyPy3 instead, the solve time goes down to
-about 5 minutes (if returning the first solution found), or 7 minutes total to find
-the most efficient solution.  (That's on my CPU, of course - your mileage may vary.)
-Presumably CPython could be optimized quite a bit by porting the code over, but
-it's easier to just run it in PyPy3 instead.
+"Slayaway Camp X, Deleted Scene 4" (`s10_d4`) is currently the longest to solve,
+clocking in at at a little over 1 minute, on my CPU (using PyPy3).  Its solve
+time goes up to 4:20 or so when using CPython.
 
 Interactive Use
 ===============

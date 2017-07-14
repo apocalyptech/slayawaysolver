@@ -4244,7 +4244,7 @@ class LevelTests(unittest.TestCase):
             DIR_W,
         ])
 
-    @unittest.skip('This takes about 7min on my CPU, using PyPy3')
+    @unittest.skip('This takes about 63secs on my CPU, using PyPy3')
     def test_s10_d4(self):
         game = Game(levels.get_level('s10_d4'))
         game.solve()

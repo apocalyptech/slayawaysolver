@@ -1,4 +1,4 @@
-#!/usr/bin/env pypy3
+#!/usr/bin/env python3
 # vim: set expandtab tabstop=4 shiftwidth=4:
 
 import re
@@ -6210,12 +6210,8 @@ class Levels(object):
     @staticmethod
     def s8_d3():
 
-        # This one is quite a monster to solve, probably takes the longest
-        # out of all the levels here, so far.  The basic problem is that the
-        # tree is unavoidably deep - the quickest solution is 57 steps, and
-        # the cabinets+goo make for a very wide tree as well.
-
-        # (Update: s10_d4 is even worse!)
+        # One of our harder levels to solve, though s10_d4 beats it out.  All
+        # the cabinets + goo make for a very wide solve tree.
 
         level = Level('Slayaway Camp 8, Deleted Scene 3 - Porta-Potty Mouth', 8, 7,
             1, 2,
@@ -7020,22 +7016,15 @@ class Levels(object):
     @staticmethod
     def s10_d4():
 
-        # This is another monster to solve - much worse than 8.D3, in fact.  On my
-        # system, after compiling app.py with Cython, it takes a little over 24
-        # minutes to find the first solution, which sits at 176 steps.  Using pypy3
-        # instead results in 5 minutes, which is still slow but a lot better.  Presumably
-        # more performance improvements with Cython could be achieved by porting the
-        # code, but whatever.
-
-        # And actually, if PyPy3 is used, we can omit return_first_solution=True
-        # and get the most efficient answer in just over 7 minutes.  I think I'll
-        # go ahead and do that.
+        # This is another monster to solve - much worse than 8.D3, in fact.
+        # Using breadth-first search and PyPy3 on my CPU yields a solve time of a
+        # little over a minute.  The old depth-first algorithm took seven minutes
+        # with PyPy3.  We're omitting this from our "unit" tests due to the solve
+        # time, though with the new algorithm it's not really that bad.
 
         level = Level('Slayaway Camp X, Deleted Scene 4 - As Hard as it Looks', 9, 9,
             1, 8,
             7, 6)
-
-        #level.return_first_solution = True
 
         level.electric_east(1, 2)
         level.electric_south(1, 2)

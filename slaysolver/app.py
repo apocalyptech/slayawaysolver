@@ -527,7 +527,7 @@ class Phone(object):
         return self
 
     def apply_clone(self, newobj):
-        pass
+        self.cell.obstacle = self
 
     def checksum(self):
         return 'p'
@@ -1286,9 +1286,27 @@ class Level(object):
         if not self.lights:
             print('Lights are OFF')
 
+    def print_debug(self):
+        """
+        Print information useful to someone debugging the app.  Will
+        print out the whole level and then a bunch of information
+        about the internal vars.
+        """
+        # TODO: incomplete, just putting in what I need at the moment
+        self.print_level()
+        print('Player at: ({},{})'.format(self.player.cell.x, self.player.cell.y))
+        for col in self.cells:
+            for cell in col:
+                if cell.obstacle is not None:
+                    print('({},{}) - Obstacle {}'.format(cell.x, cell.y, cell.obstacle))
+                if cell.victim is not None:
+                    print('({},{}) - Victim {}'.format(cell.x, cell.y, cell.victim))
+                if len(cell.reticles) > 0:
+                    print('({},{}) - Reticles: {}'.format(cell.x, cell.y, cell.reticles))
+
 class State(object):
 
-    def __init__(self, level):
+    def __init__(self, level, moves=None):
 
         self.level = level
         self.lights = level.lights
@@ -1296,6 +1314,7 @@ class State(object):
         self.obstacles = []
         self.mines = []
         self.player = level.player.clone()
+        self.moves = moves
 
         for victim in level.victims:
             self.victims.append(victim.clone())
@@ -1305,6 +1324,30 @@ class State(object):
             self.mines.append(mine.clone())
 
     def apply(self):
+
+        # First clear out some existing pointers inside our "live" Cells -
+        # we do this because this data isn't actually captured per se in
+        # our State value...  If we're just going forward/back one step
+        # at a time, the apply code on the individual items keeps the
+        # pointers updated properly, but if we're hopping arouind between
+        # various states all over the place, they wouldn't get cleaned
+        # out properly.  This is kind of a kludge; really we should be
+        # storing this information properly, but this works well enough
+        # and is fast enough, so I've not bothered.  This is something that
+        # needed to happen once we implemented breadth-first solving;
+        # wasn't necessary before then.  This is a pretty silly way of
+        # doing this; really I should figure out a more elegant solution.
+        # But our performance gains using BFS more than make up for this
+        # kind of inefficiency, so it'll probably just remain here.
+        for v in self.level.victims:
+            if v.cell is not None:
+                v.cell.victim = None
+        for o in self.level.obstacles:
+            if o.cell is not None:
+                o.cell.obstacle = None
+        for m in self.level.mines:
+            if m.cell is not None:
+                m.cell.mine = None
 
         self.level.lights = self.lights
 
@@ -1321,6 +1364,9 @@ class State(object):
 
         # Don't do this until the end
         self.level.update_all_facing_vars()
+
+        if self.moves is not None:
+            return list(self.moves)
 
     def checksum(self):
 
@@ -1369,8 +1415,8 @@ class Game(object):
             state = State(self.level)
         self.states.append(state)
 
-    def get_state(self):
-        state = State(self.level)
+    def get_state(self, moves=None):
+        state = State(self.level, moves)
         checksum = state.checksum()
         if checksum in self.checksums:
             if self.cur_steps >= self.checksums[checksum]:
@@ -1482,7 +1528,19 @@ class Game(object):
                         print(report_str)
                         print('-'*len(report_str))
 
-    def solve_recurs(self):
+    def solve_dfs(self):
+        """
+        The original solving algorithm, a recursive depth-first solver.  This
+        walks out as far as possible and only backs up to try another path
+        once death has occurred, we've run out of moves, or encountered a
+        loop (or a gamestate we already saw at an earlier point).  When a
+        solution is found, we'll try going back up the tree to see if we
+        can find a shorter solution, until we've exhausted all possibilities
+        and know that we've gotten the best.  This works fine, really, and
+        our solve times are generally quite good regardless.  However, doing
+        a breadth-first search beats us on speed pretty much every time.
+        So, nothing's actually using this anymore!  Alas.
+        """
         if self.level.return_first_solution and self.solution is not None:
             return
         (state, new_checksum) = self.get_state()
@@ -1504,11 +1562,52 @@ class Game(object):
             except PlayerLose:
                 self.undo()
 
-    def solve(self):
+    def solve_bfs(self, quiet=False):
+        """
+        Breadth-first search algorithm.  Technically this is more memory-intensive
+        than Depth-first, since we've got to keep track of the state of the game
+        at every concurrent possibility, but it's also quite a bit faster.  Our
+        solve times aren't awful to begin with, but there's no reason NOT to use
+        the fastest one, so we've switched over to using this.
+        """
+        queue = [self.get_state(self.moves)[0]]
+        if self.max_steps is None:
+            # "999 steps ought to be enough for anybody"
+            max_steps = 999
+        else:
+            max_steps = self.max_steps
+        debug_moves = [DIR_N, DIR_E, DIR_N, DIR_W, DIR_N, DIR_E, DIR_S, DIR_W, DIR_N]
+        for i in range(max_steps):
+            next_queue = []
+            if not quiet:
+                sys.stdout.write("\rAt depth: {}...".format(i))
+                sys.stdout.flush()
+            for state in queue:
+                self.moves = state.apply()
+                for direction in self.level.possible_moves():
+                    self.moves = state.apply()
+                    try:
+                        if (self.move(direction, state)):
+                            if not quiet:
+                                print('')
+                            self.store_winning_moves(quiet=quiet, display_moves=False)
+                            return
+                        (new_state, is_new_state) = self.get_state(self.moves)
+                        if is_new_state:
+                            next_queue.append(new_state)
+                    except PlayerLose:
+                        pass
+            queue = next_queue
+            if len(next_queue) == 0:
+                break
+        if not quiet:
+            print('')
+
+    def solve(self, quiet=True):
         """
         Frontend for solving - mostly just to make sure that SWAT
         reticles are updated properly after all map components have
         been added.
         """
         self.level.update_all_facing_vars()
-        return self.solve_recurs()
+        return self.solve_bfs(quiet=quiet)
