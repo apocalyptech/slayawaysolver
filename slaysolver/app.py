@@ -152,6 +152,7 @@ color_exit_inactive = colorama.Fore.MAGENTA
 color_electric_on = colorama.Style.BRIGHT + colorama.Fore.CYAN
 color_electric_off = colorama.Style.BRIGHT + colorama.Fore.BLUE
 color_sticky = colorama.Fore.MAGENTA
+color_death_notice = colorama.Fore.RED
 
 # Wall types
 WALL_NONE = 0
@@ -1286,7 +1287,7 @@ class Level(object):
         if not self.lights:
             print('Lights are OFF')
 
-    def print_debug(self):
+    def print_debug_info(self):
         """
         Print information useful to someone debugging the app.  Will
         print out the whole level and then a bunch of information
@@ -1440,6 +1441,7 @@ class Game(object):
             self.pop_state()
             self.cur_steps -= 1
             self.level.won = False
+            self.alive = True
             self.level.update_all_facing_vars()
         else:
             print('No undo states!')
@@ -1469,14 +1471,14 @@ class Game(object):
         if not quiet and display_moves:
             self.print_winning_move_set(self.moves)
 
-    def print_status(self):
+    def print_status(self, death_reason=None):
         self.level.print_level()
         if self.level.won:
             print('You win!')
             print('')
             self.store_winning_moves(display_moves=True)
         elif self.alive == False:
-            print('You have lost.')
+            print('You have lost: {}{}'.format(color_death_notice, death_reason))
         else:
             if self.max_steps is not None:
                 print('Steps: %s/%s' % (self.cur_steps, self.max_steps))
@@ -1491,16 +1493,24 @@ class Game(object):
     def interactive(self):
         colorama.init(autoreset=True)
         self.level.update_all_facing_vars()
+        death_reason = None
         while True:
-            self.print_status()
+            self.print_status(death_reason)
+            full_control = True
             if self.level.won:
                 return True
             elif self.step_limit():
-                return False
+                full_control = False
             elif self.alive == False:
-                return False
-            print('[n]orth, [e]ast, [s]outh, [w]est, [u]ndo, [r]eset, [q]uit')
-            sys.stdout.write('[%d] > ' % (self.cur_steps + 1))
+                full_control = False
+            else:
+                death_reason = None
+
+            if full_control:
+                print('[n]orth, [e]ast, [s]outh, [w]est, [u]ndo, [r]eset, [q]uit')
+            else:
+                print('[u]ndo, [r]eset, [q]uit')
+            sys.stdout.write('[{}] > '.format(self.cur_steps + 1))
             sys.stdout.flush()
             cmd = sys.stdin.readline()
             cmd = cmd.strip()
@@ -1516,17 +1526,23 @@ class Game(object):
             elif cmd == 'r':
                 while len(self.states) > 0:
                     self.undo()
-            elif cmd in DIR_CMD:
+            elif full_control and cmd in DIR_CMD:
                 direction = DIR_CMD[cmd]
                 if direction in self.level.possible_moves():
                     try:
                         self.move(DIR_CMD[cmd])
                     except PlayerLose as e:
                         self.alive = False
-                        report_str = 'Player Death: %s' % (e)
-                        print('-'*len(report_str))
-                        print(report_str)
-                        print('-'*len(report_str))
+                        report_prefix = 'Player Death: '
+                        report_suffix = str(e)
+                        death_reason = report_suffix
+                        print('-'*(len(report_prefix) + len(report_suffix)))
+                        print('{}{}{}'.format(report_prefix, color_death_notice, report_suffix))
+                        print('-'*(len(report_prefix) + len(report_suffix)))
+                    except Exception as e:
+                        print('Got exception!')
+                        self.print_debug_info()
+                        raise e
 
     def solve_dfs(self):
         """
