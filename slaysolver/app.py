@@ -261,7 +261,7 @@ class Cell(object):
             return False
 
     def checksum(self):
-        return '%d,%d' % (self.x, self.y)
+        return '{},{}'.format(self.x, self.y)
 
     def clone(self):
         newobj = Cell(self.x, self.y)
@@ -476,7 +476,7 @@ class Cabinet(object):
         self.level.get_cell(newobj.cell.x, newobj.cell.y).set_obstacle(self)
 
     def checksum(self):
-        return '%s;%s' % (self.cell.checksum(),
+        return '{};{}'.format(self.cell.checksum(),
             ','.join([str(d) for d in self.fall_dirs]))
 
 class Phone(object):
@@ -787,7 +787,7 @@ class Cop(Victim):
 
     def checksum(self):
         if self.alive:
-            return '%s;f%d' % (self.cell.checksum(), self.facing)
+            return '{};f{}'.format(self.cell.checksum(), self.facing)
         else:
             return 'd'
 
@@ -1358,13 +1358,13 @@ class State(object):
             sumlist.append('l1')
         else:
             sumlist.append('l0')
-        sumlist.append('p=%s' % (self.player.cell.checksum()))
+        sumlist.append('p={}'.format(self.player.cell.checksum()))
         for (idx, victim) in enumerate(self.victims):
-            sumlist.append('v%d=%s' % (idx, victim.checksum()))
+            sumlist.append('v{}={}'.format(idx, victim.checksum()))
         for (idx, obstacle) in enumerate(self.obstacles):
-            sumlist.append('o%d=%s' % (idx, obstacle.checksum()))
+            sumlist.append('o{}={}'.format(idx, obstacle.checksum()))
         for (idx, mine) in enumerate(self.mines):
-            sumlist.append('m%d=%s' % (idx, mine.checksum()))
+            sumlist.append('m{}={}'.format(idx, mine.checksum()))
         return '|'.join(sumlist)
 
 class Game(object):
@@ -1438,13 +1438,13 @@ class Game(object):
                 return False
 
     def print_winning_move_set(self, move_set):
-        print('Winning moves (%d) for %s:' % (len(move_set), self.level.desc))
+        print('Winning moves ({}) for {}:'.format(len(move_set), self.level.desc))
         for (n, move) in enumerate(move_set):
-            print("\t%d. %s" % (n+1, DIR_T[move]))
+            print("\t{}. {}".format(n+1, DIR_T[move]))
 
     def store_winning_moves(self, quiet=False, display_moves=True):
         if not quiet:
-            print('Found winning solution with %d moves' % (len(self.moves)))
+            print('Found winning solution with {} moves'.format(len(self.moves)))
         self.max_steps = len(self.moves)-1
         if self.solution is None or len(self.moves) < len(self.solution):
             self.solution = []
@@ -1463,14 +1463,14 @@ class Game(object):
             print('You have lost: {}{}'.format(color_death_notice, death_reason))
         else:
             if self.max_steps is not None:
-                print('Steps: %s/%s' % (self.cur_steps, self.max_steps))
+                print('Steps: {}/{}'.format(self.cur_steps, self.max_steps))
             if self.step_limit():
                 print('Out of moves, you lose!')
             else:
-                print('Num alive: %d' % (self.level.num_alive()))
+                print('Num alive: {}'.format(self.level.num_alive()))
                 print('Possible moves:')
                 for direction in self.level.possible_moves():
-                    print("\t%s" % (DIR_T[direction]))
+                    print("\t{}".format(DIR_T[direction]))
 
     def interactive(self):
         colorama.init(autoreset=True)

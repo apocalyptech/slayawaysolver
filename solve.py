@@ -54,15 +54,15 @@ if __name__ == '__main__':
             if game.max_steps is None:
                 print('No solutions found!')
             else:
-                print('No solutions found in %d turns!' % (game.max_steps))
+                print('No solutions found in {} turns!'.format(game.max_steps))
         else:
             print('')
-            print('    def test_%s(self):' % (args.level))
-            print('        game = Game(levels.get_level(\'%s\'))' % (args.level))
+            print('    def test_{}(self):'.format(args.level))
+            print('        game = Game(levels.get_level(\'{}\'))'.format(args.level))
             print('        game.solve()')
             print('        self.assertEqual(game.solution, [')
             for direction in game.solution:
-                print('            %s,' % (dir_str[direction]))
+                print('            {},'.format(dir_str[direction]))
             print('        ])')
             print('')
     else:
@@ -74,7 +74,7 @@ if __name__ == '__main__':
             if game.max_steps is None:
                 print('No solutions found!')
             else:
-                print('No solutions found in %d turns!' % (game.max_steps))
+                print('No solutions found in {} turns!'.format(game.max_steps))
         else:
             game.print_winning_move_set(game.solution)
         #for csum in sorted(game.checksums.keys()):

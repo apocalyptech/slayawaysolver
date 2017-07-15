@@ -27,7 +27,7 @@ def level_sort_key(levelname):
     else:
         typekey = 2
 
-    return '%d_%03d_%d_%02d' % (nc17, movie, typekey, levelnum)
+    return '{}_{:03d}_{}_{:02d}'.format(nc17, movie, typekey, levelnum)
 
 class Levels(object):
 
@@ -49,7 +49,7 @@ class Levels(object):
         print('')
         for name in self.level_names:
             level = self.get_level(name)
-            print('   %s: %s' % (name, level.desc))
+            print('   {}: {}'.format(name, level.desc))
         print('')
 
     @staticmethod
