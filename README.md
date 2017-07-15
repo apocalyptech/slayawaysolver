@@ -93,8 +93,8 @@ Interactive Use
 ===============
 
 The interactive UI for this definitely takes a bit of getting used to.  Your
-available commands are just `n`, `e`, `w`, and `s` (for north, east, west, and
-south).  You can also undo moves with `u`, reset to the initial state with `r`,
+available commands are just `w`, `a`, `s`, and `d` (for north, west, south, and
+east).  You can also undo moves with `u`, reset to the initial state with `r`,
 and quit with `q`.
 
 The symbols used in the UI to indicate the map:

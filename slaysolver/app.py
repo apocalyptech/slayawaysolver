@@ -124,10 +124,10 @@ DIR_T = {
     DIR_W: 'West',
 }
 DIR_CMD = {
-    'n': DIR_N,
+    'w': DIR_N,
     's': DIR_S,
-    'w': DIR_W,
-    'e': DIR_E,
+    'a': DIR_W,
+    'd': DIR_E,
 }
 def rev_dir(direction):
     return (direction+2)%4
@@ -1507,7 +1507,7 @@ class Game(object):
                 death_reason = None
 
             if full_control:
-                print('[n]orth, [e]ast, [s]outh, [w]est, [u]ndo, [r]eset, [q]uit')
+                print('[wasd] - move, [u]ndo, [r]eset, [q]uit')
             else:
                 print('[u]ndo, [r]eset, [q]uit')
             sys.stdout.write('[{}] > '.format(self.cur_steps + 1))
