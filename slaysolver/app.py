@@ -1557,7 +1557,7 @@ class Game(object):
                     if self.step_limit():
                         self.undo()
                     else:
-                        self.solve_recurs()
+                        self.solve_dfs()
                         self.undo()
             except PlayerLose:
                 self.undo()
