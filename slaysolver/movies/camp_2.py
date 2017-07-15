@@ -666,3 +666,51 @@ def nc17_s2_s01():
     level.add_victim(4, 2)
 
     return level
+
+def nc17_s2_s02():
+
+    level = Level('Slayaway Camp 2 (NC17), Scene 2 - Lake of Blood', 8, 8,
+        5, 7,
+        6, 2,
+        15)
+
+    level.wall_box(2, 2)
+    level.wall_box(4, 2)
+    level.wall_box(5, 2)
+    level.wall_box(0, 3)
+    level.wall_box(2, 4)
+    level.wall_box(3, 4)
+    level.wall_box(1, 6)
+    level.wall_box(2, 6)
+
+    level.electric_north(2, 0)
+    level.wall_east(2, 0)
+    level.electric_north(3, 1)
+    level.wall_north(4, 1)
+
+    level.set_hazard(5, 0)
+    level.set_hazard(6, 0)
+    level.set_hazard(7, 0)
+    level.set_hazard(6, 1)
+    level.set_hazard(7, 1)
+
+    level.electric_south(7, 3)
+    level.wall_south(6, 3)
+    level.wall_east(5, 4)
+    level.wall_north(5, 5)
+    level.wall_west(5, 5)
+    level.wall_south(5, 5)
+    level.electric_east(5, 6)
+    level.electric_east(5, 7)
+
+    level.electric_north(4, 7)
+
+    level.add_cabinet_ns(5, 1)
+
+    level.add_victim(1, 1)
+    level.add_victim(2, 1)
+    level.add_victim(4, 3)
+    level.add_victim(4, 6)
+
+
+    return level
