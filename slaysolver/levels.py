@@ -11,9 +11,9 @@ def level_sort_key(levelname):
     if not match:
         return 'ZZZ'
     if match.group(1):
-        nc17 = 1
+        nc17 = True
     else:
-        nc17 = 0
+        nc17 = False
     movie = int(match.group(2))
     leveltype = match.group(3)
     levelnum = int(match.group(4))
@@ -28,7 +28,11 @@ def level_sort_key(levelname):
     else:
         typekey = 2
 
-    return '{}_{:03d}_{}_{:02d}'.format(nc17, movie, typekey, levelnum)
+    # Though sort NC-17 levels after both of those
+    if nc17:
+        typekey = 3
+
+    return '{:03d}_{}_{:02d}'.format(movie, typekey, levelnum)
 
 class Levels(object):
 
