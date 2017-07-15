@@ -672,23 +672,6 @@ class Victim(object):
 
         return False
 
-    def teleport_scare(self):
-        """
-        I'm not totally sure what the behavior here is.  This can be observed
-        in X.D1 - a victim is scared onto the other side of a teleporter, but
-        is blocked by a wall there, so remains on top of the far side.  When
-        the player reaches the teleporter (going east), it generates a scare
-        event of some sort but the victim goes NORTH instead (since east is
-        blocked).  You can later similarly force the victim back down through
-        the teleporter (though doing so puts the level in an unwinnable state)
-        but the victim can't be scared away from the remote side in the same
-        way.  I'm really not sure what the conditions are for it.  For now,
-        since this only appears to happen in the one place, I'm hardcoding it
-        to only scare north, and I'll have to see if anything else changes the
-        behavior.
-        """
-        self.scare(DIR_N)
-
     def can_hit(self, obstacle):
         return True
 
@@ -1159,7 +1142,6 @@ class Level(object):
                 # Check to see if any victim is *on* the other side.  If
                 # so, call a custom scare method and just continue on.
                 if next_cell.teleporter.other.cell.victim:
-                    next_cell.teleporter.other.cell.victim.teleport_scare()
                     self.player.cell = next_cell
                 else:
 
