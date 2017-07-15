@@ -41,8 +41,9 @@ Slayaway Camp 1.
 Usage
 =====
 
-Slayaway Solver was written in Python 3.  I recommend using PyPy3, though
-performance is generally fine using plain ol' CPython.
+Slayaway Solver was written in Python.  It should work in Python 2.7 or Python 3.x
+without problems, though it's mostly just been run in 3.  I recommend using
+PyPy/PyPy3, though performance is generally fine using plain ol' CPython.
 
 Slayaway Solver requires the `colorama` Python module, to make the interactive
 output a little more palatable.  If you want to use PyPy3, an easy way to get

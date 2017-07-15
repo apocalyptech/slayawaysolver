@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# vim: set expandtab tabstop=4 shiftwidth=4:
+#!/usr/bin/env python
+# vim: set expandtab tabstop=4 shiftwidth=4 fileencoding=utf-8:
 
 import re
 from slaysolver.app import Level, DIR_N, DIR_S, DIR_E, DIR_W

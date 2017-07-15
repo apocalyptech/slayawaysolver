@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# vim: set expandtab tabstop=4 shiftwidth=4:
+#!/usr/bin/env python
+# vim: set expandtab tabstop=4 shiftwidth=4 fileencoding=utf-8:
 
 # Solver (and interactive player) for Slayaway Camp levels.
 #
