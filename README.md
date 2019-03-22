@@ -38,21 +38,29 @@ The game has levels defined for all of the "main" Slayaway Camp levels
 (ie: Slayaway Camp 1 through Slayaway Camp X), plus the NC-17 levels for
 Slayaway Camp 1.
 
+Installation
+============
+
+There is no `setup.py` for this project, alas.  The base solver itself
+should be runnable on any Python 3 installation.  To run in interactive
+mode, the following extra modules are required (both installable with
+`pip`):
+
+- [readchar](https://pypi.org/project/readchar/)
+- [colorama](https://pypi.org/project/colorama/)
+
+The solver benefits from being run with PyPy3 - solving times will be
+noticeably faster compared to vanilla Python.  The solve space for these
+puzzles are not huge, though, and vanilla Python generally does all
+right.  Assuming PyPy3 is installed, the following will set up a PyPy3
+venv with the necessary modules for interactive mode:
+
+    $ pypy3 -m venv solver_venv
+    $ . solver_venv/bin/activate
+    (solver_venv) $ pip install -r requirements.txt
+
 Usage
 =====
-
-Slayaway Solver was written in Python.  It should work in Python 2.7 or Python 3.x
-without problems, though it's mostly just been run in 3.  I recommend using
-PyPy/PyPy3, though performance is generally fine using plain ol' CPython.
-
-Slayaway Solver requires the `colorama` Python module, to make the interactive
-output a little more palatable.  If you want to use PyPy3, an easy way to get
-this installed appropriately is using virtualenvs:
-
-    $ pypy3 -m venv_slayaway
-    $ . venv_slayaway/bin/activate
-    (venv_slayaway) $ pip install colorama
-    (venv_slayaway) $ ./solve.py
 
 Commandline usage is pretty simple:
 
@@ -94,8 +102,8 @@ Interactive Use
 
 The interactive UI for this definitely takes a bit of getting used to.  Your
 available commands are just `w`, `a`, `s`, and `d` (for north, west, south, and
-east).  You can also undo moves with `u`, reset to the initial state with `r`,
-and quit with `q`.
+east), or the arrow keys.  You can also undo moves with `u`, reset to the
+initial state with `r`, and quit with `q`.
 
 The symbols used in the UI to indicate the map:
 

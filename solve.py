@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # vim: set expandtab tabstop=4 shiftwidth=4 fileencoding=utf-8:
 
 import sys
@@ -38,6 +38,20 @@ if __name__ == '__main__':
 
     game = Game(levels.get_level(args.level))
     if args.interactive:
+        # This is pretty improper, but it's a bit silly to require these
+        # modules if you're *not* using interactive mode
+        try:
+            import readchar
+        except ModuleNotFoundError:
+            print('Error: "readchar" python library not found.  Please `pip install readchar`')
+            print('or otherwise get that library installed.')
+            sys.exit(1)
+        try:
+            import colorama
+        except ModuleNotFoundError:
+            print('Error: "colorama" python library not found.  Please `pip install colorama`')
+            print('or otherwise get that library installed.')
+            sys.exit(1)
         game.interactive()
     elif args.test:
         # Not actually applicable anywhere since we're using BFS now, which does this by nature

@@ -110,7 +110,6 @@
 # there.
 
 import sys
-import colorama
 
 DIR_N = 0
 DIR_E = 1
@@ -128,6 +127,10 @@ DIR_CMD = {
     's': DIR_S,
     'a': DIR_W,
     'd': DIR_E,
+    '\x1b[a': DIR_N,
+    '\x1b[b': DIR_S,
+    '\x1b[d': DIR_W,
+    '\x1b[c': DIR_E,
 }
 def rev_dir(direction):
     return (direction+2)%4
@@ -139,20 +142,37 @@ OBS_CABINET = 0
 OBS_PHONE = 1
 
 # Colors
-colors_bg_lt = [colorama.Back.RESET, colorama.Back.YELLOW]
-colors_bg_dk = [colorama.Back.CYAN, colorama.Back.YELLOW]
-color_exit_active = {
-    True: colorama.Fore.GREEN,
-    False: colorama.Fore.BLUE,
-}
+try:
+    import colorama
+    colors_bg_lt = [colorama.Back.RESET, colorama.Back.YELLOW]
+    colors_bg_dk = [colorama.Back.CYAN, colorama.Back.YELLOW]
+    color_exit_active = {
+        True: colorama.Fore.GREEN,
+        False: colorama.Fore.BLUE,
+    }
 
-color_short_wall = colorama.Fore.RED
-color_reticle = colorama.Fore.RED
-color_exit_inactive = colorama.Fore.MAGENTA
-color_electric_on = colorama.Style.BRIGHT + colorama.Fore.CYAN
-color_electric_off = colorama.Style.BRIGHT + colorama.Fore.BLUE
-color_sticky = colorama.Fore.MAGENTA
-color_death_notice = colorama.Fore.RED
+    color_short_wall = colorama.Fore.RED
+    color_reticle = colorama.Fore.RED
+    color_exit_inactive = colorama.Fore.MAGENTA
+    color_electric_on = colorama.Style.BRIGHT + colorama.Fore.CYAN
+    color_electric_off = colorama.Style.BRIGHT + colorama.Fore.BLUE
+    color_sticky = colorama.Fore.MAGENTA
+    color_death_notice = colorama.Fore.RED
+except ModuleNotFoundError:
+    colors_bg_lt = ['', '']
+    colors_bg_dk = ['', '']
+    color_exit_active = {
+        True: '',
+        False: '',
+    }
+
+    color_short_wall = ''
+    color_reticle = ''
+    color_exit_inactive = ''
+    color_electric_on = ''
+    color_electric_off = ''
+    color_sticky = ''
+    color_death_notice = ''
 
 # Wall types
 WALL_NONE = 0
@@ -1473,6 +1493,7 @@ class Game(object):
                     print("\t{}".format(DIR_T[direction]))
 
     def interactive(self):
+        import readchar
         colorama.init(autoreset=True)
         self.level.update_all_facing_vars()
         death_reason = None
@@ -1489,42 +1510,52 @@ class Game(object):
                 death_reason = None
 
             if full_control:
-                print('[wasd] - move, [u]ndo, [r]eset, [q]uit')
+                print('[wasd/arrows] - move, [u]ndo, [r]eset, [q]uit')
             else:
                 print('[u]ndo, [r]eset, [q]uit')
             sys.stdout.write('[{}] > '.format(self.cur_steps + 1))
             sys.stdout.flush()
-            cmd = sys.stdin.readline()
-            cmd = cmd.strip()
-            if cmd == '':
-                continue
-            cmd = cmd[0].lower()
 
-            direction = None
-            if cmd == 'q':
-                return False
-            elif cmd == 'u':
-                self.undo()
-            elif cmd == 'r':
-                while len(self.states) > 0:
+            valid_input = False
+            while not valid_input:
+                cmd = readchar.readkey().lower()
+                if cmd in DIR_CMD and len(cmd) > 1:
+                    report = DIR_T[DIR_CMD[cmd]]
+                else:
+                    report = cmd
+
+                direction = None
+                if cmd == 'q':
+                    print(report)
+                    return False
+                elif cmd == 'u':
+                    valid_input = True
                     self.undo()
-            elif full_control and cmd in DIR_CMD:
-                direction = DIR_CMD[cmd]
-                if direction in self.level.possible_moves():
-                    try:
-                        self.move(DIR_CMD[cmd])
-                    except PlayerLose as e:
-                        self.alive = False
-                        report_prefix = 'Player Death: '
-                        report_suffix = str(e)
-                        death_reason = report_suffix
-                        print('-'*(len(report_prefix) + len(report_suffix)))
-                        print('{}{}{}'.format(report_prefix, color_death_notice, report_suffix))
-                        print('-'*(len(report_prefix) + len(report_suffix)))
-                    except Exception as e:
-                        print('Got exception!')
-                        self.print_debug_info()
-                        raise e
+                elif cmd == 'r':
+                    valid_input = True
+                    while len(self.states) > 0:
+                        self.undo()
+                elif full_control and cmd in DIR_CMD:
+                    valid_input = True
+                    direction = DIR_CMD[cmd]
+                    if direction in self.level.possible_moves():
+                        try:
+                            self.move(DIR_CMD[cmd])
+                        except PlayerLose as e:
+                            self.alive = False
+                            report_prefix = 'Player Death: '
+                            report_suffix = str(e)
+                            death_reason = report_suffix
+                            print('-'*(len(report_prefix) + len(report_suffix)))
+                            print('{}{}{}'.format(report_prefix, color_death_notice, report_suffix))
+                            print('-'*(len(report_prefix) + len(report_suffix)))
+                        except Exception as e:
+                            print('Got exception!')
+                            self.print_debug_info()
+                            raise e
+
+                if valid_input:
+                    print(report)
 
     def solve_dfs(self):
         """
