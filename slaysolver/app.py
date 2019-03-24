@@ -110,6 +110,7 @@
 # there.
 
 import sys
+import struct
 
 DIR_N = 0
 DIR_E = 1
@@ -281,7 +282,7 @@ class Cell(object):
             return False
 
     def checksum(self):
-        return '{},{}'.format(self.x, self.y)
+        return struct.pack('BB', self.x, self.y)
 
     def clone(self):
         newobj = Cell(self.x, self.y)
@@ -496,8 +497,10 @@ class Cabinet(object):
         self.level.get_cell(newobj.cell.x, newobj.cell.y).set_obstacle(self)
 
     def checksum(self):
-        return '{};{}'.format(self.cell.checksum(),
-            ','.join([str(d) for d in self.fall_dirs]))
+        return b'{}{}'.join([
+            self.cell.checksum(),
+            b''.join([struct.pack('B', d) for d in self.fall_dirs]),
+            ])
 
 class Phone(object):
 
@@ -551,7 +554,7 @@ class Phone(object):
         self.cell.obstacle = self
 
     def checksum(self):
-        return 'p'
+        return b''
 
 class Teleporter(object):
 
@@ -590,9 +593,9 @@ class Mine(object):
 
     def checksum(self):
         if self.active:
-            return '1'
+            return b'\x01'
         else:
-            return '0'
+            return b'\x00'
 
 class Victim(object):
     """
@@ -699,7 +702,7 @@ class Victim(object):
         if self.alive:
             return self.cell.checksum()
         else:
-            return 'd'
+            return b'\xff'
 
     def clone(self):
         newobj = Victim(self.level)
@@ -807,9 +810,12 @@ class Cop(Victim):
 
     def checksum(self):
         if self.alive:
-            return '{};f{}'.format(self.cell.checksum(), self.facing)
+            return b''.join([
+                self.cell.checksum(),
+                struct.pack('B', self.facing),
+                ])
         else:
-            return 'd'
+            return b'\xff'
 
     def clone(self):
         newobj = Cop(self.level, self.facing)
@@ -1372,20 +1378,31 @@ class State(object):
             return list(self.moves)
 
     def checksum(self):
+        """
+        A "checksum" of the level state, used to remember whether or not we've
+        seen a particular state before.  It's actually more than a checksum, since
+        it could theoretically be used to save/restore a complete state, rather
+        than just being a fingerprint.
+
+        We originally used a human-readable string for these, which worked well,
+        but since switching over my Snakebird solver checksum method to binary
+        worked out pretty well for that one, I figured I'd do so over here as well.
+        Since the solve times in Slayaway Camp are quite reasonable to begin with,
+        this doesn't really help us too much here.  It does lop off about 10
+        seconds from the s10_d4 solve, which is nice, and probably consumes a bit
+        less memory while it's doing so, too.
+        """
 
         sumlist = []
         if self.level.lights:
-            sumlist.append('l1')
+            sumlist.append(b'\x01')
         else:
-            sumlist.append('l0')
-        sumlist.append('p={}'.format(self.player.cell.checksum()))
-        for (idx, victim) in enumerate(self.victims):
-            sumlist.append('v{}={}'.format(idx, victim.checksum()))
-        for (idx, obstacle) in enumerate(self.obstacles):
-            sumlist.append('o{}={}'.format(idx, obstacle.checksum()))
-        for (idx, mine) in enumerate(self.mines):
-            sumlist.append('m{}={}'.format(idx, mine.checksum()))
-        return '|'.join(sumlist)
+            sumlist.append(b'\x00')
+        sumlist.append(self.player.cell.checksum())
+        sumlist.append(b''.join([victim.checksum() for victim in self.victims]))
+        sumlist.append(b''.join([obstacle.checksum() for obstacle in self.obstacles]))
+        sumlist.append(b''.join([mine.checksum() for mine in self.mines]))
+        return b''.join(sumlist)
 
 class Game(object):
     
