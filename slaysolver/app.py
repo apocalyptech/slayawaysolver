@@ -722,7 +722,7 @@ class Cat(Victim):
         self.type = Victim.T_CAT
         self.required_to_kill = False
         self.scare_on_lure = True
-        self.can_hit_switch = False
+        self.can_hit_switch = True
         self.can_see_in_dark = True
 
     def can_hit(self, obstacle):
