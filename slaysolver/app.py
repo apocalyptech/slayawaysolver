@@ -1175,11 +1175,16 @@ class Level(object):
                     self.scare_from_cell(next_cell)
                     self.player.cell = next_cell.teleporter.other.cell
 
-                    # I am guessing that hopping OUT of a teleporter also
-                    # scares victims, though I have yet to run into a level
-                    # which would exhibit that behavior (or not)
-                    # TODO: Find out?
-                    self.scare_from_cell(self.player.cell)
+                    # Hopping *out* of a teleporter on the far end might
+                    # potentially scare adjacent victims, but I have yet
+                    # to run into a level in which that seems to matter for
+                    # finding solutions.  If you come out heading directly
+                    # *for* an adjacent victim, you'll kill that victim
+                    # rather than scaring 'em away.
+                    # TODO: See if I can find an example of zooming out of
+                    # a teleporter, with a victim adjacent, to see if anything
+                    # needs to be done here.
+                    #self.scare_from_cell(self.player.cell)
             else:
                 self.player.cell = next_cell
 
